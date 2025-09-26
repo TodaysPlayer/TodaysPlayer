@@ -60,3 +60,17 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+
+# Code Injection
+#
+# After new code Injection tools there's a generated folder /iOSInjectionProject
+# https://github.com/johnno1962/injectionforxcode
+
+iOSInjectionProject/
+
+# 프로젝트의 모든 경로에서 .DS_Store 파일을 포함하지 않도록 함
+**/.DS_Store
+
+# 프로젝트의 모든 경로에서 GoogleService-Info.plist 파일을 포함하지 않도록 함
+**/GoogleService-Info.plist
