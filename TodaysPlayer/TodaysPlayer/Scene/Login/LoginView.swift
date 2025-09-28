@@ -70,7 +70,7 @@ struct LoginView: View {
                                     .padding(.trailing, 12)
                             }
                             .background(Color.gray.opacity(0.1))
-                            .cornerRadius(8)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         
                         // 비밀번호 입력 필드
@@ -90,7 +90,7 @@ struct LoginView: View {
                                     .padding(.trailing, 12)
                             }
                             .background(Color.gray.opacity(0.1))
-                            .cornerRadius(8)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         
                         // 로그인 버튼
@@ -104,7 +104,7 @@ struct LoginView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
                                 .background(Color.blue)
-                                .cornerRadius(8)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         
                         // 비밀번호 찾기 링크
@@ -130,12 +130,12 @@ struct LoginView: View {
                                     RoundedRectangle(cornerRadius: 8)
                                         .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                                 )
-                                .cornerRadius(8)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                     }
                     .padding(24)
                     .background(Color.white)
-                    .cornerRadius(16)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
                     .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                     .padding(.horizontal, 20)
                     
