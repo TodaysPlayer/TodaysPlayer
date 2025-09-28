@@ -98,8 +98,8 @@ struct ApplyView: View {
     @State private var isScrolling: Bool = false
     
     // 필터 관련 상태
-    @State private var currentFilter = GameFilter()
-    @State private var tempFilter = GameFilter() // 바텀시트에서 임시로 사용할 필터
+    @State private var currentFilter = GameFilter() // 현재 적용된 필터(적용하기를 눌렀을때만 업데이트됨)
+    @State private var tempFilter = GameFilter() // 바텀시트에서 편집중인 임시 필터 상태, 사용자가 선택/해제할때마다 실시간으로 변경도미(적용하기 또는 취소시 선택됨)
     
     var body: some View {
         NavigationStack {
@@ -115,9 +115,7 @@ struct ApplyView: View {
                     // 스크랩, 필터, 지역 버튼 (통일된 스타일)
                     HStack(spacing: 12) {
                         // 스크랩 버튼
-                        Button(action: {
-                            print("스크랩 버튼 클릭됨")
-                        }) {
+                        NavigationLink(destination: ScrapView()) {
                             HStack(spacing: 6) {
                                 Image(systemName: "bookmark.fill")
                                     .font(.system(size: 14))
