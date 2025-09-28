@@ -12,11 +12,19 @@ enum Region: String, CaseIterable {
     case seoul = "서울"
     case gyeonggi = "경기"
     case incheon = "인천"
-    case kangwon = "강원"
+    case gangwon = "강원"
     case daejeonSejong = "대전/세종"
     case chungbuk = "충북"
     case chungnam = "충남"
     case daegu = "대구"
+    case busan = "부산"
+    case ulsan = "울산"
+    case gyeongbuk = "경북"
+    case gyeongnam = "경남"
+    case gwangju = "광주"
+    case jeonbuk = "전북"
+    case jeonnam = "전남"
+    case jeju = "제주"
 }
 
 // 경기 종류 enum
@@ -27,36 +35,16 @@ enum GameType: String, CaseIterable {
 
 // 실력 레벨 enum
 enum SkillLevel: String, CaseIterable {
-    case s = "S"
-    case a = "A"
-    case bPlus = "B+"
-    case b = "B"
-    case bMinus = "B-"
-    case cPlus = "C+"
-    case c = "C"
-    case cMinus = "C-"
-    case d = "D"
-    
-    var description: String {
-        switch self {
-        case .s: return "선출(대학&프로출신)"
-        case .a: return "선출(중고등부 출신)"
-        case .bPlus: return "기본기 중, 팀플레이 상"
-        case .b: return "기본기 중, 팀플레이 중"
-        case .bMinus: return "기본기 중, 팀플레이 하"
-        case .cPlus: return "기본기 하, 팀플레이 상"
-        case .c: return "기본기 하, 팀플레이 중"
-        case .cMinus: return "기본기 하, 팀플레이 하"
-        case .d: return "입문자 레벨"
-        }
-    }
+    case elite = "선출"
+    case professional = "프로"
+    case amateur = "아마추어"
+    case beginner = "입문자"
 }
 
 // 성별 enum
 enum Gender: String, CaseIterable {
     case male = "남자만"
     case female = "여자만"
-    case mixed = "성별무관"
 }
 
 // 참가비 enum
@@ -67,15 +55,16 @@ enum FeeType: String, CaseIterable {
 
 // 필터 데이터 구조체
 struct GameFilter {
-    var gameTypes: Set<GameType> = []
-    var skillLevels: Set<SkillLevel> = []
-    var gender: Gender? = nil
-    var feeType: FeeType? = nil
+    var gameTypes: Set<GameType> = [] // 복수선택: 축구, 풋살 둘 다 가능
+    var skillLevels: Set<SkillLevel> = [] // 복수선택: 프로, 아마추어 둘 다 가능
+    var gender: Gender? = nil // 단일 선택: 남자만 or 여자만
+    var feeType: FeeType? = nil // 단일 선택: 무료 or 유료
     
     // 서버로 보낼 딕셔너리 형태로 변환
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
         
+        // 복수선택 항목들은 배열로 전송
         if !gameTypes.isEmpty {
             dict["gameTypes"] = gameTypes.map { $0.rawValue }
         }
@@ -84,6 +73,7 @@ struct GameFilter {
             dict["skillLevels"] = skillLevels.map { $0.rawValue }
         }
         
+        // 단일 선택 항목들은 단일 값으로 전송
         if let gender = gender {
             dict["gender"] = gender.rawValue
         }
@@ -378,17 +368,20 @@ struct ApplyView: View {
                     // 실력 레벨 섹션
                     filterSection(title: "실력") {
                         LazyVGrid(columns: [
+                            GridItem(.flexible()),
+                            GridItem(.flexible()),
+                            GridItem(.flexible()),
                             GridItem(.flexible())
-                        ], spacing: 8) {
-                            ForEach(SkillLevel.allCases, id: \.self) { level in
+                        ], spacing: 10) {
+                            ForEach(SkillLevel.allCases, id: \.self) { skillLevel in
                                 filterToggleButton(
-                                    title: "\(level.rawValue): \(level.description)",
-                                    isSelected: tempFilter.skillLevels.contains(level)
+                                    title: skillLevel.rawValue,
+                                    isSelected: tempFilter.skillLevels.contains(skillLevel)
                                 ) {
-                                    if tempFilter.skillLevels.contains(level) {
-                                        tempFilter.skillLevels.remove(level)
+                                    if tempFilter.skillLevels.contains(skillLevel) {
+                                        tempFilter.skillLevels.remove(skillLevel)
                                     } else {
-                                        tempFilter.skillLevels.insert(level)
+                                        tempFilter.skillLevels.insert(skillLevel)
                                     }
                                 }
                             }
@@ -398,7 +391,6 @@ struct ApplyView: View {
                     // 성별 섹션
                     filterSection(title: "성별") {
                         LazyVGrid(columns: [
-                            GridItem(.flexible()),
                             GridItem(.flexible()),
                             GridItem(.flexible())
                         ], spacing: 10) {
@@ -476,7 +468,7 @@ struct ApplyView: View {
             }
             .background(Color(.systemBackground))
         }
-        .presentationDetents([.large])
+        .presentationDetents([.height(500)])
         .presentationDragIndicator(.hidden)
     }
     
