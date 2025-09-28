@@ -147,7 +147,7 @@ struct MatchItemView: View {
         distance: "1.2km",
         time: "오늘 20:00",
         participants: "2/10",
-        gender: .male,
+        gender: .female,
         rating: "4.6",
         price: "15,000원",
         skillLevel: "중급",
