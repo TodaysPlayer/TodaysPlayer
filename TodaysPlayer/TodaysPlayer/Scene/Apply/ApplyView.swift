@@ -97,6 +97,9 @@ struct ApplyView: View {
     @State private var isFilterSheetPresented: Bool = false
     @State private var isScrolling: Bool = false
     
+    // 달력 선택된 날짜
+    @State private var selectedDate: Date = Date()
+    
     // 필터 관련 상태
     @State private var currentFilter = GameFilter() // 현재 적용된 필터(적용하기를 눌렀을때만 업데이트됨)
     
@@ -104,12 +107,18 @@ struct ApplyView: View {
         NavigationStack {
             ZStack {
                 VStack(alignment: .leading, spacing: 0) {
-                    // 서브타이틀
-                    Text("함께할 팀원을 찾아보세요")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 16)
+                    // 커스텀 타이틀 (네비게이션 타이틀 대신)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("용병 모집")
+                            .font(.title.bold())
+                        
+                        Text("함께할 팀원을 찾아보세요")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)  // 최소한의 상단 여백
+                    .padding(.bottom, 12)
                     
                     // 스크랩, 필터, 지역 버튼 (통일된 스타일)
                     HStack(spacing: 12) {
@@ -173,6 +182,12 @@ struct ApplyView: View {
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
                     
+                    // 주간 달력 추가
+                    CalendarView(selectedDate: $selectedDate)
+                        .frame(height: 200)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 0)
+                    
                     // 게시글 공고 스크롤뷰
                     ScrollView {
                         LazyVStack(spacing: 16) {
@@ -194,6 +209,7 @@ struct ApplyView: View {
                             }
                         }
                         .padding(.horizontal, 16)
+                        .padding(.top, 0)
                         .padding(.bottom, 100) // 플로팅 버튼을 위한 여백
                     }
                 }
@@ -209,7 +225,7 @@ struct ApplyView: View {
                 .padding(.trailing, 16)
                 .padding(.bottom, 34) // Safe Area 고려
             }
-            .navigationTitle("용병 모집")
+            //.navigationTitle("용병 모집")
         }
         .sheet(isPresented: $isRegionSheetPresented) {
             RegionBottomSheet(
