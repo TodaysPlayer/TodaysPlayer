@@ -22,7 +22,7 @@ struct ContentView: View {
                 MatchListView()
             }
             
-            Tab("Navigation", systemImage: "house") {
+            Tab("MyPage", systemImage: "house") {
                 MyPageView()
             }
         }
