@@ -11,12 +11,13 @@ struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isLoggedIn: Bool = false
+
     
     var body: some View {
         NavigationView {
             ZStack {
                 Color.gray.opacity(0.1)
-                    .ignoresSafeArea()
+                    //.ignoresSafeArea()
                 
                 VStack(spacing: 30) {
                     // 앱 로고 및 브랜딩
@@ -105,6 +106,41 @@ struct LoginView: View {
                                 .padding(.vertical, 16)
                                 .background(Color.blue)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        Button(action: {
+                            // 네이버 로그인 기능
+                        }) {
+                            HStack {
+                                Image(systemName: "n.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                
+                                Text("네이버로 로그인하기")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.green)
+                            .cornerRadius(8)
+                        }
+                        
+                        Button(action: {
+                            // 인스타그램 로그인 기능
+                        }) {
+                            HStack {
+                                Image(systemName: "i.circle.fill")
+                                    .font(.title3)
+                                    .foregroundColor(.white)
+                                
+                                Text("인스타그램으로 로그인하기")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.blue)
+                            .cornerRadius(8)
                         }
                         
                         // 비밀번호 찾기 링크
