@@ -166,8 +166,8 @@ struct FilterBottomSheet: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             }
-            .background(Color(.systemBackground))
         }
+        .background(Color(.systemBackground))
         .presentationDetents([.height(500)])
         .presentationDragIndicator(.hidden)
         .onAppear {

@@ -35,8 +35,8 @@ enum GameType: String, CaseIterable {
 
 // 실력 레벨 enum
 enum SkillLevel: String, CaseIterable {
-    case elite = "선출"
     case professional = "프로"
+    case elite = "선출"
     case amateur = "아마추어"
     case beginner = "입문자"
 }
