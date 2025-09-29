@@ -91,6 +91,7 @@ struct MyMatchInfoView: View {
             
             Divider()
             
+            // 내가 작성한 글이면 없애기
             HStack {
                 Image(systemName: "person.fill")
                     .clipShape(.circle)

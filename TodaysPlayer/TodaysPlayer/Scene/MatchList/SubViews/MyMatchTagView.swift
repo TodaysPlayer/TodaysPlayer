@@ -35,17 +35,19 @@ struct MyMatchTagView: View {
             // 태그
             HStack(spacing: 10) {
                 Text(matchInfo.matchType.rawValue)
-                    .matchTagStyle(tagType: matchInfo.matchType == .futsal ? .futsal : .soccer)
-                
+                    .matchTagStyle(tagType: matchInfo.matchType.rawValue == MatchTypeTags.futsal.rawValue ? MatchTypeTags.futsal : MatchTypeTags.soccer)
+
+                Text(matchInfo.applyStatus.rawValue)
                 
                 if matchInfo.maxCount - matchInfo.applyCount == 1 {
-                    Text(MatchInfoTag.lastOne.rawValue)
-                        .matchTagStyle(tagType: .lastOne)
+                    Text(MatchStatusTag.lastOne.rawValue)
+                        .matchTagStyle(tagType: MatchStatusTag.lastOne)
                 } else {
-                    Text(MatchInfoTag.deadline.rawValue)
-                        .matchTagStyle(tagType: .deadline)
+                    Text(MatchStatusTag.deadline.rawValue)
+                        .matchTagStyle(tagType: MatchStatusTag.deadline)
                 }
             }
+            .font(.subheadline)
             
             Spacer()
             
