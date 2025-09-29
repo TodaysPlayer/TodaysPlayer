@@ -57,13 +57,9 @@ struct FilterBottomSheet: View {
                             ForEach(GameType.allCases, id: \.self) { gameType in
                                 filterToggleButton(
                                     title: gameType.rawValue,
-                                    isSelected: tempFilter.gameTypes.contains(gameType)
+                                    isSelected: tempFilter.gameType == gameType
                                 ) {
-                                    if tempFilter.gameTypes.contains(gameType) {
-                                        tempFilter.gameTypes.remove(gameType)
-                                    } else {
-                                        tempFilter.gameTypes.insert(gameType)
-                                    }
+                                    tempFilter.gameType = (tempFilter.gameType == gameType) ? nil : gameType
                                 }
                             }
                         }

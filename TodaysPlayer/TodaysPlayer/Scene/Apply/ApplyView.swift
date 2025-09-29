@@ -55,7 +55,7 @@ enum FeeType: String, CaseIterable {
 
 // 필터 데이터 구조체
 struct GameFilter {
-    var gameTypes: Set<GameType> = [] // 복수선택: 축구, 풋살 둘 다 가능
+    var gameType: GameType? = nil // 단일 선택: 축구 or 풋살
     var skillLevels: Set<SkillLevel> = [] // 복수선택: 프로, 아마추어 둘 다 가능
     var gender: Gender? = nil // 단일 선택: 남자만 or 여자만
     var feeType: FeeType? = nil // 단일 선택: 무료 or 유료
@@ -65,8 +65,8 @@ struct GameFilter {
         var dict: [String: Any] = [:]
         
         // 복수선택 항목들은 배열로 전송
-        if !gameTypes.isEmpty {
-            dict["gameTypes"] = gameTypes.map { $0.rawValue }
+        if let gameType = gameType {
+            dict["gameType"] = gameType.rawValue
         }
         
         if !skillLevels.isEmpty {
@@ -87,7 +87,7 @@ struct GameFilter {
     
     // 필터가 비어있는지 확인
     var isEmpty: Bool {
-        return gameTypes.isEmpty && skillLevels.isEmpty && gender == nil && feeType == nil
+        return gameType == nil && skillLevels.isEmpty && gender == nil && feeType == nil
     }
 }
 
