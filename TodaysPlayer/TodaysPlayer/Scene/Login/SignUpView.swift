@@ -31,6 +31,7 @@ struct SignUpView: View {
                     
                     // 이메일 입력
                     VStack(alignment: .leading, spacing: 5) {
+                        Text("이메일 *")
                         HStack {
                             TextField("이메일", text: $email)
                                 .keyboardType(.emailAddress)
@@ -53,6 +54,7 @@ struct SignUpView: View {
                     
                     // 비밀번호
                     VStack(alignment: .leading, spacing: 5) {
+                        Text("비밀번호 *")
                         SecureField("비밀번호 (8자 이상)", text: $password)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                         
@@ -65,6 +67,7 @@ struct SignUpView: View {
                     
                     // 비밀번호 확인
                     VStack(alignment: .leading, spacing: 5) {
+                        Text("비밀번호 확인 *")
                         SecureField("비밀번호 확인", text: $confirmPassword)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                         
@@ -77,6 +80,7 @@ struct SignUpView: View {
                     
                     // 닉네임
                     VStack(alignment: .leading, spacing: 5) {
+                        Text("닉네임 *")
                         HStack {
                             TextField("닉네임", text: $nickname)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
