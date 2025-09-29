@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct NearbyMatchesCard: View {
+    let matches: [Match] // 이미 필터링되고 정렬된 매치들 (최대 3개)
+    let viewModel: HomeViewModel // 거리 계산용
+    
+    // matches는 이미 ViewModel에서 필터링되고 정렬된 상태 (최대 3개)
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // 헤더
@@ -28,49 +33,27 @@ struct NearbyMatchesCard: View {
             
             // 매치 리스트
             VStack(spacing: 16) {
-                // 강남풋살파크
-                MatchItemView(
-                    location: "강남풋살파크",
-                    address: "강남구 테헤란로 152",
-                    distance: "1.2km",
-                    time: "오늘 20:00",
-                    participants: "2/10",
-                    gender: .mixed,
-                    rating: "4.6",
-                    price: "15,000원",
-                    skillLevel: "중급",
-                    tags: []
-                )
-                
-                // 홍대스포츠센터
-                MatchItemView(
-                    location: "홍대스포츠센터",
-                    address: "마포구 와우산로 123",
-                    distance: "2.8km",
-                    time: "내일 19:30",
-                    participants: "1/8",
-                    gender: .male,
-                    rating: "4.8",
-                    price: "12,000원",
-                    skillLevel: "초급",
-                    tags: [
-                        MatchTag(text: "마감임박", color: .orange, icon: "bolt.fill")
-                    ]
-                )
-                
-                // 잠실종합운동장
-                MatchItemView(
-                    location: "잠실종합운동장",
-                    address: "송파구 올림픽로 25",
-                    distance: "4.5km",
-                    time: "1/26 18:00",
-                    participants: "3/12",
-                    gender: .female,
-                    rating: "4.3",
-                    price: "18,000원",
-                    skillLevel: "고급",
-                    tags: []
-                )
+                if matches.isEmpty {
+                    Text("주변에 매치가 없습니다")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .padding(.vertical, 20)
+                } else {
+                    ForEach(Array(matches.enumerated()), id: \.element.id) { index, match in
+                        MatchItemView(
+                            location: match.location.name,
+                            address: match.location.address,
+                            distance: viewModel.formatDistance(to: match.location.coordinates),
+                            time: match.dateTime.formatForDisplay(),
+                            participants: "\(Int.random(in: 1...match.maxParticipants))/\(match.maxParticipants)",
+                            gender: .mixed, // 임시 성별
+                            rating: "4.\(Int.random(in: 0...9))", // 임시 평점
+                            price: match.price == 0 ? "무료" : "\(match.price)원",
+                            skillLevel: match.skillLevel.skillLevelToKorean(),
+                            tags: match.createMatchTags()
+                        )
+                    }
+                }
             }
             .padding(.horizontal, 20)
             
@@ -97,9 +80,9 @@ struct NearbyMatchesCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
     }
+    
 }
 
-
 #Preview {
-    NearbyMatchesCard()
+    NearbyMatchesCard(matches: [], viewModel: HomeViewModel())
 }

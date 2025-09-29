@@ -139,7 +139,6 @@ struct MatchItemView: View {
     }
 }
 
-
 #Preview {
     MatchItemView(
         location: "강남풋살파크",

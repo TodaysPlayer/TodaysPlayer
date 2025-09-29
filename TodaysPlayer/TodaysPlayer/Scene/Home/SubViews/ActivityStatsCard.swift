@@ -34,6 +34,8 @@ struct ActivityStatsCard: View {
                     title: "이번 달 참여",
                     value: "8회",
                     valueColor: .black,
+                    valueBackgroundColor: nil,
+                    valueTextColor: nil,
                     iconColor: .blue
                 )
                 
@@ -43,6 +45,8 @@ struct ActivityStatsCard: View {
                     title: "출석률",
                     value: "85%",
                     valueColor: .green,
+                    valueBackgroundColor: nil,
+                    valueTextColor: nil,
                     iconColor: .clear,
                     progress: 0.85
                 )
@@ -64,6 +68,8 @@ struct ActivityStatsCard: View {
                     title: "연속 참여",
                     value: "3주째",
                     valueColor: .orange,
+                    valueBackgroundColor: nil,
+                    valueTextColor: nil,
                     iconColor: .orange
                 )
                 
@@ -88,7 +94,6 @@ struct ActivityStatsCard: View {
         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
     }
 }
-
 
 #Preview {
     ActivityStatsCard()
