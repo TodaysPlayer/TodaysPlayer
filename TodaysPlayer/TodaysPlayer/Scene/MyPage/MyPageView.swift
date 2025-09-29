@@ -13,6 +13,7 @@ struct MyPageView: View {
     @AppStorage("profile_position") private var profilePosition: String = ""
     @AppStorage("profile_level") private var profileLevel: String = ""
     @AppStorage("profile_avatar") private var avatarData: Data?
+    @State private var homeViewModel = HomeViewModel()
     
     var body: some View {
         NavigationStack {
@@ -96,36 +97,7 @@ struct MyPageView: View {
                     .padding(.horizontal)
 
                     // 배너
-                    ZStack(alignment: .topTrailing) {
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.black)
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("축구화 할인 특가")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                            Text("나이키/아디다스 축구화 최대 30% 할인")
-                                .font(.subheadline)
-                                .foregroundColor(.white.opacity(0.8))
-                            HStack(spacing: 4) {
-                                ForEach(0..<3, id: \.self) { i in
-                                    Circle()
-                                        .fill(i == 0 ? .white : .white.opacity(0.4))
-                                        .frame(width: 8, height: 8)
-                                }
-                            }
-                        }
-                        .padding(20)
-                        Text("30% OFF")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal,12)
-                            .padding(.vertical, 6)
-                            .background(Color.red)
-                            .cornerRadius(14)
-                            .padding([.top, .trailing], 16)
-                    }
-                    .frame(height: 108)
-                    .padding(.horizontal)
+                    PromotionalBanner(viewModel: homeViewModel)
 
                     // 메뉴 리스트
                     VStack(spacing: 12) {
@@ -145,59 +117,6 @@ struct MyPageView: View {
             }
         }
         .background(Color(.systemGray5).edgesIgnoringSafeArea(.all))
-    }
-}
-
-// 통계 뷰
-struct StatView: View {
-    let icon: String
-    let value: String
-    let label: String
-    let color: Color
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 28))
-                .foregroundColor(color)
-            Text(value)
-                .font(.system(size: 22, weight: .bold))
-            Text(label)
-                .font(.footnote)
-                .foregroundColor(.gray)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(20)
-        .background(Color.white)
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.02), radius: 1, x: 0, y: 1)
-    }
-}
-
-// 메뉴 리스트 행 뷰
-struct MyPageRowView: View {
-    let icon: String
-    let iconColor: Color
-    let title: String
-    let subtitle: String
-    var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.system(size: 26))
-                .foregroundColor(iconColor)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.body)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-            }
-            Spacer()
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(14)
     }
 }
 
