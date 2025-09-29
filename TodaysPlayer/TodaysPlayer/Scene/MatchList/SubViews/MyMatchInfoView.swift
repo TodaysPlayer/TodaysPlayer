@@ -32,6 +32,8 @@ private struct LinearGaugeProgressStyle: ProgressViewStyle {
 
 /// 경기정보 View
 struct MyMatchInfoView: View {
+    @State var myName: String = "용헌"
+    
     let matchInfo: MatchInfo
     
     var body: some View {
@@ -89,16 +91,44 @@ struct MyMatchInfoView: View {
                 Spacer()
             }
             
-            Divider()
             
             // 내가 작성한 글이면 없애기
-            HStack {
-                Image(systemName: "person.fill")
-                    .clipShape(.circle)
-                
-                Text(matchInfo.postUserName)
-                
-                Spacer()
+            if matchInfo.postUserName != myName {
+                Divider()
+
+                HStack {
+                    Image(systemName: "person.fill")
+                        .clipShape(.circle)
+                    
+                    Text(matchInfo.postUserName)
+                    
+                    Spacer()
+                }
+            }
+            
+            if matchInfo.applyStatus == .rejected {
+                NavigationLink {
+                    RejectionReasonView(matchId: matchInfo.matchId,
+                                        rejectionReasion: matchInfo.rejectionReason)
+                } label: {
+                    HStack(alignment: .center){
+                        Spacer()
+                        
+                        Text("거절사유 확인하기")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                            .background(Color.red)
+                            .cornerRadius(12)
+                        
+                        Spacer()
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+
             }
         }
     }
@@ -106,9 +136,9 @@ struct MyMatchInfoView: View {
 
 #Preview {
     MyMatchInfoView(matchInfo: MatchInfo(
-        matchId: "",
+        matchId: 0,
         matchType: .futsal,
-        applyStatus: .confirmed,
+        applyStatus: .rejected,
         matchLocation: "연수구",
         matchTitle: "Test",
         matchTime: "08:00~10:00",
@@ -118,6 +148,7 @@ struct MyMatchInfoView: View {
         genderLimit: "무관",
         levelLimit: "무관",
         imageURL: "",
-        postUserName: "용헌"
+        postUserName: "용헌",
+        rejectionReason: "거절함"
     ))
 }

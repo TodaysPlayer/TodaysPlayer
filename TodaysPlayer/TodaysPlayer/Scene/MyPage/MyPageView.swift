@@ -25,10 +25,16 @@ struct MyPageView: View {
                             .font(.system(size: 26, weight: .bold))
                         Spacer()
                         HStack(spacing: 20) {
-                            Image(systemName: "bell")
-                                .font(.system(size: 20))
-                            Image(systemName: "gearshape")
-                                .font(.system(size: 20))
+                            NavigationLink(destination: NotiView()) {
+                                Image(systemName: "bell")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(Color(.black))
+                            }
+                            NavigationLink(destination: SettingView()) {
+                                Image(systemName: "gearshape")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(Color(.black))
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -111,6 +117,7 @@ struct MyPageView: View {
                             MyPageRowView(icon: "shield.lefthalf.fill", iconColor: .purple, title: "개인정보 처리방침", subtitle: "개인정보 보호 정책 및 이용약관")
                         }
                     }
+                    .foregroundStyle(Color(.black))
                     .padding(.horizontal)
                     .padding(.bottom, 32)
                 }

@@ -35,8 +35,8 @@ enum GameType: String, CaseIterable {
 
 // 실력 레벨 enum
 enum SkillLevel: String, CaseIterable {
-    case elite = "선출"
     case professional = "프로"
+    case elite = "선출"
     case amateur = "아마추어"
     case beginner = "입문자"
 }
@@ -55,7 +55,7 @@ enum FeeType: String, CaseIterable {
 
 // 필터 데이터 구조체
 struct GameFilter {
-    var gameTypes: Set<GameType> = [] // 복수선택: 축구, 풋살 둘 다 가능
+    var gameType: GameType? = nil // 단일 선택: 축구 or 풋살
     var skillLevels: Set<SkillLevel> = [] // 복수선택: 프로, 아마추어 둘 다 가능
     var gender: Gender? = nil // 단일 선택: 남자만 or 여자만
     var feeType: FeeType? = nil // 단일 선택: 무료 or 유료
@@ -65,8 +65,8 @@ struct GameFilter {
         var dict: [String: Any] = [:]
         
         // 복수선택 항목들은 배열로 전송
-        if !gameTypes.isEmpty {
-            dict["gameTypes"] = gameTypes.map { $0.rawValue }
+        if let gameType = gameType {
+            dict["gameType"] = gameType.rawValue
         }
         
         if !skillLevels.isEmpty {
@@ -87,7 +87,7 @@ struct GameFilter {
     
     // 필터가 비어있는지 확인
     var isEmpty: Bool {
-        return gameTypes.isEmpty && skillLevels.isEmpty && gender == nil && feeType == nil
+        return gameType == nil && skillLevels.isEmpty && gender == nil && feeType == nil
     }
 }
 
@@ -97,6 +97,9 @@ struct ApplyView: View {
     @State private var isFilterSheetPresented: Bool = false
     @State private var isScrolling: Bool = false
     
+    // 달력 선택된 날짜
+    @State private var selectedDate: Date = Date()
+    
     // 필터 관련 상태
     @State private var currentFilter = GameFilter() // 현재 적용된 필터(적용하기를 눌렀을때만 업데이트됨)
     
@@ -104,12 +107,18 @@ struct ApplyView: View {
         NavigationStack {
             ZStack {
                 VStack(alignment: .leading, spacing: 0) {
-                    // 서브타이틀
-                    Text("함께할 팀원을 찾아보세요")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 16)
+                    // 커스텀 타이틀 (네비게이션 타이틀 대신)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("용병 모집")
+                            .font(.title.bold())
+                        
+                        Text("함께할 팀원을 찾아보세요")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)  // 최소한의 상단 여백
+                    .padding(.bottom, 12)
                     
                     // 스크랩, 필터, 지역 버튼 (통일된 스타일)
                     HStack(spacing: 12) {
@@ -173,12 +182,20 @@ struct ApplyView: View {
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
                     
+                    // 주간 달력 추가
+                    CalendarView(selectedDate: $selectedDate)
+                        .frame(height: 200)
+                        .clipped()
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, -100)
+                    
                     // 게시글 공고 스크롤뷰
                     ScrollView {
                         LazyVStack(spacing: 16) {
                             // 스크롤 감지를 위한 투명한 뷰
                             Rectangle()
-                                .fill(Color.clear)
+                                .fill(Color.clear
+                                )
                                 .frame(height: 1)
                                 .id("top")
                                 .onAppear {
@@ -188,12 +205,10 @@ struct ApplyView: View {
                                     isScrolling = true
                                 }
                             
-                            // 샘플 게시글들
-                            ForEach(1...20, id: \.self) { index in
-                                PostCardView(title: "게시글 \(index)", content: "내용 \(index)")
-                            }
+                            ApplyMatchListView()
                         }
                         .padding(.horizontal, 16)
+                        .padding(.top, 0)
                         .padding(.bottom, 100) // 플로팅 버튼을 위한 여백
                     }
                 }
@@ -209,7 +224,7 @@ struct ApplyView: View {
                 .padding(.trailing, 16)
                 .padding(.bottom, 34) // Safe Area 고려
             }
-            .navigationTitle("용병 모집")
+            //.navigationTitle("용병 모집")
         }
         .sheet(isPresented: $isRegionSheetPresented) {
             RegionBottomSheet(
@@ -250,29 +265,29 @@ struct ApplyView: View {
     }
 }
 
-// 샘플 게시글 카드 뷰
-struct PostCardView: View {
-    let title: String
-    let content: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
-                .foregroundColor(.primary)
-            
-            Text(content)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .lineLimit(3)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-    }
-}
+//// 샘플 게시글 카드 뷰
+//struct PostCardView: View {
+//    let title: String
+//    let content: String
+//    
+//    var body: some View {
+//        VStack(alignment: .leading, spacing: 8) {
+//            Text(title)
+//                .font(.headline)
+//                .foregroundColor(.primary)
+//            
+//            Text(content)
+//                .font(.body)
+//                .foregroundColor(.secondary)
+//                .lineLimit(3)
+//        }
+//        .frame(maxWidth: .infinity, alignment: .leading)
+//        .padding()
+//        .background(Color(.systemBackground))
+//        .cornerRadius(12)
+//        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+//    }
+//}
 
 #Preview {
     NavigationStack {

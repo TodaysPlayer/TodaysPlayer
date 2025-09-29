@@ -11,13 +11,13 @@ import SwiftUI
 /// MyMatchView
 /// - 내가 신청 / 작성한 경기
 struct MyMatchView: View {
-    let testMatchData: MatchInfo
+    let matchInfo: MatchInfo
     
     var body: some View {
         VStack(spacing: 20) {
-            MyMatchTagView(matchInfo: testMatchData)
+            MyMatchTagView(matchInfo: matchInfo)
                     
-            MyMatchInfoView(matchInfo: testMatchData)
+            MyMatchInfoView(matchInfo: matchInfo)
         }
     }
 }

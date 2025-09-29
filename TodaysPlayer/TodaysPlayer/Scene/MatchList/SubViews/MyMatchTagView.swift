@@ -28,6 +28,7 @@ struct MatchTagStyle: ViewModifier {
 
 
 struct MyMatchTagView: View {
+    @State private var isShowAlert: Bool = false
     let matchInfo: MatchInfo
     
     var body: some View {
@@ -35,30 +36,38 @@ struct MyMatchTagView: View {
             // 태그
             HStack(spacing: 10) {
                 Text(matchInfo.matchType.rawValue)
-                    .matchTagStyle(tagType: matchInfo.matchType.rawValue == MatchTypeTags.futsal.rawValue ? MatchTypeTags.futsal : MatchTypeTags.soccer)
+                    .matchTagStyle(tagType: matchInfo.matchType.rawValue == MatchType.futsal.rawValue ? MatchType.futsal : MatchType.soccer)
 
                 Text(matchInfo.applyStatus.rawValue)
+                    .matchTagStyle(tagType: matchInfo.applyStatus)
                 
                 if matchInfo.maxCount - matchInfo.applyCount == 1 {
-                    Text(MatchStatusTag.lastOne.rawValue)
-                        .matchTagStyle(tagType: MatchStatusTag.lastOne)
+                    Text(MatchInfoStatus.lastOne.rawValue)
+                        .matchTagStyle(tagType: MatchInfoStatus.lastOne)
                 } else {
-                    Text(MatchStatusTag.deadline.rawValue)
-                        .matchTagStyle(tagType: MatchStatusTag.deadline)
+                    Text(MatchInfoStatus.deadline.rawValue)
+                        .matchTagStyle(tagType: MatchInfoStatus.deadline)
                 }
             }
-            .font(.subheadline)
+            .font(.system(size: 14))
             
             Spacer()
             
             // x버튼
             Button {
                 print("x버튼 탭")
+                isShowAlert = true
             } label: {
                 Image(systemName: "xmark")
             }
             .padding(.horizontal, 10)
             .foregroundStyle(Color.black)
+            .alert("삭제할까요?", isPresented: $isShowAlert) {
+                Button("취소"){
+                    isShowAlert = false
+                }
+                Button("삭제"){}
+            }
         }
     }
 }

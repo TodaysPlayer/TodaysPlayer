@@ -12,7 +12,7 @@ import Foundation
 let mockMatchData: [MatchInfo] = [
     // 1. 풋살 - 마감 임박 (11/12)
     MatchInfo(
-        matchId: "M001",
+        matchId: 1,
         matchType: .futsal,
         applyStatus: .confirmed,
         matchLocation: "강남 논현동 풋살장",
@@ -24,12 +24,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "남성",
         levelLimit: "초/중급",
         imageURL: "url_001",
-        postUserName: "축구왕 슛돌이"
+        postUserName: "용헌",
+        rejectionReason: ""
     ),
     
     // 2. 축구 - 여유 (10/20)
     MatchInfo(
-        matchId: "M002",
+        matchId: 2,
         matchType: .soccer,
         applyStatus: .confirmed,
         matchLocation: "분당 탄천 운동장",
@@ -41,12 +42,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "무관",
         levelLimit: "중급",
         imageURL: "url_002",
-        postUserName: "캡틴 박"
+        postUserName: "캡틴 박",
+        rejectionReason: ""
     ),
     
     // 3. 풋살 - 꽉 참 (12/12) - 너만 오면 GO
     MatchInfo(
-        matchId: "M003",
+        matchId: 3,
         matchType: .futsal,
         applyStatus: .confirmed,
         matchLocation: "수원 매탄동 실내 구장",
@@ -58,12 +60,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "남성",
         levelLimit: "무관",
         imageURL: "url_003",
-        postUserName: "이매치성사"
+        postUserName: "이매치성사",
+        rejectionReason: ""
     ),
     
     // 4. 축구 - 신청 대기 중 (5/22)
     MatchInfo(
-        matchId: "M004",
+        matchId: 4,
         matchType: .soccer,
         applyStatus: .standby,
         matchLocation: "고양 종합 운동장",
@@ -75,12 +78,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "남성",
         levelLimit: "초급",
         imageURL: "url_004",
-        postUserName: "운동합시다"
+        postUserName: "운동합시다",
+        rejectionReason: ""
     ),
     
     // 5. 풋살 - 저가 (8/10)
     MatchInfo(
-        matchId: "M005",
+        matchId: 5,
         matchType: .futsal,
         applyStatus: .confirmed,
         matchLocation: "용인 기흥구 풋살장",
@@ -92,12 +96,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "남성",
         levelLimit: "중/상급",
         imageURL: "url_005",
-        postUserName: "저가매치"
+        postUserName: "저가매치",
+        rejectionReason: ""
     ),
     
     // 6. 축구 - 여성 한정 (2/18)
     MatchInfo(
-        matchId: "M006",
+        matchId: 6,
         matchType: .soccer,
         applyStatus: .confirmed,
         matchLocation: "서울 잠원 지구",
@@ -109,12 +114,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "여성",
         levelLimit: "무관",
         imageURL: "url_006",
-        postUserName: "골때리는 그녀들"
+        postUserName: "골때리는 그녀들",
+        rejectionReason: ""
     ),
     
     // 7. 풋살 - 마감 임박 (9/10)
     MatchInfo(
-        matchId: "M007",
+        matchId: 7,
         matchType: .futsal,
         applyStatus: .confirmed,
         matchLocation: "인천 연수구 옥상 구장",
@@ -126,12 +132,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "무관",
         levelLimit: "초급",
         imageURL: "url_007",
-        postUserName: "얼리버드"
+        postUserName: "얼리버드",
+        rejectionReason: ""
     ),
     
     // 8. 축구 - 레벨 상급 (15/22)
     MatchInfo(
-        matchId: "M008",
+        matchId: 8,
         matchType: .soccer,
         applyStatus: .confirmed,
         matchLocation: "파주 NFC 근처",
@@ -143,12 +150,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "남성",
         levelLimit: "상급",
         imageURL: "url_008",
-        postUserName: "프로테스터"
+        postUserName: "프로테스터",
+        rejectionReason: ""
     ),
     
     // 9. 풋살 - 너만 오면 GO (10/10)
     MatchInfo(
-        matchId: "M009",
+        matchId: 9,
         matchType: .futsal,
         applyStatus: .confirmed,
         matchLocation: "부산 해운대구 실내 구장",
@@ -160,12 +168,13 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "무관",
         levelLimit: "중급",
         imageURL: "url_009",
-        postUserName: "부산싸나이"
+        postUserName: "부산싸나이",
+        rejectionReason: ""
     ),
     
     // 10. 축구 - 취소됨/모집 미달 (1/20)
     MatchInfo(
-        matchId: "M010",
+        matchId: 10,
         matchType: .soccer,
         applyStatus: .rejected,
         matchLocation: "대구 수성구 스타디움",
@@ -177,6 +186,7 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "무관",
         levelLimit: "초/중급",
         imageURL: "url_010",
-        postUserName: "용병대모집"
+        postUserName: "용병대모집",
+        rejectionReason: "거절했어요"
     )
 ]

@@ -12,8 +12,10 @@ struct MyListSegmentedControl: View {
     
     var options: [String] = ["신청한 경기","모집중인 경기"]
     
+    var onSelectionChanged: ((Int) -> Void)? = nil
+
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             ForEach(options.indices, id:\.self) { index in
                 ZStack {
                     Rectangle()
@@ -27,6 +29,8 @@ struct MyListSegmentedControl: View {
                         .onTapGesture {
                             withAnimation(.interactiveSpring()) {
                                 preselectedIndex = index
+                                
+                                onSelectionChanged?(index)
                             }
                         }
                 }
@@ -38,4 +42,9 @@ struct MyListSegmentedControl: View {
         .frame(height: 50)
         .cornerRadius(20)
     }
+}
+
+
+#Preview {
+    MyListSegmentedControl(preselectedIndex: 0)
 }
