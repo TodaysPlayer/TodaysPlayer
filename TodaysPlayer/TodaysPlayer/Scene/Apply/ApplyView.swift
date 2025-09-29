@@ -205,10 +205,7 @@ struct ApplyView: View {
                                     isScrolling = true
                                 }
                             
-                            // 샘플 게시글들
-                            ForEach(1...20, id: \.self) { index in
-                                PostCardView(title: "게시글 \(index)", content: "내용 \(index)")
-                            }
+                            ApplyMatchListView()
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 0)
@@ -268,29 +265,29 @@ struct ApplyView: View {
     }
 }
 
-// 샘플 게시글 카드 뷰
-struct PostCardView: View {
-    let title: String
-    let content: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
-                .foregroundColor(.primary)
-            
-            Text(content)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .lineLimit(3)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-    }
-}
+//// 샘플 게시글 카드 뷰
+//struct PostCardView: View {
+//    let title: String
+//    let content: String
+//    
+//    var body: some View {
+//        VStack(alignment: .leading, spacing: 8) {
+//            Text(title)
+//                .font(.headline)
+//                .foregroundColor(.primary)
+//            
+//            Text(content)
+//                .font(.body)
+//                .foregroundColor(.secondary)
+//                .lineLimit(3)
+//        }
+//        .frame(maxWidth: .infinity, alignment: .leading)
+//        .padding()
+//        .background(Color(.systemBackground))
+//        .cornerRadius(12)
+//        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+//    }
+//}
 
 #Preview {
     NavigationStack {
