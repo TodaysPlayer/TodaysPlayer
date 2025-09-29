@@ -10,19 +10,36 @@ import SwiftUI
 struct MatchListView: View {
     var body: some View {
         ZStack {
-            //248 249 251
-            Color.gray.opacity(0.2)
+            Color.gray.opacity(0.1)
+                .ignoresSafeArea()
             
-            VStack {
+            VStack(alignment: .leading, spacing: 15) {
+                Text("나의 매치 관리")
+                    .font(.title)
+                    .bold()
+                
+                MyListSegmentedControl(preselectedIndex: 0)
+                    .padding(.horizontal, 10)
+
                 MatchDashboardView()
-                MyMatchView()
+                    .padding(.horizontal, 10)
+                
+                List(mockMatchData, id: \.self) { match in
+                    MyMatchView(testMatchData: match)
+                        .listRowSeparator(.hidden)
+                        .padding(.vertical, 5)
+                }
+                .listRowSpacing(20)
+                .scrollContentBackground(.hidden)
             }
+            .padding(.horizontal)
         }
-        .ignoresSafeArea()
     }
 }
 
 
+
 #Preview {
     MatchListView()
+    
 }

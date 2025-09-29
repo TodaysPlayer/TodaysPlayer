@@ -40,7 +40,7 @@ struct MatchInfoEntity: Decodable {
 
 /// 매칭 정보 Domain Model
 /// - 앱에서 사용
-struct MatchInfo {
+struct MatchInfo: Hashable {
     let matchId: String
     let matchType: MatchType
     let applyStatus: ApplyStatus

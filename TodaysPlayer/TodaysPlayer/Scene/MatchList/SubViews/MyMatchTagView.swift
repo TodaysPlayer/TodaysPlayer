@@ -7,45 +7,6 @@
 
 import SwiftUI
 
-/// 경기정보 태그 enum
-enum MatchInfoTag: String {
-    case futsal = "풋살"
-    case soccer = "축구"
-    case deadline = "마감임박"
-    case lastOne = "너만 오면 GO"
-    case location
-    
-    var backgroundColor: Color {
-        switch self {
-        case .futsal: .green
-        case .soccer: .blue
-        case .deadline: .red
-        case .lastOne:  .orange
-        case .location: .mint
-        }
-    }
-    
-    var textColor: Color {
-        switch self {
-        case .futsal: .white
-        case .soccer: .white
-        case .deadline: .white
-        case .lastOne:  .white
-        case .location: .white
-        }
-    }
-    
-    var borderColor: Color {
-        switch self {
-        case .futsal: .green
-        case .soccer: .blue
-        case .deadline: .red
-        case .lastOne:  .orange
-        case .location: .mint
-        }
-    }
-}
-
 
 /// 경기정보 태그 스타일
 struct MatchTagStyle: ViewModifier {
@@ -76,17 +37,14 @@ struct MyMatchTagView: View {
                 Text(matchInfo.matchType.rawValue)
                     .matchTagStyle(tagType: matchInfo.matchType == .futsal ? .futsal : .soccer)
                 
-                #warning("데드라인 어떻게 설정할지 정해야함")
-                Text(MatchInfoTag.deadline.rawValue)
-                    .matchTagStyle(tagType: .deadline)
                 
                 if matchInfo.maxCount - matchInfo.applyCount == 1 {
                     Text(MatchInfoTag.lastOne.rawValue)
                         .matchTagStyle(tagType: .lastOne)
+                } else {
+                    Text(MatchInfoTag.deadline.rawValue)
+                        .matchTagStyle(tagType: .deadline)
                 }
-                
-                Text(matchInfo.matchLocation)
-                    .matchTagStyle(tagType: .location)
             }
             
             Spacer()
@@ -100,10 +58,5 @@ struct MyMatchTagView: View {
             .padding(.horizontal, 10)
             .foregroundStyle(Color.black)
         }
-        .padding(.horizontal)
     }
 }
-
-//#Preview {
-//    MyMatchTagView()
-//}

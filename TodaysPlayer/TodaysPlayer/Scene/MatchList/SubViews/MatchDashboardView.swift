@@ -29,7 +29,7 @@ struct MatchDashboardComponentView: View {
         }
         .padding(.vertical, 20)
         .background(Color.white)
-        .clipShape(.buttonBorder)
+        .clipShape(RoundedCorner())
     }
 }
 
@@ -54,7 +54,7 @@ struct MatchDashboardView: View {
                 buttonTitle: "마감/종료",
                 buttonCountTitle: 0
             )
-        } 
+        }
     }
 }
 
