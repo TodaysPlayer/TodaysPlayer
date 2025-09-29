@@ -15,7 +15,7 @@ protocol MatchInfoTag {
 }
  
 /// 경기타입 태그 enum
-enum MatchTypeTags: String, MatchInfoTag {
+enum MatchType: String, MatchInfoTag {
     case futsal = "풋살"
     case soccer = "축구"
     
@@ -43,7 +43,7 @@ enum MatchTypeTags: String, MatchInfoTag {
     }
 }
 
-enum MatchStatusTag: String, MatchInfoTag {
+enum MatchInfoStatus: String, MatchInfoTag {
     case deadline = "마감임박"
     case lastOne = "너만 오면 GO"
 
@@ -65,3 +65,30 @@ enum MatchStatusTag: String, MatchInfoTag {
         }
     }
 }
+
+enum ApplyStatus: String, MatchInfoTag {
+    case standby = "대기중"
+    case confirmed = "확정"
+    case rejected = "거절"
+    
+    var title: String { rawValue }
+
+    var backgroundColor: Color {
+        switch self {
+        case .standby: .green
+        case .confirmed: .blue
+        case .rejected: .red
+        }
+    }
+
+    var textColor: Color { .white }
+
+    var borderColor: Color {
+        switch self {
+        case .standby: .green
+        case .confirmed: .blue
+        case .rejected: .red
+        }
+    }
+}
+
