@@ -53,7 +53,7 @@ struct HomeView: View {
             }
         }
         .onAppear {
-            // onAppear는 제거 - init()에서 이미 호출됨
+            
         }
         .alert("샘플 데이터 생성", isPresented: $showSampleDataAlert) {
             Button("확인") { }
