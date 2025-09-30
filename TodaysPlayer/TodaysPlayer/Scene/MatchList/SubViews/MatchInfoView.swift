@@ -31,12 +31,11 @@ private struct LinearGaugeProgressStyle: ProgressViewStyle {
 
 
 /// 경기정보 View
-struct MyMatchInfoView: View {
-    @State var myName: String = "용헌"
-    
+struct MatchInfoView: View {    
     let matchInfo: MatchInfo
-    var showRejectionButton: Bool = false // 거절사유 버튼 플래그 추가
-    
+//    var showRejectionButton: Bool = false // 거절사유 버튼 플래그 추가
+    let postedMatchCase: PostedMatchCase
+
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             // 제목
@@ -94,7 +93,7 @@ struct MyMatchInfoView: View {
             
             
             // 내가 작성한 글이면 없애기
-            if matchInfo.postUserName != myName {
+            if postedMatchCase != .myRecruitingMatch {
                 Divider()
 
                 HStack {
@@ -108,7 +107,7 @@ struct MyMatchInfoView: View {
             }
             
             // 조건부: 거절 사유 버튼
-            if showRejectionButton && matchInfo.applyStatus == .rejected {
+            if postedMatchCase == .appliedMatch && matchInfo.applyStatus == .rejected {
                 NavigationLink {
                     RejectionReasonView(matchId: matchInfo.matchId,
                                         rejectionReasion: matchInfo.rejectionReason)
@@ -136,21 +135,3 @@ struct MyMatchInfoView: View {
     }
 }
 
-#Preview {
-    MyMatchInfoView(matchInfo: MatchInfo(
-        matchId: 0,
-        matchType: .futsal,
-        applyStatus: .rejected,
-        matchLocation: "연수구",
-        matchTitle: "Test",
-        matchTime: "08:00~10:00",
-        applyCount: 10,
-        maxCount: 12,
-        matchFee: 3000,
-        genderLimit: "무관",
-        levelLimit: "무관",
-        imageURL: "",
-        postUserName: "용헌",
-        rejectionReason: "거절함"
-    ))
-}

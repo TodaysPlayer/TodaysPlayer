@@ -30,15 +30,20 @@ struct MatchListView: View {
                     ScrollView {
                         LazyVStack(spacing: 16) {
                             ForEach(viewModel.matchListDatas, id: \.self) { match in
-                                MyMatchView(
-                                    matchInfo: match,
-                                    showDeleteButton: true,
-                                    showApplyStatus: true,
-                                    showRejectionButton: true
-                                )
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(12)
+                                VStack(spacing: 20) {
+                                    MatchTagView(
+                                        matchInfo: match,
+                                        postedMatchCase: viewModel.postedMatchCase
+                                    )
+                                            
+                                    MatchInfoView(
+                                        matchInfo: match,
+                                        postedMatchCase: viewModel.postedMatchCase
+                                    )
+                                }
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
                             }
                         }
                         .padding(.vertical)

@@ -17,9 +17,10 @@ struct RejectionReasonView: View {
             Text("경기 주최자의 거절사유입니다.")
                 .padding(.top, 20)
             
-            Text("경기 내용")
+            Text(rejectionReasion)
                 .padding()
                 .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.gray.opacity(0.3))
                 .clipShape(RoundedCorner())
             

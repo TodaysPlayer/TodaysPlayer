@@ -14,12 +14,11 @@ struct ApplyMatchListView: View {
         LazyVStack(spacing: 16) {
             ForEach(matchList, id: \.matchId) { match in
                 NavigationLink(destination: ApplyMatchDetailView(matchInfo: match)) {
-                    MyMatchView(
-                        matchInfo: match,
-                        showDeleteButton: false, // x버튼 숨김
-                        showApplyStatus: false,  // 신청 상태 숨김
-                        showRejectionButton: false // 거절사유 버튼 숨김
-                    )
+                    VStack(spacing: 20) {
+                        MatchTagView(matchInfo: match, postedMatchCase: .allMatches)
+                        
+                        MatchInfoView(matchInfo: match, postedMatchCase: .allMatches)
+                    }
                 }
                 .buttonStyle(PlainButtonStyle()) // NavigationLink의 기본 파란색 제거
             }
