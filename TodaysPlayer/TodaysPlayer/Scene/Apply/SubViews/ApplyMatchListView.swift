@@ -8,11 +8,52 @@
 import SwiftUI
 
 struct ApplyMatchListView: View {
+    let filter: GameFilter
+    
     let matchList: [MatchInfo] = mockMatchData
+    
+    // 필터링된 매치 목록
+    var filteredMatches: [MatchInfo] {
+        matchList.filter { match in
+            // matchType 필터
+            if let filterMatchType = filter.matchType,
+               match.matchType != filterMatchType {
+                return false
+            }
+            
+            // skillLevels 필터 (복수 선택)
+            if !filter.skillLevels.isEmpty {
+                let hasMatchingLevel = filter.skillLevels.contains { skillLevel in
+                    match.levelLimit == skillLevel.rawValue
+                }
+                if !hasMatchingLevel {
+                    return false
+                }
+            }
+            
+            // gender 필터
+            if let filterGender = filter.gender,
+               match.genderLimit != filterGender.rawValue {
+                return false
+            }
+            
+            // feeType 필터
+            if let filterFeeType = filter.feeType {
+                switch filterFeeType {
+                case .free:
+                    if match.matchFee != 0 { return false }
+                case .paid:
+                    if match.matchFee == 0 { return false }
+                }
+            }
+            
+            return true
+        }
+    }
     
     var body: some View {
         LazyVStack(spacing: 16) {
-            ForEach(matchList, id: \.matchId) { match in
+            ForEach(filteredMatches, id: \.matchId) { match in
                 NavigationLink(destination: ApplyMatchDetailView(
                     matchInfo: match,
                     postedMatchCase: .allMatches
@@ -24,7 +65,26 @@ struct ApplyMatchListView: View {
                         MatchInfoView(matchInfo: match, postedMatchCase: .allMatches)
                     }
                 }
-                .buttonStyle(PlainButtonStyle()) // NavigationLink의 기본 파란색 제거
+                .buttonStyle(PlainButtonStyle())
+            }
+            
+            // 필터링 결과가 없을 때 메시지
+            if filteredMatches.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 48))
+                        .foregroundColor(.secondary)
+                    
+                    Text("조건에 맞는 경기가 없습니다")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    
+                    Text("다른 조건으로 검색해보세요")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 60)
             }
         }
     }

@@ -15,7 +15,7 @@ protocol TagStyle {
 }
  
 /// 경기타입 태그 enum
-enum MatchType: String, TagStyle {
+enum MatchType: String, TagStyle, CaseIterable {
     case futsal = "풋살"
     case soccer = "축구"
     
@@ -67,8 +67,8 @@ enum MatchInfoStatus: String, TagStyle {
 }
 
 enum ApplyStatus: String, TagStyle, CaseIterable {
-    case standby = "대기"
-    case accepted = "수락"
+    case standby = "대기중"
+    case accepted = "확정"
     case rejected = "거절"
     
     var title: String { rawValue }
