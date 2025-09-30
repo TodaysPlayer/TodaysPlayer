@@ -27,11 +27,10 @@ struct MatchTagStyle: ViewModifier {
 }
 
 
-struct MyMatchTagView: View {
+struct MatchTagView: View {
     @State private var isShowAlert: Bool = false
     let matchInfo: MatchInfo
-    var showDeleteButton: Bool = false // 삭제버튼 표시여부
-    var showApplyStatus: Bool = false // 신청상태 표시 여부
+    let postedMatchCase: PostedMatchCase
     
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
@@ -41,7 +40,7 @@ struct MyMatchTagView: View {
                     .matchTagStyle(tagType: matchInfo.matchType.rawValue == MatchType.futsal.rawValue ? MatchType.futsal : MatchType.soccer)
                 
                 // 조건부 : 신청상태( 확정/대기중/거절 )
-                if showApplyStatus {
+                if postedMatchCase == .appliedMatch {
                     Text(matchInfo.applyStatus.rawValue)
                         .matchTagStyle(tagType: matchInfo.applyStatus)
                 }
@@ -59,7 +58,7 @@ struct MyMatchTagView: View {
             Spacer()
             
             // 추가: 조건부 x버튼
-            if showDeleteButton{
+            if postedMatchCase == .appliedMatch {
                 Button {
                     print("x버튼 탭")
                     isShowAlert = true

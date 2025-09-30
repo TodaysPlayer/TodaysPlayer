@@ -12,3 +12,5 @@ enum GenderType: String, CaseIterable {
     case female = "female"
     case mixed = "mixed"
 }
+
+
