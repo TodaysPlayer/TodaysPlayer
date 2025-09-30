@@ -48,24 +48,25 @@ struct FilterBottomSheet: View {
             // 필터 옵션들
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    // 경기 종류 섹션
+                    // 경기 종류 섹션 - MatchType 사용
                     filterSection(title: "경기 종류") {
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
                             GridItem(.flexible())
                         ], spacing: 10) {
-                            ForEach(GameType.allCases, id: \.self) { gameType in
+                            ForEach(MatchType.allCases, id: \.self) { matchType in
                                 filterToggleButton(
-                                    title: gameType.rawValue,
-                                    isSelected: tempFilter.gameType == gameType
+                                    title: matchType.rawValue,
+                                    isSelected: tempFilter.matchType == matchType,
+                                    color: matchType.backgroundColor
                                 ) {
-                                    tempFilter.gameType = (tempFilter.gameType == gameType) ? nil : gameType
+                                    tempFilter.matchType = (tempFilter.matchType == matchType) ? nil : matchType
                                 }
                             }
                         }
                     }
                     
-                    // 실력 레벨 섹션
+                    // 실력 레벨 섹션 - SkillLevel enum 사용
                     filterSection(title: "실력") {
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
@@ -88,7 +89,7 @@ struct FilterBottomSheet: View {
                         }
                     }
                     
-                    // 성별 섹션
+                    // 성별 섹션 - Gender enum 사용
                     filterSection(title: "성별") {
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
@@ -105,7 +106,7 @@ struct FilterBottomSheet: View {
                         }
                     }
                     
-                    // 참가비 섹션
+                    // 참가비 섹션 - FeeType enum 사용
                     filterSection(title: "참가비") {
                         HStack(spacing: 10) {
                             ForEach(FeeType.allCases, id: \.self) { feeType in
@@ -187,8 +188,13 @@ struct FilterBottomSheet: View {
         }
     }
     
-    // 필터 토글 버튼 헬퍼 함수
-    private func filterToggleButton(title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+    // 필터 토글 버튼 헬퍼 함수 - color 파라미터 추가
+    private func filterToggleButton(
+        title: String,
+        isSelected: Bool,
+        color: Color = .blue,
+        action: @escaping () -> Void
+    ) -> some View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: 12, weight: .medium))
@@ -196,7 +202,7 @@ struct FilterBottomSheet: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .frame(maxWidth: .infinity)
-                .background(isSelected ? Color.blue : Color(.systemGray5))
+                .background(isSelected ? color : Color(.systemGray5))
                 .cornerRadius(20)
         }
     }

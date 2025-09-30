@@ -14,7 +14,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 1,
         matchType: .futsal,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "강남 논현동 풋살장",
         matchTitle: "주말 오전 2파전 (11명째 모십니다!)",
         matchTime: "10:00~12:00",
@@ -32,7 +32,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 2,
         matchType: .soccer,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "분당 탄천 운동장",
         matchTitle: "성남 지역 친선 축구 경기",
         matchTime: "14:00~16:00",
@@ -50,7 +50,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 3,
         matchType: .futsal,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "수원 매탄동 실내 구장",
         matchTitle: "오늘 저녁 급 벙개 풋살",
         matchTime: "20:00~22:00",
@@ -86,7 +86,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 5,
         matchType: .futsal,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "용인 기흥구 풋살장",
         matchTitle: "저렴한 구장비, 2시간 빡겜!",
         matchTime: "18:00~20:00",
@@ -104,7 +104,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 6,
         matchType: .soccer,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "서울 잠원 지구",
         matchTitle: "여성 축구팀 연습 경기",
         matchTime: "16:00~18:00",
@@ -122,7 +122,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 7,
         matchType: .futsal,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "인천 연수구 옥상 구장",
         matchTitle: "인천 지역 주중 풋살",
         matchTime: "07:00~09:00",
@@ -140,7 +140,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 8,
         matchType: .soccer,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "파주 NFC 근처",
         matchTitle: "실력자만! 상급 매치",
         matchTime: "13:00~16:00",
@@ -158,7 +158,7 @@ let mockMatchData: [MatchInfo] = [
     MatchInfo(
         matchId: 9,
         matchType: .futsal,
-        applyStatus: .confirmed,
+        applyStatus: .accepted,
         matchLocation: "부산 해운대구 실내 구장",
         matchTitle: "지금 바로 10명 풀방!",
         matchTime: "19:00~21:00",

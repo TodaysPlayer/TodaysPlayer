@@ -18,12 +18,8 @@ struct RejectionReasonView: View {
                 .padding(.top, 20)
             
             Text(rejectionReasion)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.gray.opacity(0.3))
-                .clipShape(RoundedCorner())
-            
+                .modifier(DescriptionTextStyle())
+
             Spacer()
             
             Button("확인") {
@@ -33,7 +29,7 @@ struct RejectionReasonView: View {
             .frame(maxWidth: .infinity)
             .foregroundStyle(Color.black)
             .background(Color.green)
-            .clipShape(RoundedCorner())
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .padding()
         .navigationTitle("거절사유")

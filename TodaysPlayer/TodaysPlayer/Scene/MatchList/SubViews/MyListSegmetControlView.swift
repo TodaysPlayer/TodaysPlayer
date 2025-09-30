@@ -10,7 +10,7 @@ import SwiftUI
 struct MyListSegmentedControl: View {
     @State var preselectedIndex: Int
     
-    var options: [String] = ["신청한 경기","모집중인 경기"]
+    var options: [String] = ["신청한 경기","등록한 경기"]
     
     var onSelectionChanged: ((Int) -> Void)? = nil
 

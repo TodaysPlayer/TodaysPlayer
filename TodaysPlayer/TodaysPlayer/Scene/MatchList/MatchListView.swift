@@ -33,8 +33,10 @@ struct MatchListView: View {
                                 VStack(spacing: 20) {
                                     MatchTagView(
                                         matchInfo: match,
-                                        postedMatchCase: viewModel.postedMatchCase
-                                    )
+                                        postedMatchCase: viewModel.postedMatchCase,
+                                    ) {
+                                        viewModel.deleteAppliedMatch(matchId: $0)
+                                    }
                                             
                                     MatchInfoView(
                                         matchInfo: match,
@@ -53,10 +55,4 @@ struct MatchListView: View {
             }
         }
     }
-}
-
-
-
-#Preview {
-    MatchListView()
 }

@@ -29,7 +29,7 @@ struct MatchDashboardComponentView: View {
         }
         .padding(.vertical, 20)
         .background(Color.white)
-        .clipShape(RoundedCorner())
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 

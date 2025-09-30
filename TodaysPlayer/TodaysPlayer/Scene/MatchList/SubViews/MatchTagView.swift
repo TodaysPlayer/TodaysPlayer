@@ -8,29 +8,11 @@
 import SwiftUI
 
 
-/// 경기정보 태그 스타일
-struct MatchTagStyle: ViewModifier {
-    var matchTag: MatchInfoTag
-    
-    func body(content: Content) -> some View {
-        content
-            .padding(.vertical, 5)
-            .padding(.horizontal, 15)
-            .foregroundStyle(matchTag.textColor)
-            .background(matchTag.backgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(matchTag.borderColor.opacity(0.2), lineWidth: 1)
-            )
-    }
-}
-
-
 struct MatchTagView: View {
     @State private var isShowAlert: Bool = false
     let matchInfo: MatchInfo
     let postedMatchCase: PostedMatchCase
+    var deleteAppliedMatch: ((Int) -> Void)? = nil
     
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
@@ -71,7 +53,11 @@ struct MatchTagView: View {
                     Button("취소"){
                         isShowAlert = false
                     }
-                    Button("삭제"){}
+                    
+                    Button("삭제"){
+                        deleteAppliedMatch?(matchInfo.matchId)
+                    }
+                    .foregroundStyle(Color.green)
                 }
             }
         }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-protocol MatchInfoTag {
+protocol TagStyle {
     var backgroundColor: Color { get }
     var textColor: Color { get }
     var borderColor: Color { get }
@@ -15,7 +15,7 @@ protocol MatchInfoTag {
 }
  
 /// 경기타입 태그 enum
-enum MatchType: String, MatchInfoTag {
+enum MatchType: String, TagStyle, CaseIterable {
     case futsal = "풋살"
     case soccer = "축구"
     
@@ -43,7 +43,7 @@ enum MatchType: String, MatchInfoTag {
     }
 }
 
-enum MatchInfoStatus: String, MatchInfoTag {
+enum MatchInfoStatus: String, TagStyle {
     case deadline = "마감임박"
     case lastOne = "너만 오면 GO"
 
@@ -66,9 +66,9 @@ enum MatchInfoStatus: String, MatchInfoTag {
     }
 }
 
-enum ApplyStatus: String, MatchInfoTag {
+enum ApplyStatus: String, TagStyle, CaseIterable {
     case standby = "대기중"
-    case confirmed = "확정"
+    case accepted = "확정"
     case rejected = "거절"
     
     var title: String { rawValue }
@@ -76,7 +76,7 @@ enum ApplyStatus: String, MatchInfoTag {
     var backgroundColor: Color {
         switch self {
         case .standby: .green
-        case .confirmed: .blue
+        case .accepted: .blue
         case .rejected: .red
         }
     }
@@ -86,7 +86,7 @@ enum ApplyStatus: String, MatchInfoTag {
     var borderColor: Color {
         switch self {
         case .standby: .green
-        case .confirmed: .blue
+        case .accepted: .blue
         case .rejected: .red
         }
     }

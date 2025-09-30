@@ -27,24 +27,17 @@ enum Region: String, CaseIterable {
     case jeju = "제주"
 }
 
-// 경기 종류 enum
-enum GameType: String, CaseIterable {
-    case soccer = "축구"
-    case futsal = "풋살"
-}
-
 // 실력 레벨 enum
 enum SkillLevel: String, CaseIterable {
-    case professional = "프로"
-    case elite = "선출"
-    case amateur = "아마추어"
+    case professional = "상급"
+    case elite = "중급"
+    case amateur = "초급"
     case beginner = "입문자"
 }
 
-// 성별 enum
 enum Gender: String, CaseIterable {
-    case male = "남자만"
-    case female = "여자만"
+    case male = "남성"
+    case female = "여성"
 }
 
 // 참가비 enum
@@ -55,7 +48,7 @@ enum FeeType: String, CaseIterable {
 
 // 필터 데이터 구조체
 struct GameFilter {
-    var gameType: GameType? = nil // 단일 선택: 축구 or 풋살
+    var matchType: MatchType? = nil // 단일 선택: 축구 or 풋살
     var skillLevels: Set<SkillLevel> = [] // 복수선택: 프로, 아마추어 둘 다 가능
     var gender: Gender? = nil // 단일 선택: 남자만 or 여자만
     var feeType: FeeType? = nil // 단일 선택: 무료 or 유료
@@ -64,18 +57,17 @@ struct GameFilter {
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
         
-        // 복수선택 항목들은 배열로 전송
-        if let gameType = gameType {
-            dict["gameType"] = gameType.rawValue
+        if let matchType = matchType {
+            dict["matchType"] = matchType.rawValue
         }
         
         if !skillLevels.isEmpty {
-            dict["skillLevels"] = skillLevels.map { $0.rawValue }
+            dict["levelLimits"] = skillLevels.map { $0.rawValue }  // String 배열로 변환
         }
         
         // 단일 선택 항목들은 단일 값으로 전송
         if let gender = gender {
-            dict["gender"] = gender.rawValue
+            dict["genderLimit"] = gender.rawValue
         }
         
         if let feeType = feeType {
@@ -87,7 +79,7 @@ struct GameFilter {
     
     // 필터가 비어있는지 확인
     var isEmpty: Bool {
-        return gameType == nil && skillLevels.isEmpty && gender == nil && feeType == nil
+        return matchType == nil && skillLevels.isEmpty && gender == nil && feeType == nil
     }
 }
 
@@ -205,7 +197,7 @@ struct ApplyView: View {
                                     isScrolling = true
                                 }
                             
-                            ApplyMatchListView()
+                            ApplyMatchListView(filter: currentFilter)
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 0)
