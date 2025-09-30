@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct NearbyMatchesCard: View {
-    let matches: [Match] // 이미 필터링되고 정렬된 매치들 (최대 3개)
-    let viewModel: HomeViewModel // 거리 계산용
+    let matches: [Match]
+    let viewModel: HomeViewModel
     
-    // matches는 이미 ViewModel에서 필터링되고 정렬된 상태 (최대 3개)
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

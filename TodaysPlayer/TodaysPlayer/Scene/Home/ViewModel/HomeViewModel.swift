@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Observation
+import CoreLocation
 
 @Observable
 class HomeViewModel {
@@ -22,6 +23,9 @@ class HomeViewModel {
     var user: User?
     var regions: [RegionData] = []
     var appliedMatchIds: Set<String> = [] // 사용자가 신청한 매치 ID들
+    
+    // 위치 관련
+    let locationManager = LocationManager()
     
     
     // 로딩 상태
@@ -41,6 +45,8 @@ class HomeViewModel {
     init() {
         Task {
             await loadInitialData()
+            // 홈 화면 진입 시 위치 권한 요청
+            await requestLocationPermission()
         }
     }
     
@@ -227,11 +233,19 @@ class HomeViewModel {
     private func calculateDistanceValue(to coordinates: Coordinates) -> Double {
         // 두 좌표 간의 거리 계산 (km)
         
-        let userLatitude = 37.5665  // 서울시청 근처 (실제로는 사용자 위치 사용)
-        let userLongitude = 126.9780
+        guard let userLocation = locationManager.currentLocation else {
+            // 사용자 위치를 가져올 수 없으면 기본값(판교역) 사용
+            let defaultLatitude = 37.394726159
+            let defaultLongitude = 127.111209047
+            
+            return calculateDistanceBetweenCoordinates(
+                lat1: defaultLatitude, lon1: defaultLongitude,
+                lat2: coordinates.latitude, lon2: coordinates.longitude
+            )
+        }
         
         return calculateDistanceBetweenCoordinates(
-            lat1: userLatitude, lon1: userLongitude,
+            lat1: userLocation.coordinate.latitude, lon1: userLocation.coordinate.longitude,
             lat2: coordinates.latitude, lon2: coordinates.longitude
         )
     }
@@ -248,8 +262,9 @@ class HomeViewModel {
         }
     }
     
-    /// Haversine 공식을 사용한 두 좌표 간 거리 계산
     private func calculateDistanceBetweenCoordinates(lat1: Double, lon1: Double, lat2: Double, lon2: Double) -> Double {
+        // Haversine 공식을 사용한 두 좌표 간 거리 계산
+        
         let earthRadius = 6371.0 // 지구 반지름 (km)
         
         let dLat = (lat2 - lat1) * .pi / 180
@@ -262,5 +277,12 @@ class HomeViewModel {
         let c = 2 * atan2(sqrt(a), sqrt(1-a))
         
         return earthRadius * c
+    }
+    
+    func requestLocationPermission() async {
+        // 위치 권한 요청
+        await MainActor.run {
+            self.locationManager.requestLocationPermission()
+        }
     }
 }
