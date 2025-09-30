@@ -39,3 +39,4 @@ struct ErrorView: View {
         onRetry: {}
     )
 }
+

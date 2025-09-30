@@ -21,6 +21,7 @@ struct PromotionalBanner: View {
                 // 순환 리스트에서 첫 번째와 마지막 아이템을 추가
                 ForEach(-1..<viewModel.bannerData.count + 1, id: \.self) { i in
                     let item = viewModel.bannerData[i < 0 ? viewModel.bannerData.count - 1 : (i >= viewModel.bannerData.count ? 0 : i)]
+                    
                     BannerItemView(bannerItem: item)
                         .tag(i)
                 }
@@ -28,17 +29,19 @@ struct PromotionalBanner: View {
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(height: 160)
             .clipShape(RoundedRectangle(cornerRadius: 16))
-            .simultaneousGesture(
-                DragGesture()
+            .simultaneousGesture( // delay를 두지 않고, 바로 제스쳐를 감지
+                DragGesture()   // 드래그 감지
                     .onChanged { _ in
                         // 드래그 중 타이머 중지
                         isDragging = true
+                        
                         timer.upstream.connect().cancel()
                     }
                     .onEnded { _ in
-                        // 드래그 종료 타이머 활성화
+                        // 드래그 종료 시, 타이머 재활성화
                         isDragging = false
                         getInfiniteScrollIndex()
+                        
                         timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
                     }
             )
@@ -49,7 +52,7 @@ struct PromotionalBanner: View {
                 }
             }
             .onReceive(timer) { _ in
-                // 타이머 가동 시 인덱스 하나씩 옮김
+                // 타이머 가동 시, 인덱스 하나씩 옮김
                 withAnimation(.easeInOut(duration: 0.5)) {
                     currentIndex += 1
                 }
