@@ -35,6 +35,7 @@ struct MyMatchInfoView: View {
     @State var myName: String = "용헌"
     
     let matchInfo: MatchInfo
+    var showRejectionButton: Bool = false // 거절사유 버튼 플래그 추가
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -106,7 +107,8 @@ struct MyMatchInfoView: View {
                 }
             }
             
-            if matchInfo.applyStatus == .rejected {
+            // 조건부: 거절 사유 버튼
+            if showRejectionButton && matchInfo.applyStatus == .rejected {
                 NavigationLink {
                     RejectionReasonView(matchId: matchInfo.matchId,
                                         rejectionReasion: matchInfo.rejectionReason)
