@@ -30,7 +30,12 @@ struct MatchListView: View {
                     ScrollView {
                         LazyVStack(spacing: 16) {
                             ForEach(viewModel.matchListDatas, id: \.self) { match in
-                                MyMatchView(matchInfo: match)
+                                MyMatchView(
+                                    matchInfo: match,
+                                    showDeleteButton: true,
+                                    showApplyStatus: true,
+                                    showRejectionButton: true
+                                )
                                     .padding()
                                     .background(Color.white)
                                     .cornerRadius(12)
@@ -49,5 +54,4 @@ struct MatchListView: View {
 
 #Preview {
     MatchListView()
-    
 }
