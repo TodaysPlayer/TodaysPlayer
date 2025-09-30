@@ -14,8 +14,8 @@ struct ApplyMatchDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // 태그들 (NEW!)
-                MatchTagsView(matchInfo: matchInfo)
+                // 기존 MatchTagView 재사용
+                MatchTagView(matchInfo: matchInfo, postedMatchCase: .allMatches)
                 
                 // 헤더
                 MatchDetailHeaderView(
@@ -52,62 +52,6 @@ struct ApplyMatchDetailView: View {
         .safeAreaInset(edge: .bottom) {
             MatchActionButtonsView(matchInfo: matchInfo)
         }
-    }
-}
-
-// MARK: - 태그 뷰 (NEW!)
-struct TagView: View {
-    let tag: MatchInfoTag
-    
-    var body: some View {
-        Text(tag.title)
-            .font(.caption)
-            .fontWeight(.semibold)
-            .foregroundColor(tag.textColor)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(tag.backgroundColor)
-            .cornerRadius(4)
-            .overlay(
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(tag.borderColor, lineWidth: 1)
-            )
-    }
-}
-
-// MARK: - 태그들을 표시하는 뷰 (수정됨)
-struct MatchTagsView: View {
-    let matchInfo: MatchInfo
-    
-    var body: some View {
-        HStack(spacing: 8) {
-            // 매치 타입 태그 (풋살/축구)
-            TagView(tag: matchInfo.matchType)
-            
-            // 추가 상태 태그 (마감임박, 너만 오면 GO 등)
-            if let statusTag = getMatchInfoStatus() {
-                TagView(tag: statusTag)
-            }
-            
-            Spacer()
-        }
-    }
-    
-    // 매칭 상태에 따른 추가 태그 결정
-    private func getMatchInfoStatus() -> MatchInfoStatus? {
-        let remainingSlots = matchInfo.maxCount - matchInfo.applyCount
-        
-        // 1명만 남았으면 "너만 오면 GO"
-        if remainingSlots == 1 {
-            return .lastOne
-        }
-        
-        // 2명 이하 남았으면 "마감임박"
-        if remainingSlots <= 2 && remainingSlots > 1 {
-            return .deadline
-        }
-        
-        return nil
     }
 }
 
