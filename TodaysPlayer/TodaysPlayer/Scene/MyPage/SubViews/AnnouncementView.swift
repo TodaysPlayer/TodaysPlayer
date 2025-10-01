@@ -33,6 +33,7 @@ struct AnnouncementView: View {
             }
             .padding(.vertical)
         }
+        .background(Color.gray.opacity(0.1))
         .navigationTitle("공지사항")
     }
 
@@ -49,7 +50,7 @@ private struct AnnouncementCard: View {
     let item: AnnouncementList
     let isExpanded: Bool
     let onTap: () -> Void
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center, spacing: 12) {
@@ -58,9 +59,9 @@ private struct AnnouncementCard: View {
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)
-
+                
                 Spacer()
-
+                
                 Image(systemName: "chevron.down")
                     .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     .foregroundStyle(.secondary)
@@ -69,7 +70,7 @@ private struct AnnouncementCard: View {
             .contentShape(Rectangle())
             .padding(16)
             .onTapGesture(perform: onTap)
-
+            
             if isExpanded {
                 Divider()
                 Text(item.content)
@@ -83,7 +84,7 @@ private struct AnnouncementCard: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(.secondarySystemBackground))
+                .fill(Color(.white))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)

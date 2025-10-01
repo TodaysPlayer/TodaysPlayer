@@ -17,5 +17,6 @@ struct SettingView: View {
             Text("회원 탈퇴")
                 .foregroundStyle(Color(.red))
         }
+//        .background(Color.gray.opacity(0.1))
     }
 }

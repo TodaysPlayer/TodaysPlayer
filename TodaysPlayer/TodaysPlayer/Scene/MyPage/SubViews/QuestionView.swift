@@ -68,7 +68,8 @@ struct QuestionView: View {
             Text("문의하기")
                 .font(.headline)
                 .foregroundColor(.primary)
-            Text("궁금한 점이나 문제가 있으시면 언제든지 문의해주세요.")
+            Text("궁금한 사항이나 문제가 있으시면 문의해주세요.")
+                .multilineTextAlignment(.center)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
@@ -79,6 +80,7 @@ struct QuestionView: View {
             RoundedRectangle(cornerRadius: 14)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 0)
         )
+        .frame(maxWidth: .infinity)
     }
 
     private var inquiryCard: some View {

@@ -10,6 +10,6 @@ import Foundation
 
 struct NotiView: View {
     var body: some View {
-        Text("Notification Here!")
+        Text("매칭진행/ 완료 등등 알람이 이곳에 표시됩니다!")
     }
 }
