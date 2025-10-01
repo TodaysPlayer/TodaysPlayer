@@ -1,5 +1,5 @@
 //
-//  Faqs.swift
+//  FAQItem.swift
 //  TodaysPlayer
 //
 //  Created by jonghyuck on 10/1/25.

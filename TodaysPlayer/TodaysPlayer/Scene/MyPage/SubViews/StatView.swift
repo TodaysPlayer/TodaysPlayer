@@ -26,7 +26,7 @@ struct StatView: View {
                 .foregroundColor(.gray)
         }
         .frame(maxWidth: .infinity)
-        .padding(20)
+        .padding(25)
         .background(Color.white)
         .cornerRadius(16)
     }
