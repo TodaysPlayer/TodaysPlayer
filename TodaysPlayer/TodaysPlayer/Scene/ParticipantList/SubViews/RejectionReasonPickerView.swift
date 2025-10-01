@@ -7,15 +7,16 @@
 
 import SwiftUI
 
+// 픽커에서 Textfield로 처리할 수 있도록 화면은 빼고 눌렀을 때 textField 가 생기고 키보드가 올라와야함
 struct RejectionReasonPickerView: View {
-    let options: [String] = [
-        "이 경기의 목표와 맞지 않습니다",
-        "팀원 조건과 맞지 않습니다(실력, 성별 등)",
-        "소개글이 짧아서 어떤 분인지 알 수 없습니다",
-        "기타(직접 작성)"
-    ]
+    private let options: [String] = RejectCase.allCases.map { $0.title }
+    let participantData: ParticipantEntity
     
     @State private var selectedOption: String? = nil
+    
+    //    var onRejectButtonAction: ((RejectCase) -> Void)? = nil
+    @Environment(\.dismiss) private var dismiss
+    @Environment(ParticipantListViewModel.self) private var viewModel
     
     var body: some View {
         VStack(spacing: 20) {
@@ -32,7 +33,13 @@ struct RejectionReasonPickerView: View {
                 Spacer()
                 
                 Button("거절하기") {
-                    print("거절하기")
+                    guard let select = selectedOption,
+                          let rejectCase = RejectCase(rawValue: select) else { return }
+                    
+                    dismiss()
+                    
+                    //                    onRejectButtonAction?(rejectCase)
+                    viewModel.rejectButtonTapped(rejectCase, participantData)
                 }
                 .foregroundStyle(Color.green)
             }
@@ -56,8 +63,4 @@ struct RejectionReasonPickerView: View {
             }
         }
     }
-}
-
-#Preview {
-    RejectionReasonPickerView()
 }

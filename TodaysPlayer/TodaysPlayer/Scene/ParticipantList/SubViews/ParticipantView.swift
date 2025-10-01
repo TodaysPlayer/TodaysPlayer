@@ -11,109 +11,98 @@ struct ParticipantView: View {
     let participantData: ParticipantEntity
     @State private var isShowAcceptAlert: Bool = false
     @State private var isShowRejectSheet: Bool = false
-    
-    var onParticipantAction: (((ParticipantEntity, ApplyStatus)) -> Void)? = nil
+    @Environment(ParticipantListViewModel.self) private var viewModel
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10){
-            HStack {
-                Image(systemName: "star.fill")
-                    .frame(width: 50, height: 50, alignment: .center)
-                    .foregroundStyle(Color.green)
-                    .background(Color.gray.opacity(0.2))
-                    .clipShape(Circle())
-                
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("\(participantData.userName)(\(participantData.userNickName))")
-                        .frame(maxWidth: .infinity, alignment: .leading)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 10){
+                HStack {
+                    Image(systemName: "star.fill")
+                        .frame(width: 50, height: 50, alignment: .center)
+                        .foregroundStyle(Color.green)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Circle())
                     
-                    HStack {
-                        Text(participantData.userPosition)
-                            .padding(.all, 5)
-                            .background(Color.gray)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("\(participantData.userName)(\(participantData.userNickName))")
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        Text(participantData.userLevel)
-                            .padding(.all, 5)
-                            .background(Color.gray.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        HStack {
+                            Text(participantData.userPosition)
+                                .padding(.all, 5)
+                                .background(Color.gray)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
+                            Text(participantData.userLevel)
+                                .padding(.all, 5)
+                                .background(Color.gray.opacity(0.2))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
+                        }
                         
+                        Text(participantData.appliedDate + " 신청")
                     }
+                }
+                
+                if participantData.status != .accepted {
+                    VStack(alignment: .leading, spacing: 4) {
+                        if participantData.status == .rejected {
+                            Text("거절사유")
+                                .foregroundStyle(Color.gray.opacity(0.5))
+                        }
+                        
+                        Text(participantData.description)
+                    }
+                    .modifier(DescriptionTextStyle())
+                    .padding(.top, 20)
+                }
+                
+                // 대기중의 경우 버튼 활성화
+                if participantData.status == .standby {
+                    Divider()
                     
-                    Text(participantData.appliedDate + " 신청")
+                    HStack(spacing: 10) {
+                        Button("거절") {
+                            isShowRejectSheet = true
+                            print("거절탭")
+                        }
+                        .foregroundStyle(Color.gray)
+                        .frame(maxWidth: .infinity)
+                        
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.5))
+                            .frame(width: 1)
+                        
+                        Button("수락") {
+                            isShowAcceptAlert = true
+                            print("수락탭")
+                        }
+                        .foregroundStyle(Color.green)
+                        .frame(maxWidth: .infinity)
+                    }
                 }
             }
-            
-            if participantData.status != .accepted {
-                VStack(alignment: .leading, spacing: 4) {
-                    if participantData.status == .rejected {
-                        Text("거절사유")
-                            .foregroundStyle(Color.gray.opacity(0.5))
-                    }
-                    
-                    Text(participantData.description)
-                }
-                .modifier(DescriptionTextStyle())
-                .padding(.top, 20)
+            // 이거 다 메인 view로 옮기기
+            .sheet(isPresented: $isShowRejectSheet) {
+                RejectionReasonPickerView(participantData: participantData)
+                .padding()
+                .presentationDetents([.height(300)])
+                .presentationDragIndicator(.visible)
             }
+            .alert("이 신청자를 수락할까요?", isPresented: $isShowAcceptAlert) {
+                Button("취소") {
+                    isShowAcceptAlert = false
+                }
+                
+                Button("수락") {
+                    viewModel.managementAppliedStatus(participantData, .accepted)
+                    isShowAcceptAlert = false
+                }
+                .foregroundStyle(Color.green)
+            }
+        }
 
-        
-            // 대기중의 경우 버튼 활성화
-            if participantData.status == .standby {
-                Divider()
-                
-                HStack(spacing: 10) {
-                    Button("거절") {
-                        isShowRejectSheet = true
-                        print("거절탭")
-                    }
-                    .foregroundStyle(Color.gray)
-                    .frame(maxWidth: .infinity)
-                    
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.5))
-                        .frame(width: 1)
-                    
-                    Button("수락") {
-                        isShowAcceptAlert = true
-                        print("수락탭")
-                    }
-                    .foregroundStyle(Color.green)
-                    .frame(maxWidth: .infinity)
-                }
-            }
-        }
-        .sheet(isPresented: $isShowRejectSheet) {
-            RejectionReasonPickerView()
-        }
-        .alert("이 신청자를 수락할까요?", isPresented: $isShowAcceptAlert) {
-            Button("취소") {
-                isShowAcceptAlert = false
-            }
-            
-            Button("수락") {
-                onParticipantAction?((participantData, .accepted))
-                isShowAcceptAlert = false
-            }
-            .foregroundStyle(Color.green)
-        }
     }
     
-}
-
-#Preview {
-    ParticipantView(
-        participantData: ParticipantEntity(
-            matchId: 0,
-            userName: "용헌",
-            userNickName: "rrheon",
-            userProfile: "",
-            userLevel: "중급자",
-            userPosition: "미드필더",
-            description: "신청합니다.",
-            appliedDate: "2025.09.30 (화)",
-            status: .standby
-        )
-    )
 }
