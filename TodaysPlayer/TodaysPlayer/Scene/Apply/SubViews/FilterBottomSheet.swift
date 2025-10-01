@@ -13,6 +13,14 @@ struct FilterBottomSheet: View {
     @Binding var isPresented: Bool
     @State private var tempFilter: GameFilter
     
+    // 필터 선택 여부를 확인하는 computed property
+    private var hasActiveFilters: Bool {
+        tempFilter.matchType != nil ||
+        !tempFilter.skillLevels.isEmpty ||
+        tempFilter.gender != nil ||
+        tempFilter.feeType != nil
+    }
+    
     // 생성자에서 tempFilter 초기화
     init(currentFilter: Binding<GameFilter>, isPresented: Binding<Bool>) {
         self._currentFilter = currentFilter
@@ -25,8 +33,8 @@ struct FilterBottomSheet: View {
             // 헤더
             HStack {
                 Text("필터")
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                    .font(.title2)
+                    .fontWeight(.bold)
                 
                 Spacer()
                 
@@ -40,10 +48,7 @@ struct FilterBottomSheet: View {
             }
             .padding(.horizontal, 20)
             .padding(.top, 20)
-            .padding(.bottom, 16)
-            
-            Divider()
-                .padding(.horizontal, 20)
+            .padding(.bottom, 8)
             
             // 필터 옵션들
             ScrollView {
@@ -108,7 +113,10 @@ struct FilterBottomSheet: View {
                     
                     // 참가비 섹션 - FeeType enum 사용
                     filterSection(title: "참가비") {
-                        HStack(spacing: 10) {
+                        LazyVGrid(columns: [
+                                GridItem(.flexible()),
+                                GridItem(.flexible())
+                            ], spacing: 10) {
                             ForEach(FeeType.allCases, id: \.self) { feeType in
                                 filterToggleButton(
                                     title: feeType.rawValue,
@@ -117,7 +125,6 @@ struct FilterBottomSheet: View {
                                     tempFilter.feeType = (tempFilter.feeType == feeType) ? nil : feeType
                                 }
                             }
-                            Spacer()
                         }
                     }
                 }
@@ -136,12 +143,12 @@ struct FilterBottomSheet: View {
                         tempFilter = GameFilter()
                     }) {
                         Text("조건 초기화")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color(.systemGray5))
-                            .cornerRadius(12)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(hasActiveFilters ? .white : .secondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(hasActiveFilters ? Color.green : Color(.systemGray5))
+                        .cornerRadius(12)
                     }
                     
                     // 적용하기 버튼
@@ -182,7 +189,6 @@ struct FilterBottomSheet: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
                 .font(.headline)
-                .fontWeight(.semibold)
             
             content()
         }
