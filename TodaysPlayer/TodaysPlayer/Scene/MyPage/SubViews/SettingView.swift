@@ -11,7 +11,9 @@ import Foundation
 struct SettingView: View {
     var body: some View {
         VStack {
-            Text("비밀번호 변경")
+            NavigationLink(destination: PwEditView()) {
+                Text("비밀번호 변경")
+            }
             Text("회원 탈퇴")
                 .foregroundStyle(Color(.red))
         }
