@@ -97,6 +97,7 @@ struct MyPageView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
                             .scaledToFill()
+                            .foregroundStyle(Color.green)
                     }
                 }
                 .frame(width: 75, height: 75)
