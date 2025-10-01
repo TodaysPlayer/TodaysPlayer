@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
     @State private var isCreatingSampleData = false
+    @State private var isAddingRating = false
     @State private var showSampleDataAlert = false
     @State private var sampleDataMessage = ""
     @State private var hasAppeared = false  // 중복 로딩 방지
@@ -19,8 +20,8 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 20) {
 #if DEBUG
-                    // 개발용 샘플 데이터 생성 버튼 (나중에 삭제)
-//                    sampleDataButton
+                    // 개발용 테스트 뷰
+                    TestView()
 #endif
                     
                     // 다음 경기
@@ -73,7 +74,6 @@ struct HomeView: View {
     }
     
     // MARK: - Sample Data Button (개발용)
-    
     private var sampleDataButton: some View {
         VStack(spacing: 8) {
             Button(action: createSampleData) {
@@ -107,9 +107,6 @@ struct HomeView: View {
         .cornerRadius(8)
         .padding(.horizontal, 24)
     }
-    
-    // MARK: - Sample Data Creation
-    
     private func createSampleData() {
         Task {
             isCreatingSampleData = true

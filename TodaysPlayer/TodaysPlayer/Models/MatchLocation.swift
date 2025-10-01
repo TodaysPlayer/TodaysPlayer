@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MatchLocation: Codable {
+struct MatchLocation: Codable, Equatable {
     let name: String
     let address: String
     let coordinates: Coordinates

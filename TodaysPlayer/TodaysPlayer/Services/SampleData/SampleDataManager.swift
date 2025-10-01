@@ -13,6 +13,35 @@ class SampleDataManager {
     
     private init() {}
     
+    /// 기존 매치 데이터에 rating 필드 추가 (마이그레이션)
+    func addRatingToExistingMatches() async throws {
+        print("🔥 기존 매치 데이터에 rating 필드 추가 시작...")
+        
+        do {
+            // 모든 매치 데이터 가져오기
+            let documentIds = try await firestore.getDocumentIds(collection: "matches")
+            print("🔥 총 \(documentIds.count)개의 매치 문서 발견")
+            
+            for documentId in documentIds {
+                // 각 매치에 rating 필드 추가 (기본값: 4.5)
+                let randomRating = Double.random(in: 4.0...5.0)
+                let roundedRating = round(randomRating * 10) / 10 // 소수점 첫째자리까지
+                
+                try await firestore.updateDocument(
+                    collection: "matches",
+                    documentId: documentId,
+                    data: ["rating": roundedRating]
+                )
+                print("✅ 매치 \(documentId)에 rating: \(roundedRating) 추가됨")
+            }
+            
+            print("🎉 모든 매치에 rating 필드 추가 완료!")
+        } catch {
+            print("❌ rating 필드 추가 실패: \(error)")
+            throw error
+        }
+    }
+    
     /// 모든 샘플 데이터 생성
     func createAllSampleData() async throws {
         print("🔥 샘플 데이터 생성 시작...")
@@ -165,38 +194,53 @@ class SampleDataManager {
     // MARK: - 매치 데이터
     
     private func createSampleMatches() async throws {
-        // 먼저 사용자들을 가져와서 첫 번째 사용자를 주최자로 사용
+        // 먼저 사용자들을 가져와서 여러 사용자를 주최자로 사용
         let users = try await firestore.getDocuments(collection: "users", as: User.self)
-        guard let firstUser = users.first else {
-            print("⚠️ 사용자가 없어서 매치 생성 건너뜀")
+        guard users.count >= 2 else {
+            print("⚠️ 사용자가 충분하지 않아서 매치 생성 건너뜀")
             return
         }
         
-        print("🔥 매치 생성에 사용할 사용자: \(firstUser.displayName) (ID: \(firstUser.id))")
+        let firstUser = users[0]  // 주 사용자 (bJYjlQZuaqvw2FDB5uNa)
+        let secondUser = users[1] // 두 번째 사용자
+        let thirdUser = users.count > 2 ? users[2] : secondUser
+        
+        print("🔥 매치 생성에 사용할 사용자들:")
+        print("  - 사용자1: \(firstUser.displayName) (ID: \(firstUser.id))")
+        print("  - 사용자2: \(secondUser.displayName) (ID: \(secondUser.id))")
+        print("  - 사용자3: \(thirdUser.displayName) (ID: \(thirdUser.id))")
         
         // 매치별 참가자 정보 (사용자 ID와 상태)
-        let participants1 = [
-            "bJYjlQZuaqvw2FDB5uNa": "accepted" // 주최자만
+        // 주 사용자가 신청한 매치 (1개)
+        let participantsWithMainUser = [
+            secondUser.id: "accepted", // 주최자
+            firstUser.id: "accepted"   // 주 사용자가 참여
         ]
         
-        let participants2 = [
-            "bJYjlQZuaqvw2FDB5uNa": "accepted", // 주최자
-            "user2": "pending" // 대기중
+        // 주 사용자가 주최하는 매치 (1개)
+        let participantsMainUserHost = [
+            firstUser.id: "accepted" // 주최자만
         ]
         
-        let participants3 = [
-            "bJYjlQZuaqvw2FDB5uNa": "accepted", // 주최자
-            "user3": "accepted" // 수락됨
+        // 다른 사용자들이 주최하는 매치들 (주 사용자가 신청 안 함)
+        let participantsOtherUser1 = [
+            secondUser.id: "accepted" // 주최자만
+        ]
+        
+        let participantsOtherUser2 = [
+            thirdUser.id: "accepted" // 주최자만
         ]
         
         let matches = [
+            // 매치 1: 다른 사용자 주최 (신청 가능)
             Match(
                 id: "", // 자동 생성
                 title: "주말 축구 매치 - 강남구",
                 description: "주말에 즐기는 축구 매치입니다. 실력 무관 누구나 참여 가능!",
-                organizerId: firstUser.id,
+                organizerId: secondUser.id,
                 teamId: nil,
                 matchType: "individual",
+                gender: "mixed",
                 location: MatchLocation(
                     name: "강남풋살파크",
                     address: "서울특별시 강남구 테헤란로 123",
@@ -208,20 +252,23 @@ class SampleDataManager {
                 skillLevel: "intermediate",
                 position: "striker",
                 price: 0,
+                rating: 4.5,
                 status: "recruiting",
                 tags: ["주말", "친선", "실력무관"],
                 requirements: "축구화 착용 필수",
-                participants: participants1,
+                participants: participantsOtherUser1,
                 createdAt: Date(),
                 updatedAt: Date()
             ),
+            // 매치 2: 다른 사용자 주최, 주 사용자가 이미 신청함 (제외됨)
             Match(
                 id: "", // 자동 생성
                 title: "실력별 축구 대회 - 분당구",
                 description: "실력별로 나누어 진행하는 축구 대회입니다.",
-                organizerId: firstUser.id,
+                organizerId: secondUser.id,
                 teamId: nil,
                 matchType: "individual",
+                gender: "male",
                 location: MatchLocation(
                     name: "분당축구센터",
                     address: "경기도 성남시 분당구 판교역로 456",
@@ -233,20 +280,23 @@ class SampleDataManager {
                 skillLevel: "advanced",
                 position: "midfielder",
                 price: 5000,
+                rating: 4.8,
                 status: "recruiting",
                 tags: ["대회", "실력별", "상금"],
                 requirements: "중급 이상 실력자만 참여 가능",
-                participants: participants2,
+                participants: participantsWithMainUser,
                 createdAt: Date(),
                 updatedAt: Date()
             ),
+            // 매치 3: 다른 사용자 주최 (신청 가능)
             Match(
                 id: "", // 자동 생성
                 title: "초보자 축구 교실 - 인천",
                 description: "축구를 처음 배우는 분들을 위한 교실입니다.",
-                organizerId: firstUser.id,
+                organizerId: thirdUser.id,
                 teamId: nil,
                 matchType: "individual",
+                gender: "mixed",
                 location: MatchLocation(
                     name: "인천축구아카데미",
                     address: "인천광역시 연수구 컨벤시아대로 789",
@@ -258,20 +308,23 @@ class SampleDataManager {
                 skillLevel: "beginner",
                 position: nil,
                 price: 0,
+                rating: 4.2,
                 status: "recruiting",
                 tags: ["교실", "초보자", "교육"],
                 requirements: "축구화 없이도 참여 가능",
-                participants: participants3,
+                participants: participantsOtherUser2,
                 createdAt: Date(),
                 updatedAt: Date()
             ),
+            // 매치 4: 다른 사용자 주최 (신청 가능)
             Match(
                 id: "", // 자동 생성
                 title: "야간 축구 매치 - 송파구",
                 description: "야간에 진행하는 축구 매치입니다. 직장인들 환영!",
-                organizerId: firstUser.id,
+                organizerId: secondUser.id,
                 teamId: nil,
                 matchType: "individual",
+                gender: "mixed",
                 location: MatchLocation(
                     name: "송파축구장",
                     address: "서울특별시 송파구 올림픽로 300",
@@ -283,13 +336,15 @@ class SampleDataManager {
                 skillLevel: "intermediate",
                 position: "defender",
                 price: 3000,
+                rating: 4.6,
                 status: "recruiting",
                 tags: ["야간", "직장인", "친선"],
                 requirements: "야간 조명 시설 완비",
-                participants: participants1,
+                participants: participantsOtherUser1,
                 createdAt: Date(),
                 updatedAt: Date()
             ),
+            // 매치 5: 주 사용자가 주최 (본인 매치이므로 제외됨)
             Match(
                 id: "", // 자동 생성
                 title: "고수들만의 매치 - 부천시",
@@ -297,6 +352,7 @@ class SampleDataManager {
                 organizerId: firstUser.id,
                 teamId: nil,
                 matchType: "individual",
+                gender: "male",
                 location: MatchLocation(
                     name: "부천축구센터",
                     address: "경기도 부천시 원미구 길주로 210",
@@ -308,10 +364,11 @@ class SampleDataManager {
                 skillLevel: "advanced",
                 position: "goalkeeper",
                 price: 8000,
+                rating: 4.9,
                 status: "recruiting",
                 tags: ["고수", "고강도", "경쟁"],
                 requirements: "고급 실력자만 참여 가능",
-                participants: participants2,
+                participants: participantsMainUserHost,
                 createdAt: Date(),
                 updatedAt: Date()
             )

@@ -44,9 +44,9 @@ struct NearbyMatchesCard: View {
                             address: match.location.address,
                             distance: viewModel.formatDistance(to: match.location.coordinates),
                             time: match.dateTime.formatForDisplay(),
-                            participants: "\(Int.random(in: 1...match.maxParticipants))/\(match.maxParticipants)",
-                            gender: .mixed, // 임시 성별
-                            rating: "4.\(Int.random(in: 0...9))", // 임시 평점
+                            participants: "\(match.participants.count)/\(match.maxParticipants)",
+                            gender: GenderType(rawValue: match.gender) ?? .mixed,
+                            rating: match.rating != nil ? String(format: "%.1f", match.rating!) : "0.0",
                             price: match.price == 0 ? "무료" : "\(match.price)원",
                             skillLevel: match.skillLevel.skillLevelToKorean(),
                             tags: match.createMatchTags()

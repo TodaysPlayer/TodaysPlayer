@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import CoreLocation
+import MapKit
 
 struct NextMatchCard: View {
     let user: User?
@@ -101,6 +103,7 @@ struct NextMatchCard: View {
                         
                         Button(action: {
                             // 길찾기 기능
+                            openAppleMap(to: nextMatch)
                         }) {
                             HStack {
                                 Image(systemName: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
@@ -172,6 +175,21 @@ struct NextMatchCard: View {
         }
     }
     
+    private func openAppleMap(to match: Match?) {
+        if let match {
+            // 좌표 생성
+            let latitude = match.location.coordinates.latitude
+            let longitude = match.location.coordinates.longitude
+            let name = match.location.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            
+            // Apple Maps URL
+            let urlString = "http://maps.apple.com/?daddr=\(latitude),\(longitude)&dirflg=d&q=\(name)"
+            
+            if let url = URL(string: urlString) {
+                UIApplication.shared.open(url)
+            }
+        }
+    }
 }
 
 #Preview {
