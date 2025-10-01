@@ -24,13 +24,12 @@ struct ParticipantListView: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(viewModel.participantDatas, id: \.self) { participant in
-                                ParticipantView(participantData: participant) { info, status in
-                                    viewModel.managementAppliedStatus(info, status)
-                                }
-                                .padding(10)
-                                .background(Color.white)
-                                .cornerRadius(12)
-                                .shadow(radius: 1, y: 1)
+                                ParticipantView(participantData: participant)
+                                    .environment(viewModel)
+                                    .padding(10)
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    .shadow(radius: 1, y: 1)
                             }
                         }
                         .padding(.horizontal)
@@ -39,7 +38,12 @@ struct ParticipantListView: View {
                 }
             }
             .navigationTitle("인원 관리하기")
-
+            .navigationDestination(isPresented: $viewModel.isShowWriteReasonView) {
+                if let info = viewModel.rejectedPerson {
+                    WriteRejectionReasonView(appliedPersonData: info)
+                }
+            }
+            // 여기에서 바텀을 띄워야함
         }
     }
 }
