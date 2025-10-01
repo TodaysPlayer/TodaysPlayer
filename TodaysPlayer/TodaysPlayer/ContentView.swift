@@ -10,19 +10,19 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            Tab("Home", systemImage: "house") {
+            Tab("홈", systemImage: "house") {
                 HomeView()
             }
             
-            Tab("Apply", systemImage: "house") {
+            Tab("용병 신청", systemImage: "soccerball") {
                 ApplyView()
             }
             
-            Tab("Navigation", systemImage: "house") {
+            Tab("나의 매치", systemImage: "checklist") {
                 MatchListView()
             }
             
-            Tab("MyPage", systemImage: "house") {
+            Tab("프로필", systemImage: "person") {
                 MyPageView()
             }
         }
