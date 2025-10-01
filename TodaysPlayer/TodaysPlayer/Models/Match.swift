@@ -15,6 +15,7 @@ struct Match: Codable, Identifiable {
     let organizerId: String
     let teamId: String?
     let matchType: String // "individual", "team"
+    let gender: String // "male", "female", "mixed"
     let location: MatchLocation
     let dateTime: Date
     let duration: Int // 경기 시간 (분)
@@ -22,6 +23,7 @@ struct Match: Codable, Identifiable {
     let skillLevel: String
     let position: String?
     let price: Int
+    let rating: Double? // 매치 평점 (0.0 ~ 5.0)
     let status: String // "recruiting", "confirmed", "completed", "cancelled"
     let tags: [String]
     let requirements: String?
@@ -36,6 +38,7 @@ struct Match: Codable, Identifiable {
         case organizerId
         case teamId
         case matchType
+        case gender
         case location
         case dateTime
         case duration
@@ -43,6 +46,7 @@ struct Match: Codable, Identifiable {
         case skillLevel
         case position
         case price
+        case rating
         case status
         case tags
         case requirements
@@ -54,13 +58,14 @@ struct Match: Codable, Identifiable {
     static let documentIdKey = CodingUserInfoKey(rawValue: "documentId")!
     
     // 기본 초기화자 (SampleDataManager에서 사용)
-    init(id: String, title: String, description: String, organizerId: String, teamId: String?, matchType: String, location: MatchLocation, dateTime: Date, duration: Int, maxParticipants: Int, skillLevel: String, position: String?, price: Int, status: String, tags: [String], requirements: String?, participants: [String: String], createdAt: Date, updatedAt: Date) {
+    init(id: String, title: String, description: String, organizerId: String, teamId: String?, matchType: String, gender: String, location: MatchLocation, dateTime: Date, duration: Int, maxParticipants: Int, skillLevel: String, position: String?, price: Int, rating: Double?, status: String, tags: [String], requirements: String?, participants: [String: String], createdAt: Date, updatedAt: Date) {
         self.id = id
         self.title = title
         self.description = description
         self.organizerId = organizerId
         self.teamId = teamId
         self.matchType = matchType
+        self.gender = gender
         self.location = location
         self.dateTime = dateTime
         self.duration = duration
@@ -68,6 +73,7 @@ struct Match: Codable, Identifiable {
         self.skillLevel = skillLevel
         self.position = position
         self.price = price
+        self.rating = rating
         self.status = status
         self.tags = tags
         self.requirements = requirements
@@ -92,6 +98,7 @@ struct Match: Codable, Identifiable {
         self.organizerId = try container.decode(String.self, forKey: .organizerId)
         self.teamId = try container.decodeIfPresent(String.self, forKey: .teamId)
         self.matchType = try container.decode(String.self, forKey: .matchType)
+        self.gender = try container.decodeIfPresent(String.self, forKey: .gender) ?? "mixed" // 기본값: 혼성
         self.location = try container.decode(MatchLocation.self, forKey: .location)
         self.dateTime = try container.decode(Date.self, forKey: .dateTime)
         self.duration = try container.decode(Int.self, forKey: .duration)
@@ -99,6 +106,7 @@ struct Match: Codable, Identifiable {
         self.skillLevel = try container.decode(String.self, forKey: .skillLevel)
         self.position = try container.decodeIfPresent(String.self, forKey: .position)
         self.price = try container.decode(Int.self, forKey: .price)
+        self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
         self.status = try container.decode(String.self, forKey: .status)
         self.tags = try container.decode([String].self, forKey: .tags)
         self.requirements = try container.decodeIfPresent(String.self, forKey: .requirements)
@@ -110,7 +118,7 @@ struct Match: Codable, Identifiable {
 
 extension Match {
     /// 매치에 대한 태그 생성
-    /// - Returns: 가격, 실력 레벨, 마감 임박 등에 따른 태그 배열
+    /// - Returns: 가격, 실력 레벨, 성별, 마감 임박 등에 따른 태그 배열
     func createMatchTags() -> [MatchTag] {
         var tags: [MatchTag] = []
         
@@ -126,11 +134,34 @@ extension Match {
             tags.append(MatchTag(text: "초보환영", color: .blue, icon: "person.fill"))
         }
         
-        // 마감 임박 태그 (임시)
-        if Int.random(in: 1...10) <= 3 {
+        // 성별 태그
+        switch self.gender {
+        case "male":
+            tags.append(MatchTag(text: "남성", color: .blue, icon: "person"))
+        case "female":
+            tags.append(MatchTag(text: "여성", color: .pink, icon: "person"))
+        case "mixed":
+            tags.append(MatchTag(text: "혼성", color: .purple, icon: "person.2"))
+        default:
+            break
+        }
+        
+        // 마감 임박 태그 (참가자 수 기반)
+        let participantRatio = Double(self.participants.count) / Double(self.maxParticipants)
+        if participantRatio >= 0.8 {
             tags.append(MatchTag(text: "마감임박", color: .orange, icon: "bolt.fill"))
         }
         
         return tags
+    }
+    
+    /// 성별을 한국어로 변환
+    var genderKorean: String {
+        switch self.gender {
+        case "male": return "남성"
+        case "female": return "여성"
+        case "mixed": return "혼성"
+        default: return "혼성"
+        }
     }
 }
