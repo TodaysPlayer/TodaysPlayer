@@ -25,6 +25,7 @@ struct MatchInfoEntity: Decodable {
     let imageURL: String?
     let postUserName: String?
     let rejectionReason: String?
+    let matchDescription: String?
 }
 
 /// 매칭 정보 Domain Model
@@ -44,6 +45,7 @@ struct MatchInfo: Hashable {
     let imageURL: String
     let postUserName: String
     let rejectionReason: String
+    let matchDescription: String
 }
 
 extension MatchInfo {
@@ -62,5 +64,6 @@ extension MatchInfo {
         self.imageURL = entity.imageURL ?? ""
         self.postUserName = entity.postUserName ?? ""
         self.rejectionReason = entity.rejectionReason ?? ""
+        self.matchDescription = entity.matchDescription ?? ""
     }
 }

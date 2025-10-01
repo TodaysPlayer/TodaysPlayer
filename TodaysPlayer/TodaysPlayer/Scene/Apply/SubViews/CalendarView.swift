@@ -19,17 +19,17 @@ struct CalendarView: UIViewRepresentable {
         calendar.locale = Locale(identifier: "ko_KR") // 한국어
         
         // 달력 높이 제한
-//        calendar.headerHeight = 40  // 헤더 높이 줄이기
-//        calendar.weekdayHeight = 30  // 요일 높이 줄이기
-//        calendar.appearance.headerMinimumDissolvedAlpha = 0.0  // 헤더 단순화
-//        
-//        calendar.contentView.layoutMargins = .zero
-//        
-//        if let collectionView = calendar.collectionView {
-//                collectionView.contentInset = .zero
-//        }
-//            
-//        calendar.clipsToBounds = true
+        calendar.headerHeight = 40  // 헤더 높이 줄이기
+        calendar.weekdayHeight = 30  // 요일 높이 줄이기
+        calendar.appearance.headerMinimumDissolvedAlpha = 0.0  // 헤더 단순화
+        
+        calendar.contentView.layoutMargins = .zero
+        
+        if let collectionView = calendar.collectionView {
+                collectionView.contentInset = .zero
+        }
+            
+        calendar.clipsToBounds = true
         
         return calendar
     }

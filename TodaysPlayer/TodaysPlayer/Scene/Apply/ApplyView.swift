@@ -98,6 +98,10 @@ struct ApplyView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                
+                Color(.systemGroupedBackground)
+                                .ignoresSafeArea()
+                
                 VStack(alignment: .leading, spacing: 0) {
                     // 커스텀 타이틀 (네비게이션 타이틀 대신)
                     VStack(alignment: .leading, spacing: 4) {
@@ -126,7 +130,7 @@ struct ApplyView: View {
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
-                            .background(Color(.systemGray6))
+                            .background(Color(.systemBackground))
                             .cornerRadius(16)
                         }
                         
@@ -144,7 +148,7 @@ struct ApplyView: View {
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
-                            .background(Color(.systemGray6))
+                            .background(Color(.systemBackground))
                             .cornerRadius(16)
                         }
                         
@@ -165,7 +169,7 @@ struct ApplyView: View {
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
-                            .background(Color(.systemGray6))
+                            .background(Color(.systemBackground))
                             .cornerRadius(16)
                         }
                         

@@ -27,8 +27,11 @@ struct ApplyMatchDetailView: View {
                 // 기본 정보 카드
                 MatchBasicInfoCard(matchInfo: matchInfo)
                 
-                // 상세 정보 섹션
-                MatchDetailInfoSection(matchInfo: matchInfo)
+                // 장소 정보 섹션 (새로 추가)
+                MatchLocationSection(matchInfo: matchInfo)
+                
+                // 설명 섹션
+                MatchDescriptionSection(description: matchInfo.matchDescription)
                 
                 // 주의사항
                 WarningNoticeView()
@@ -43,6 +46,7 @@ struct ApplyMatchDetailView: View {
             }
             .padding()
         }
+        .background(Color(.systemGray6)) // 배경색을 옅은 회색으로 변경
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -112,9 +116,25 @@ struct MatchBasicInfoCard: View {
                     value: "\(matchInfo.matchFee.formatted())원"
                 )
             }
+            
+            Divider()
+            
+            HStack(spacing: 24) {
+                InfoItemView(
+                    icon: "person.crop.circle",
+                    title: "성별",
+                    value: matchInfo.genderLimit
+                )
+                
+                InfoItemView(
+                    icon: "star.circle",
+                    title: "실력",
+                    value: matchInfo.levelLimit
+                )
+            }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(Color(.systemBackground)) // 흰색 유지
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
     }
@@ -157,37 +177,99 @@ struct InfoItemView: View {
     }
 }
 
-// MARK: - 상세 정보 섹션
-struct MatchDetailInfoSection: View {
+// MARK: - 장소 정보 섹션 (새로 추가)
+struct MatchLocationSection: View {
     let matchInfo: MatchInfo
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeaderView(title: "상세 정보")
+            SectionHeaderView(title: "장소 정보")
             
-            DetailRowView(
-                icon: "mappin.circle",
-                label: "매치 장소",
-                value: matchInfo.matchLocation
-            )
+            VStack(alignment: .leading, spacing: 16) {
+                // 구장명
+                HStack {
+                    Image(systemName: "mappin.circle.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 24)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("구장명")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Text(matchInfo.matchLocation)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                    }
+                }
+                
+                // 주소 (임시 - 서버에서 받아올 예정)
+                HStack(alignment: .top) {
+                    Image(systemName: "location.fill")
+                        .foregroundColor(.gray)
+                        .frame(width: 24)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("주소")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Text("서울시 강남구 논현동 123-45")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                    }
+                }
+                
+                Divider()
+                
+                // 지도 영역 (애플 지도 추가 예정)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("위치")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    // 지도 플레이스홀더
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.systemGray5))
+                            .frame(height: 200)
+                        
+                        VStack(spacing: 8) {
+                            Image(systemName: "map.fill")
+                                .font(.system(size: 40))
+                                .foregroundColor(.gray)
+                            
+                            Text("지도가 여기에 표시됩니다")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+            }
+            .padding()
+            .background(Color(.systemBackground)) // 흰색으로 변경
+            .cornerRadius(12)
+            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
+        }
+    }
+}
+
+// MARK: - 설명 섹션
+struct MatchDescriptionSection: View {
+    let description: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionHeaderView(title: "설명")
             
-            DetailRowView(
-                icon: "figure.soccer",
-                label: "매치 종류",
-                value: matchInfo.matchType.displayName
-            )
-            
-            DetailRowView(
-                icon: "person.crop.circle",
-                label: "성별 제한",
-                value: matchInfo.genderLimit
-            )
-            
-            DetailRowView(
-                icon: "star.circle",
-                label: "레벨 제한",
-                value: matchInfo.levelLimit
-            )
+            Text(description)
+                .font(.body)
+                .foregroundColor(.primary)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.systemBackground)) // 흰색으로 변경
+                .cornerRadius(12)
+                .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
     }
 }
@@ -200,30 +282,6 @@ struct SectionHeaderView: View {
         Text(title)
             .font(.headline)
             .padding(.top, 8)
-    }
-}
-
-// MARK: - 상세 정보 행
-struct DetailRowView: View {
-    let icon: String
-    let label: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.secondary)
-                .frame(width: 24)
-            
-            Text(label)
-                .foregroundColor(.secondary)
-            
-            Spacer()
-            
-            Text(value)
-                .fontWeight(.medium)
-        }
-        .padding(.vertical, 4)
     }
 }
 
@@ -243,18 +301,13 @@ struct WarningNoticeView: View {
                     .foregroundColor(.secondary)
             }
             .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.yellow.opacity(0.1))
             .cornerRadius(8)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text("준비물:")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                
-                Text("• 풋살화 (축구화 권장)\n• 개인 음료\n• 수건")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+            .padding()
+            .background(Color(.systemBackground))
+            .cornerRadius(12)
+            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
     }
 }
@@ -295,8 +348,9 @@ struct OrganizerInfoView: View {
                 Spacer()
             }
             .padding()
-            .background(Color(.systemGray6))
+            .background(Color(.systemBackground)) // 흰색으로 변경
             .cornerRadius(12)
+            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
     }
 }
