@@ -13,154 +13,203 @@ struct WritePostView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 24) {
-                    // 제목 입력
-                    FormSection(title: "제목") {
-                        TextField("경기 제목을 입력하세요", text: $viewModel.title)
-                            .textFieldStyle(.roundedBorder)
-                    }
-                    
-                    // 경기 종류
-                    FormSection(title: "경기 종류") {
-                        HStack(spacing: 12) {
-                            MatchTypeButton(
-                                type: "futsal",
-                                title: "풋살",
-                                isSelected: viewModel.matchType == "futsal"
-                            ) {
-                                viewModel.matchType = "futsal"
-                            }
-                            
-                            MatchTypeButton(
-                                type: "soccer",
-                                title: "축구",
-                                isSelected: viewModel.matchType == "soccer"
-                            ) {
-                                viewModel.matchType = "soccer"
-                            }
-                        }
-                    }
-                    
-                    // 날짜 선택
-                    FormSection(title: "날짜") {
-                        DatePicker(
-                            "경기 날짜",
-                            selection: $viewModel.selectedDate,
-                            in: Date()...,
-                            displayedComponents: .date
-                        )
-                        .datePickerStyle(.compact)
-                    }
-                    
-                    // 시간 입력
-                    FormSection(title: "시간") {
-                        HStack(spacing: 12) {
-                            TextField("시작 시간 (예: 18:00)", text: $viewModel.startTime)
+            ZStack(alignment: .bottom) {
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // 제목 입력
+                        FormSection(title: "제목") {
+                            TextField("경기 제목을 입력하세요", text: $viewModel.title)
                                 .textFieldStyle(.roundedBorder)
-                            
-                            Text("~")
-                            
-                            TextField("종료 시간 (예: 20:00)", text: $viewModel.endTime)
-                                .textFieldStyle(.roundedBorder)
-                        }
-                    }
-                    
-                    // 구장 선택
-                    FormSection(title: "구장명") {
-                        Button {
-                            viewModel.showLocationSearch = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "magnifyingglass")
-                                Text(viewModel.selectedLocation?.name ?? "구장을 검색하세요")
-                                    .foregroundColor(viewModel.selectedLocation == nil ? .gray : .primary)
-                                Spacer()
-                            }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
                         }
                         
-                        if let location = viewModel.selectedLocation {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(location.address)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                        // 경기 종류
+                        FormSection(title: "경기 종류") {
+                            HStack(spacing: 12) {
+                                MatchTypeButton(
+                                    type: "futsal",
+                                    title: "풋살",
+                                    isSelected: viewModel.matchType == "futsal"
+                                ) {
+                                    viewModel.matchType = "futsal"
+                                }
+                                
+                                MatchTypeButton(
+                                    type: "soccer",
+                                    title: "축구",
+                                    isSelected: viewModel.matchType == "soccer"
+                                ) {
+                                    viewModel.matchType = "soccer"
+                                }
                             }
-                            .padding(.top, 4)
                         }
-                    }
-                    
-                    // 모집 인원
-                    FormSection(title: "모집 인원") {
-                        Stepper(
-                            value: $viewModel.maxParticipants,
-                            in: 1...22
-                        ) {
-                            Text("\(viewModel.maxParticipants)명")
+                        
+                        // 날짜 선택
+                        FormSection(title: "날짜") {
+                            HStack {
+                                DatePicker(
+                                    "경기 날짜",
+                                    selection: $viewModel.selectedDate,
+                                    in: Date()...,
+                                    displayedComponents: .date
+                                )
+                                .datePickerStyle(.compact)
+                                .labelsHidden()
+                                
+                                Spacer()
+                            }
                         }
-                    }
-                    
-                    // 실력
-                    FormSection(title: "실력") {
-                        SkillLevelPicker(selectedLevel: $viewModel.skillLevel)
-                    }
-                    
-                    // 성별
-                    FormSection(title: "성별") {
-                        GenderPicker(selectedGender: $viewModel.gender)
-                    }
-                    
-                    // 참가비
-                    FormSection(title: "참가비") {
-                        VStack(spacing: 12) {
-                            Toggle("참가비 있음", isOn: $viewModel.hasFee)
+                        
+                        // 시간 입력
+                        FormSection(title: "시간") {
+                            HStack(spacing: 12) {
+                                DatePicker(
+                                    "시작 시간",
+                                    selection: $viewModel.startTime,
+                                    displayedComponents: .hourAndMinute
+                                )
+                                .labelsHidden()
+                                .frame(maxWidth: .infinity)
+                                
+                                Text("~")
+                                
+                                DatePicker(
+                                    "종료 시간",
+                                    selection: $viewModel.endTime,
+                                    displayedComponents: .hourAndMinute
+                                )
+                                .labelsHidden()
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                        
+                        // 구장 선택
+                        FormSection(title: "구장명") {
+                            Button {
+                                viewModel.showLocationSearch = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "magnifyingglass")
+                                    Text(viewModel.selectedLocation?.name ?? "구장을 검색하세요")
+                                        .foregroundColor(viewModel.selectedLocation == nil ? .gray : .primary)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                            }
                             
-                            if viewModel.hasFee {
-                                TextField("참가비 (원)", value: $viewModel.price, format: .number)
-                                    .textFieldStyle(.roundedBorder)
-                                    .keyboardType(.numberPad)
+                            if let location = viewModel.selectedLocation {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(location.address)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.top, 4)
+                            }
+                        }
+                        
+                        // 모집 상세 (구장명 다음으로 이동)
+                        FormSection(title: "모집 상세") {
+                            TextEditor(text: $viewModel.description)
+                                .frame(minHeight: 120)
+                                .padding(8)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                        }
+                        
+                        // 모집 인원
+                        FormSection(title: "모집 인원") {
+                            Stepper(
+                                value: $viewModel.maxParticipants,
+                                in: 1...22
+                            ) {
+                                Text("\(viewModel.maxParticipants)명")
+                            }
+                        }
+                        
+                        // 실력
+                        FormSection(title: "실력") {
+                            SkillLevelPicker(selectedLevel: $viewModel.skillLevel)
+                        }
+                        
+                        // 성별
+                        FormSection(title: "성별") {
+                            GenderPicker(selectedGender: $viewModel.gender)
+                        }
+                        
+                        // 참가비
+                        FormSection(title: "참가비") {
+                            VStack(spacing: 12) {
+                                HStack(spacing: 12) {
+                                    Button {
+                                        viewModel.hasFee = true
+                                    } label: {
+                                        Text("있어요")
+                                            .font(.subheadline)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 12)
+                                            .background(viewModel.hasFee ? Color.green : Color(.systemGray5))
+                                            .foregroundColor(viewModel.hasFee ? .white : .primary)
+                                            .cornerRadius(8)
+                                    }
+                                    
+                                    Button {
+                                        viewModel.hasFee = false
+                                        viewModel.price = 0
+                                    } label: {
+                                        Text("없어요")
+                                            .font(.subheadline)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 12)
+                                            .background(!viewModel.hasFee ? Color.green : Color(.systemGray5))
+                                            .foregroundColor(!viewModel.hasFee ? .white : .primary)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                                
+                                if viewModel.hasFee {
+                                    TextField("참가비 (원)", value: $viewModel.price, format: .number)
+                                        .textFieldStyle(.roundedBorder)
+                                        .keyboardType(.numberPad)
+                                }
                             }
                         }
                     }
-                    
-                    // 경기 상세 설명
-                    FormSection(title: "모집 상세") {
-                        TextEditor(text: $viewModel.description)
-                            .frame(minHeight: 120)
-                            .padding(8)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                    }
-                }
-                .padding()
-            }
-            .navigationTitle("용병 모집하기")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") {
-                        dismiss()
-                    }
+                    .padding()
+                    .padding(.bottom, 80) // 하단 버튼 공간 확보
                 }
                 
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("등록") {
+                // 하단 고정 등록 버튼
+                VStack(spacing: 0) {
+                    Divider()
+                    
+                    Button {
                         Task {
                             do {
-                                // TODO: 현재 사용자 ID 가져오기
-                                let userId = "currentUserId"
+                                let userId = "bJYjlQZuaqvw2FDB5uNa" // 임시 사용자 ID
                                 _ = try await viewModel.createMatch(organizerId: userId)
                                 dismiss()
                             } catch {
                                 viewModel.errorMessage = error.localizedDescription
                             }
                         }
+                    } label: {
+                        Text("등록하기")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(viewModel.isFormValid ? Color.green : Color.gray)
+                            .cornerRadius(12)
+                            .padding(.horizontal)
                     }
                     .disabled(!viewModel.isFormValid)
+                    .padding(.vertical, 12)
                 }
+                .background(Color(.systemBackground))
             }
+            .navigationTitle("용병 모집하기")
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $viewModel.showLocationSearch) {
                 LocationSearchBottomSheet(
                     isPresented: $viewModel.showLocationSearch,
@@ -245,6 +294,7 @@ struct SkillLevelPicker: View {
                         .cornerRadius(6)
                 }
             }
+            Spacer() // 왼쪽 정렬
         }
     }
 }
@@ -274,6 +324,7 @@ struct GenderPicker: View {
                         .cornerRadius(6)
                 }
             }
+            Spacer() // 왼쪽 정렬
         }
     }
 }

@@ -16,8 +16,8 @@ final class WritePostViewModel {
     var matchType: String = "futsal" // "futsal", "soccer"
     var gender: String = "mixed" // "male", "female", "mixed"
     var selectedDate: Date = Date()
-    var startTime: String = ""
-    var endTime: String = ""
+    var startTime: Date = Date()
+    var endTime: Date = Calendar.current.date(byAdding: .hour, value: 2, to: Date()) ?? Date()
     var duration: Int = 120 // 기본 120분
     var maxParticipants: Int = 6
     var skillLevel: String = "beginner" // "beginner", "intermediate", "advanced", "expert"
@@ -35,9 +35,7 @@ final class WritePostViewModel {
         !title.isEmpty &&
         !description.isEmpty &&
         selectedLocation != nil &&
-        maxParticipants > 0 &&
-        !startTime.isEmpty &&
-        !endTime.isEmpty
+        maxParticipants > 0
     }
     
     var dateTimeString: String {
@@ -45,10 +43,12 @@ final class WritePostViewModel {
         formatter.dateFormat = "yyyy년 M월 d일"
         let dateString = formatter.string(from: selectedDate)
         
-        if !startTime.isEmpty && !endTime.isEmpty {
-            return "\(dateString) \(startTime)~\(endTime)"
-        }
-        return dateString
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        let startTimeString = timeFormatter.string(from: startTime)
+        let endTimeString = timeFormatter.string(from: endTime)
+        
+        return "\(dateString) \(startTimeString)~\(endTimeString)"
     }
     
     // MARK: - Actions
@@ -64,6 +64,9 @@ final class WritePostViewModel {
         isLoading = true
         defer { isLoading = false }
         
+        // 시간 계산 (duration)
+        let durationInMinutes = Int(endTime.timeIntervalSince(startTime) / 60)
+        
         // Match 객체 생성
         let match = Match(
             id: UUID().uuidString,
@@ -74,8 +77,8 @@ final class WritePostViewModel {
             matchType: matchType,
             gender: gender,
             location: location,
-            dateTime: selectedDate,
-            duration: duration,
+            dateTime: combineDateAndTime(date: selectedDate, time: startTime),
+            duration: durationInMinutes > 0 ? durationInMinutes : 120,
             maxParticipants: maxParticipants,
             skillLevel: skillLevel,
             position: nil,
@@ -98,14 +101,30 @@ final class WritePostViewModel {
         return match
     }
     
+    // 날짜와 시간을 합치는 헬퍼 함수
+    private func combineDateAndTime(date: Date, time: Date) -> Date {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
+        
+        var mergedComponents = DateComponents()
+        mergedComponents.year = dateComponents.year
+        mergedComponents.month = dateComponents.month
+        mergedComponents.day = dateComponents.day
+        mergedComponents.hour = timeComponents.hour
+        mergedComponents.minute = timeComponents.minute
+        
+        return calendar.date(from: mergedComponents) ?? date
+    }
+    
     func reset() {
         title = ""
         description = ""
         matchType = "futsal"
         gender = "mixed"
         selectedDate = Date()
-        startTime = ""
-        endTime = ""
+        startTime = Date()
+        endTime = Calendar.current.date(byAdding: .hour, value: 2, to: Date()) ?? Date()
         duration = 120
         maxParticipants = 6
         skillLevel = "beginner"
