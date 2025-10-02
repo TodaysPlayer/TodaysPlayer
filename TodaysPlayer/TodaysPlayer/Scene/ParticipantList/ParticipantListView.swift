@@ -24,8 +24,7 @@ struct ParticipantListView: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(viewModel.participantDatas, id: \.self) { participant in
-                                ParticipantView(participantData: participant)
-                                    .environment(viewModel)
+                                ParticipantView(participantData: participant, viewModel: viewModel)
                                     .padding(10)
                                     .background(Color.white)
                                     .cornerRadius(12)
@@ -36,14 +35,38 @@ struct ParticipantListView: View {
                         .padding(.vertical, 8)
                     }
                 }
+                
+                ToastMessageView(manager: viewModel.toastManager)
+
+            }
+            .sheet(isPresented: $viewModel.isShowRejectSheet) {
+                RejectionReasonPickerView(onRejectButtonTapped: { rejectCase, otherReason  in
+                    viewModel.managementAppliedStatus(
+                        status: .rejected,
+                        rejectCase: rejectCase,
+                        otherReason
+                    )
+                    
+                    viewModel.toastManager.show(.participantRejected)
+                })
+                .padding()
+                .presentationDetents([.height(350)])
+                .presentationDragIndicator(.visible)
+            }
+            .alert("이 신청자를 수락할까요?", isPresented: $viewModel.isShowAcceptAlert) {
+                Button("취소") {}
+                
+                Button("수락") {
+                    viewModel.managementAppliedStatus(status: .accepted)
+                    viewModel.toastManager.show(.participantAccepted)
+                }
+                .foregroundStyle(Color.green)
             }
             .navigationTitle("인원 관리하기")
-            .navigationDestination(isPresented: $viewModel.isShowWriteReasonView) {
-                if let info = viewModel.rejectedPerson {
-                    WriteRejectionReasonView(appliedPersonData: info)
-                }
-            }
-            // 여기에서 바텀을 띄워야함
         }
     }
+}
+
+#Preview {
+    ParticipantListView()
 }
