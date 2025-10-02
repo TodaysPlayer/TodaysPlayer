@@ -121,10 +121,10 @@ struct ApplyView: View {
                         // 스크랩 버튼
                         NavigationLink(destination: ScrapView()) {
                             HStack(spacing: 6) {
-                                Image(systemName: "bookmark.fill")
+                                Image(systemName: "bookmark")
                                     .font(.system(size: 14))
                                     .foregroundColor(.blue)
-                                Text("스크랩")
+                                Text("찜한 매치")
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(.primary)
                             }
