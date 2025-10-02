@@ -121,7 +121,7 @@ struct ProfileEditView: View {
                             Text("이름").font(.caption).foregroundColor(.gray)
                             TextField("이름", text: $name)
                                 .padding(5.5)
-                                .background(RoundedRectangle(cornerRadius: 4).fill(Color(.systemGray5)))
+                                .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                                 .font(.body)
                                 .disabled(true)
                         }
