@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
-
 // 마이페이지의 메뉴 리스트 한 행을 표시하는 뷰
 // - 좌측 아이콘, 제목/부제목, 우측 이동 화살표로 구성됩니다.
 struct MyPageRowView: View {

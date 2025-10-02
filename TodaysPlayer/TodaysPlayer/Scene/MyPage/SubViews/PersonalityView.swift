@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 struct PersonalityView: View {
     @Environment(\.presentationMode) var presentationMode

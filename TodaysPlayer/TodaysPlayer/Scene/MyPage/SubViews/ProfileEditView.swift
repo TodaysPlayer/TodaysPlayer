@@ -13,7 +13,6 @@ import PhotosUI
 struct ProfileEditView: View {
     @Environment(\.dismiss) private var dismiss
     
-    // MARK: - AppStorage (영구 저장되는 사용자 프로필 값)
     // MARK: - Auth Info (로그인 계정에서 제공)
     /// 로그인 계정 이름 (읽기 전용, 로그인 과정에서 설정)
     @AppStorage("auth_name") private var authName: String = ""
@@ -228,11 +227,13 @@ struct ProfileEditView: View {
                         }
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("자기소개").font(.caption).foregroundColor(.gray)
-                        TextField("간단한 자기소개를 입력하세요.", text: $editIntro)
-                            .textFieldStyle(.roundedBorder)
-                            .foregroundColor(.black)
+                        Text("자기소개 (플레이 스타일 / 축구 경력 / 각오 등)").font(.caption).foregroundColor(.gray)
+                        TextEditor(text: $editIntro)
                             .font(.body)
+                            .foregroundColor(.black)
+                            .padding(4)
+                            .frame(minHeight: 120)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1)))
                     }
                 }
                 .padding()

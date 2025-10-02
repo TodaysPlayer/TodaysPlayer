@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 struct SettingView: View {
     var body: some View {

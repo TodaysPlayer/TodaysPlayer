@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 struct NotiView: View {
     // 주입 가능한 알림 데이터. 바인딩으로 받아 삭제가 반영됩니다.
