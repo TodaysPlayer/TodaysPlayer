@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import FSCalendar
 
 struct WritePostView: View {
     @State private var viewModel = WritePostViewModel()
     @Environment(\.dismiss) private var dismiss
+    @State private var showCalendar = false
     
     var body: some View {
         NavigationStack {
@@ -18,8 +20,14 @@ struct WritePostView: View {
                     VStack(spacing: 24) {
                         // 제목 입력
                         FormSection(title: "제목") {
-                            TextField("경기 제목을 입력하세요", text: $viewModel.title)
-                                .textFieldStyle(.roundedBorder)
+                            HStack {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundColor(.gray)
+                                TextField("경기 제목을 입력하세요", text: $viewModel.title)
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
                         }
                         
                         // 경기 종류
@@ -45,17 +53,17 @@ struct WritePostView: View {
                         
                         // 날짜 선택
                         FormSection(title: "날짜") {
-                            HStack {
-                                DatePicker(
-                                    "경기 날짜",
-                                    selection: $viewModel.selectedDate,
-                                    in: Date()...,
-                                    displayedComponents: .date
-                                )
-                                .datePickerStyle(.compact)
-                                .labelsHidden()
-                                
-                                Spacer()
+                            Button(action: { showCalendar = true }) {
+                                HStack {
+                                    Text(dateFormatter.string(from: viewModel.selectedDate))
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Image(systemName: "calendar")
+                                        .foregroundColor(.gray)
+                                }
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(12)
                             }
                         }
                         
@@ -69,8 +77,12 @@ struct WritePostView: View {
                                 )
                                 .labelsHidden()
                                 .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(12)
                                 
                                 Text("~")
+                                    .foregroundColor(.gray)
                                 
                                 DatePicker(
                                     "종료 시간",
@@ -79,6 +91,9 @@ struct WritePostView: View {
                                 )
                                 .labelsHidden()
                                 .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(12)
                             }
                         }
                         
@@ -89,13 +104,14 @@ struct WritePostView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: "magnifyingglass")
+                                        .foregroundColor(.gray)
                                     Text(viewModel.selectedLocation?.name ?? "구장을 검색하세요")
                                         .foregroundColor(viewModel.selectedLocation == nil ? .gray : .primary)
                                     Spacer()
                                 }
                                 .padding()
                                 .background(Color(.systemGray6))
-                                .cornerRadius(8)
+                                .cornerRadius(12)
                             }
                             
                             if let location = viewModel.selectedLocation {
@@ -108,23 +124,38 @@ struct WritePostView: View {
                             }
                         }
                         
-                        // 모집 상세 (구장명 다음으로 이동)
+                        // 모집 상세
                         FormSection(title: "모집 상세") {
                             TextEditor(text: $viewModel.description)
-                                .frame(minHeight: 120)
+                                .frame(minHeight: 150)
                                 .padding(8)
                                 .background(Color(.systemGray6))
-                                .cornerRadius(8)
+                                .cornerRadius(12)
+                                .overlay(
+                                    Group {
+                                        if viewModel.description.isEmpty {
+                                            Text("매칭에 대해 알려주세요\n(팀이름/연령대/소개 등)")
+                                                .foregroundColor(.gray)
+                                                .padding(.top, 16)
+                                                .padding(.leading, 12)
+                                                .allowsHitTesting(false)
+                                        }
+                                    },
+                                    alignment: .topLeading
+                                )
                         }
                         
                         // 모집 인원
                         FormSection(title: "모집 인원") {
-                            Stepper(
-                                value: $viewModel.maxParticipants,
-                                in: 1...22
-                            ) {
-                                Text("\(viewModel.maxParticipants)명")
+                            HStack {
+                                TextField("모집하는 인원을 입력하세요", value: $viewModel.maxParticipants, format: .number)
+                                    .keyboardType(.numberPad)
+                                Text("명")
+                                    .foregroundColor(.primary)
                             }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
                         }
                         
                         // 실력
@@ -142,35 +173,47 @@ struct WritePostView: View {
                             VStack(spacing: 12) {
                                 HStack(spacing: 12) {
                                     Button {
-                                        viewModel.hasFee = true
-                                    } label: {
-                                        Text("있어요")
-                                            .font(.subheadline)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 12)
-                                            .background(viewModel.hasFee ? Color.green : Color(.systemGray5))
-                                            .foregroundColor(viewModel.hasFee ? .white : .primary)
-                                            .cornerRadius(8)
-                                    }
-                                    
-                                    Button {
                                         viewModel.hasFee = false
                                         viewModel.price = 0
                                     } label: {
-                                        Text("없어요")
-                                            .font(.subheadline)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 12)
-                                            .background(!viewModel.hasFee ? Color.green : Color(.systemGray5))
-                                            .foregroundColor(!viewModel.hasFee ? .white : .primary)
-                                            .cornerRadius(8)
+                                        HStack {
+                                            Image(systemName: viewModel.hasFee ? "circle" : "checkmark.circle.fill")
+                                                .foregroundColor(viewModel.hasFee ? .gray : .green)
+                                            Text("없어요")
+                                                .foregroundColor(.primary)
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(12)
+                                    }
+                                    
+                                    Button {
+                                        viewModel.hasFee = true
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: viewModel.hasFee ? "checkmark.circle.fill" : "circle")
+                                                .foregroundColor(viewModel.hasFee ? .green : .gray)
+                                            Text("있어요")
+                                                .foregroundColor(.primary)
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(12)
                                     }
                                 }
                                 
                                 if viewModel.hasFee {
-                                    TextField("참가비 (원)", value: $viewModel.price, format: .number)
-                                        .textFieldStyle(.roundedBorder)
-                                        .keyboardType(.numberPad)
+                                    HStack {
+                                        TextField("금액을 입력하세요", value: $viewModel.price, format: .number)
+                                            .keyboardType(.numberPad)
+                                        Text("원")
+                                            .foregroundColor(.primary)
+                                    }
+                                    .padding()
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(12)
                                 }
                             }
                         }
@@ -210,6 +253,9 @@ struct WritePostView: View {
             }
             .navigationTitle("용병 모집하기")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showCalendar) {
+                MonthCalendarSheet(selectedDate: $viewModel.selectedDate, showCalendar: $showCalendar)
+            }
             .sheet(isPresented: $viewModel.showLocationSearch) {
                 LocationSearchBottomSheet(
                     isPresented: $viewModel.showLocationSearch,
@@ -227,6 +273,91 @@ struct WritePostView: View {
             }
         }
     }
+    
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "yyyy년 M월 d일"
+        return formatter
+    }
+}
+
+// MARK: - 월간 캘린더 시트
+struct MonthCalendarSheet: View {
+    @Binding var selectedDate: Date
+    @Binding var showCalendar: Bool
+    
+    var body: some View {
+        NavigationView {
+            VStack {
+                MonthCalendarView(selectedDate: $selectedDate)
+                    .frame(height: 400)
+                    .padding()
+                
+                Spacer()
+                
+                Button(action: {
+                    showCalendar = false
+                }) {
+                    Text("완료")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(12)
+                }
+                .padding()
+            }
+            .navigationTitle("날짜 선택")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: Button("닫기") {
+                showCalendar = false
+            })
+        }
+    }
+}
+
+// MARK: - FSCalendar UIViewRepresentable (월간 모드)
+struct MonthCalendarView: UIViewRepresentable {
+    @Binding var selectedDate: Date
+    
+    func makeUIView(context: Context) -> FSCalendar {
+        let calendar = FSCalendar()
+        calendar.scope = .month  // 월간 달력 모드
+        calendar.delegate = context.coordinator
+        calendar.dataSource = context.coordinator
+        calendar.locale = Locale(identifier: "ko_KR")
+        
+        // 달력 스타일 설정
+        calendar.appearance.headerTitleColor = .black
+        calendar.appearance.weekdayTextColor = .gray
+        calendar.appearance.todayColor = .systemBlue
+        calendar.appearance.selectionColor = .systemGreen
+        calendar.appearance.headerMinimumDissolvedAlpha = 0.0
+        
+        return calendar
+    }
+    
+    func updateUIView(_ uiView: FSCalendar, context: Context) {
+        uiView.select(selectedDate)
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, FSCalendarDelegate, FSCalendarDataSource {
+        var parent: MonthCalendarView
+        
+        init(_ parent: MonthCalendarView) {
+            self.parent = parent
+        }
+        
+        func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+            parent.selectedDate = date
+        }
+    }
 }
 
 // MARK: - Form Section Component
@@ -242,7 +373,7 @@ struct FormSection<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.headline)
+                .font(.system(size: 16, weight: .semibold))
             content
         }
     }
@@ -261,9 +392,9 @@ struct MatchTypeButton: View {
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(isSelected ? (type == "futsal" ? Color.green : Color.blue) : Color(.systemGray5))
+                .background(isSelected ? Color.green : Color(.systemGray5))
                 .foregroundColor(isSelected ? .white : .primary)
-                .cornerRadius(8)
+                .cornerRadius(12)
         }
     }
 }
@@ -287,14 +418,13 @@ struct SkillLevelPicker: View {
                 } label: {
                     Text(level.1)
                         .font(.subheadline)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
                         .background(selectedLevel == level.0 ? Color.blue : Color(.systemGray5))
                         .foregroundColor(selectedLevel == level.0 ? .white : .primary)
-                        .cornerRadius(6)
+                        .cornerRadius(8)
                 }
             }
-            Spacer() // 왼쪽 정렬
         }
     }
 }
@@ -310,21 +440,20 @@ struct GenderPicker: View {
     ]
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             ForEach(genders, id: \.0) { gender in
                 Button {
                     selectedGender = gender.0
                 } label: {
                     Text(gender.1)
                         .font(.subheadline)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
                         .background(selectedGender == gender.0 ? Color.blue : Color(.systemGray5))
                         .foregroundColor(selectedGender == gender.0 ? .white : .primary)
-                        .cornerRadius(6)
+                        .cornerRadius(8)
                 }
             }
-            Spacer() // 왼쪽 정렬
         }
     }
 }
