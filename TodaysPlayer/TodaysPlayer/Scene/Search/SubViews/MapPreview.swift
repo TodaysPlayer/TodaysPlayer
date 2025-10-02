@@ -2,7 +2,7 @@
 //  MapPreview.swift
 //  TodaysPlayer
 //
-//  Created by AI on 10/1/25.
+//  Created by J on 10/1/25.
 //
 
 import SwiftUI
