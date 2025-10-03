@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MatchListView: View {
     @State var viewModel: MatchListViewModel = MatchListViewModel()
-    
+
     var body: some View {
         NavigationStack{
             ZStack {
@@ -28,8 +28,11 @@ struct MatchListView: View {
                             viewModel.fetchMatchListDatas(selectedIndex: $0)
                         }
                     
-                    MatchDashboardView()
-                        .padding(.horizontal, 20)
+                    MyMatchFilterButtonView(
+                        titles: viewModel.appliedMatchType,
+                        selectedTitle: $viewModel.selectedMatchType
+                    )
+                        .padding(.horizontal, 10)
                     
                     ScrollView {
                         LazyVStack(spacing: 16) {
