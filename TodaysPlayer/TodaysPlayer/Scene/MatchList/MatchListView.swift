@@ -25,7 +25,7 @@ struct MatchListView: View {
                     ParticipantSegmentControlView(
                         categories: viewModel.matchListType,
                         initialSelection: viewModel.matchListType.first ?? "신청한 경기") {
-                            viewModel.fetchMatchListDatas(selectedIndex: $0)
+                            viewModel.fetchMatchListDatas(selectedType: $0)
                         }
                     
                     MyMatchFilterButtonView(

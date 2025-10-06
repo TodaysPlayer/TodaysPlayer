@@ -13,11 +13,11 @@ struct ParticipantSegmentControlView: View {
     
     @Namespace private var underlineNamespace
     
-    var onSelectionChanged: ((String) -> Void)? = nil
+    var onSelectionChanged: ((PostedMatchCase) -> Void)? = nil
     
     init(categories: [String],
          initialSelection: String,
-         onSelectionChanged: ((String) -> Void)? = nil
+         onSelectionChanged: ((PostedMatchCase) -> Void)? = nil
     ) {
         self.categories = categories
         _selectedStatus = State(initialValue: initialSelection)
@@ -50,7 +50,8 @@ struct ParticipantSegmentControlView: View {
                     .onTapGesture {
                         withAnimation(.spring()) {
                             selectedStatus = status
-                            onSelectionChanged?(selectedStatus)
+                            guard let title = PostedMatchCase(rawValue: selectedStatus) else { return }
+                            onSelectionChanged?(title)
                         }
                     }
                 }

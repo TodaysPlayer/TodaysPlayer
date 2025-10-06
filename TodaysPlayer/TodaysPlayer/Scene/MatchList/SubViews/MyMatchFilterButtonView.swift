@@ -11,22 +11,22 @@ import SwiftUI
 /// MatchList DashBoard Component
 struct MatchDashboardComponentView: View {
     var buttonTitle: String
-    @Binding var selectedTitle: String
+    @Binding var selectedTitle: ApplyStatus
     
     var body: some View {
         Button {
-            selectedTitle = buttonTitle
+            selectedTitle = ApplyStatus(filterTitle: buttonTitle)
         } label: {
             Text(buttonTitle)
                 .foregroundStyle(.black)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .background(selectedTitle == buttonTitle ? .green.opacity(0.1) : .gray.opacity(0.2))
+                .background(selectedTitle.filterTitle == buttonTitle ? .green.opacity(0.1) : .gray.opacity(0.2))
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .overlay {
                     RoundedRectangle(cornerRadius: 20)
                         .strokeBorder(
-                            selectedTitle == buttonTitle ? Color.green.opacity(0.8) : Color.gray.opacity(0.8),
+                            selectedTitle.filterTitle == buttonTitle ? Color.green.opacity(0.8) : Color.gray.opacity(0.8),
                             lineWidth: 2
                         )
                 }
@@ -41,7 +41,7 @@ struct MatchDashboardComponentView: View {
 /// 클로져달기
 struct MyMatchFilterButtonView: View {
     var titles: [String]
-    @Binding var selectedTitle: String 
+    @Binding var selectedTitle: ApplyStatus
         
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {

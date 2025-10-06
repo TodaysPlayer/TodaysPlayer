@@ -22,7 +22,7 @@ struct ParticipantListView: View {
                         categories: ApplyStatus.allCases.map({$0.rawValue}),
                         initialSelection: viewModel.selectedStatus.rawValue
                     ) { status in
-                        viewModel.fetchParticipantDatas(status: ApplyStatus(rawValue: status) ?? .standby)
+                        viewModel.fetchParticipantDatas(status: ApplyStatus(rawValue: status.rawValue) ?? .standby)
                     }
                     
                     ScrollView {
