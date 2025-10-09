@@ -66,8 +66,8 @@ struct MatchInfoDetailView: View {
 /// 내가 모집한 경기 가 끝났으면 평가하기 버튼 추가
 struct MatchInfoView: View {
     let matchInfo: MatchInfo
-//    var showRejectionButton: Bool = false // 거절사유 버튼 플래그 추가
     let postedMatchCase: PostedMatchCase
+    let userName: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -80,13 +80,12 @@ struct MatchInfoView: View {
                 .visible(matchInfo.applyStatus != .rejected)
             
             Text("경기 주최자의 거절사유입니다.")
-                .visible( matchInfo.applyStatus == .rejected)
+                .visible(matchInfo.applyStatus == .rejected)
 
             Text(matchInfo.rejectionReason)
                 .modifier(DescriptionTextStyle())
-                .visible( matchInfo.applyStatus == .rejected)
+                .visible(matchInfo.applyStatus == .rejected)
             
-            // 내가 작성한 글이면 없애기
             Divider()
                 .visible(postedMatchCase != .myRecruitingMatch)
             
@@ -99,6 +98,11 @@ struct MatchInfoView: View {
                 Spacer()
             }
             .visible(postedMatchCase != .myRecruitingMatch)
+            
+            Button("참여자 평가하기") {
+                print("평가데스")
+            }
+            .visible(postedMatchCase == .finishedMatch && matchInfo.postUserName == userName)
         }
     }
 }
