@@ -15,7 +15,6 @@ final class PlayerRatingViewModel {
     var comments: [String: String] = [:]
     var completedRatings: Set<String> = [] // 평가 완료된 유저 ID
     let ratingList: [(String, String)] = [
-        ("trophy", "실력"),
         ("heart", "매너"),
         ("person.2", "팀워크"),
         ("timer", "시간약속")

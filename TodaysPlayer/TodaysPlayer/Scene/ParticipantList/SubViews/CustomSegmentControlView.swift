@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ParticipantSegmentControlView: View {
+struct CustomSegmentControlView: View {
     let categories: [String]
     @State private var selectedStatus: String
     
@@ -30,7 +30,9 @@ struct ParticipantSegmentControlView: View {
                 ZStack(alignment: .bottom) {
                     Text(status)
                         .foregroundColor(selectedStatus == status ? .green : .gray)
-                        .font(.footnote)
+                        .font(.headline)
+                        .lineLimit(1) 
+                        .minimumScaleFactor(0.7)
                         .overlay(
                             VStack {
                                 RoundedRectangle(cornerRadius: 10)

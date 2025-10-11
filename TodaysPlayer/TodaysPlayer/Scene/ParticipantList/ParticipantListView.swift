@@ -18,7 +18,7 @@ struct ParticipantListView: View {
                 .ignoresSafeArea()
             
             VStack {
-                ParticipantSegmentControlView(
+                CustomSegmentControlView(
                     categories: ApplyStatus.allCases
                         .filter({ $0 != .allType})
                         .map({ $0.rawValue}),
