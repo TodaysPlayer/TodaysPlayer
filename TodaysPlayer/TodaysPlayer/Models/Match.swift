@@ -13,6 +13,8 @@ struct Match: Codable, Identifiable {
     let title: String
     let description: String
     let organizerId: String
+    let organizerName: String
+    let organizerProfileURL: String?
     let teamId: String?
     let matchType: String // "individual", "team"
     let gender: String // "male", "female", "mixed"
@@ -36,6 +38,8 @@ struct Match: Codable, Identifiable {
         case title
         case description
         case organizerId
+        case organizerName
+        case organizerProfileURL
         case teamId
         case matchType
         case gender
@@ -58,11 +62,13 @@ struct Match: Codable, Identifiable {
     static let documentIdKey = CodingUserInfoKey(rawValue: "documentId")!
     
     // 기본 초기화자 (SampleDataManager에서 사용)
-    init(id: String, title: String, description: String, organizerId: String, teamId: String?, matchType: String, gender: String, location: MatchLocation, dateTime: Date, duration: Int, maxParticipants: Int, skillLevel: String, position: String?, price: Int, rating: Double?, status: String, tags: [String], requirements: String?, participants: [String: String], createdAt: Date, updatedAt: Date) {
+    init(id: String, title: String, description: String, organizerId: String, organizerName: String, organizerProfileURL: String?, teamId: String?, matchType: String, gender: String, location: MatchLocation, dateTime: Date, duration: Int, maxParticipants: Int, skillLevel: String, position: String?, price: Int, rating: Double?, status: String, tags: [String], requirements: String?, participants: [String: String], createdAt: Date, updatedAt: Date) {
         self.id = id
         self.title = title
         self.description = description
         self.organizerId = organizerId
+        self.organizerName = organizerName
+        self.organizerProfileURL = organizerProfileURL
         self.teamId = teamId
         self.matchType = matchType
         self.gender = gender
@@ -96,6 +102,8 @@ struct Match: Codable, Identifiable {
         self.title = try container.decode(String.self, forKey: .title)
         self.description = try container.decode(String.self, forKey: .description)
         self.organizerId = try container.decode(String.self, forKey: .organizerId)
+        self.organizerName = try container.decode(String.self, forKey: .organizerName)
+        self.organizerProfileURL = try container.decode(String.self, forKey: .organizerProfileURL)
         self.teamId = try container.decodeIfPresent(String.self, forKey: .teamId)
         self.matchType = try container.decode(String.self, forKey: .matchType)
         self.gender = try container.decodeIfPresent(String.self, forKey: .gender) ?? "mixed" // 기본값: 혼성

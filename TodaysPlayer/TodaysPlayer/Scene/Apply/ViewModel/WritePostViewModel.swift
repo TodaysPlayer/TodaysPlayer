@@ -73,6 +73,8 @@ final class WritePostViewModel {
             title: title,
             description: description,
             organizerId: organizerId,
+            organizerName: "test1",
+            organizerProfileURL: "",
             teamId: nil,
             matchType: matchType,
             gender: gender,

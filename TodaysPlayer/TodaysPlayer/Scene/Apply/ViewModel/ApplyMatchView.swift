@@ -357,6 +357,8 @@ struct ApplyMatchInfoCard: View {
                 title: "주말 풋살 매치",
                 description: "함께 즐거운 경기 해요!",
                 organizerId: "user123",
+                organizerName: "test1",
+                organizerProfileURL: "",
                 teamId: nil,
                 matchType: "futsal",
                 gender: "mixed",
