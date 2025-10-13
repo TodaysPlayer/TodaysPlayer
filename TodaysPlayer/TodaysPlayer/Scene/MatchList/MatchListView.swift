@@ -4,6 +4,15 @@
 //
 //  Created by J on 9/24/25.
 //
+//  ⚠️ TODO (2025.10.13 - 소정)
+//  ApplyMatchDetailView가 삭제되어 임시로 주석 처리했습니다.
+//
+//  해결 방법:
+//  1. MatchInfo를 Match로 변환하는 extension 추가
+//  2. 또는 MatchListView도 Firebase 데이터로 전환
+//
+//  참고: FirebaseMatchListView.swift 참고
+//
 
 import SwiftUI
 
@@ -33,10 +42,14 @@ struct MatchListView: View {
                         LazyVStack(spacing: 16) {
                             ForEach(viewModel.matchListDatas, id: \.self) { match in
                                 NavigationLink(
-                                    destination: ApplyMatchDetailView(
-                                        matchInfo: match,
-                                        postedMatchCase: viewModel.postedMatchCase
-                                    )) {
+                                    // ⚠️ 임시: ApplyMatchDetailView 삭제로 인한 주석 처리
+                                    // TODO: MatchDetailView로 교체 필요
+                                    destination: Text("준비중입니다.")
+//                                    destination: ApplyMatchDetailView(
+//                                        matchInfo: match,
+//                                        postedMatchCase: viewModel.postedMatchCase
+                                    //)
+                                ) {
                                         VStack(spacing: 20) {
                                             MatchTagView(info: match, matchCase: viewModel.postedMatchCase)
                                             MatchInfoView(
