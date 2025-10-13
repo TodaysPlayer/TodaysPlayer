@@ -93,7 +93,10 @@ struct ApplyView: View {
     @State private var selectedDate: Date = Date()
     
     // 필터 관련 상태
-    @State private var currentFilter = GameFilter() // 현재 적용된 필터(적용하기를 눌렀을때만 업데이트됨)
+    @State private var currentFilter = GameFilter()
+    
+    // ✅ FavoriteViewModel 추가
+    @EnvironmentObject var favoriteViewModel: FavoriteViewModel
     
     var body: some View {
         NavigationStack {
@@ -113,15 +116,16 @@ struct ApplyView: View {
                             .foregroundColor(.secondary)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 8)  // 최소한의 상단 여백
+                    .padding(.top, 8)
                     .padding(.bottom, 8)
                     
                     // 스크랩, 필터, 지역 버튼 (통일된 스타일)
                     HStack(spacing: 12) {
-                        // 스크랩 버튼
+                        // ✅ 스크랩 버튼 (아이콘 변경)
                         NavigationLink(destination: ScrapView()) {
                             HStack(spacing: 6) {
-                                Image(systemName: "bookmark")
+                                // ✅ 삼항연산자로 아이콘 변경
+                                Image(systemName: favoriteViewModel.favoritedMatchIds.isEmpty ? "bookmark" : "bookmark.fill")
                                     .font(.system(size: 14))
                                     .foregroundColor(.blue)
                                 Text("찜한 매치")
@@ -191,8 +195,7 @@ struct ApplyView: View {
                         LazyVStack(spacing: 16) {
                             // 스크롤 감지를 위한 투명한 뷰
                             Rectangle()
-                                .fill(Color.clear
-                                )
+                                .fill(Color.clear)
                                 .frame(height: 1)
                                 .id("top")
                                 .onAppear {
@@ -202,12 +205,11 @@ struct ApplyView: View {
                                     isScrolling = true
                                 }
                             
-//                            ApplyMatchListView(filter: currentFilter)
                             FirebaseMatchListView(selectedDate: selectedDate)
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 0)
-                        .padding(.bottom, 100) // 플로팅 버튼을 위한 여백
+                        .padding(.bottom, 100)
                     }
                 }
                 
@@ -220,9 +222,8 @@ struct ApplyView: View {
                     }
                 }
                 .padding(.trailing, 16)
-                .padding(.bottom, 34) // Safe Area 고려
+                .padding(.bottom, 34)
             }
-            //.navigationTitle("용병 모집")
         }
         .sheet(isPresented: $isRegionSheetPresented) {
             RegionBottomSheet(
@@ -263,32 +264,9 @@ struct ApplyView: View {
     }
 }
 
-//// 샘플 게시글 카드 뷰
-//struct PostCardView: View {
-//    let title: String
-//    let content: String
-//    
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 8) {
-//            Text(title)
-//                .font(.headline)
-//                .foregroundColor(.primary)
-//            
-//            Text(content)
-//                .font(.body)
-//                .foregroundColor(.secondary)
-//                .lineLimit(3)
-//        }
-//        .frame(maxWidth: .infinity, alignment: .leading)
-//        .padding()
-//        .background(Color(.systemBackground))
-//        .cornerRadius(12)
-//        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-//    }
-//}
-
 #Preview {
     NavigationStack {
         ApplyView()
+            .environmentObject(FavoriteViewModel())
     }
 }

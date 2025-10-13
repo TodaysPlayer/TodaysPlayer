@@ -148,17 +148,17 @@ struct MyPageView: View {
 
     private var statsRow: some View {
         HStack(spacing: 10) {
-            StatView(icon: "calendar", value: "5", label: "참여 경기", color: .green)
+            Stat(icon: "calendar", value: "5", label: "참여 경기", color: .green)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                 )
-            StatView(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "평균 평점", color: .purple)
+            Stat(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "평균 평점", color: .purple)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                 )
-            StatView(icon: "person.3.fill", value: "12", label: "용병 참여", color: .orange)
+            Stat(icon: "person.3.fill", value: "12", label: "용병 참여", color: .orange)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -180,13 +180,13 @@ struct MyPageView: View {
     private var menuList: some View {
         VStack(spacing: 12) {
             NavigationLink(destination: AnnouncementView()) {
-                MyPageRowView(icon: "megaphone.fill", iconColor: .blue, title: "앱 공지사항", subtitle: "최신 공지사항 및 업데이트 정보")
+                MyPageRow(icon: "megaphone.fill", iconColor: .blue, title: "앱 공지사항", subtitle: "최신 공지사항 및 업데이트 정보")
             }
             NavigationLink(destination: QuestionView()) {
-                MyPageRowView(icon: "questionmark.circle.fill", iconColor: .green, title: "운영자에게 문의하기", subtitle: "궁금한 점이나 문제점을 문의하세요")
+                MyPageRow(icon: "questionmark.circle.fill", iconColor: .green, title: "운영자에게 문의하기", subtitle: "궁금한 점이나 문제점을 문의하세요")
             }
             NavigationLink(destination: PersonalityView()) {
-                MyPageRowView(icon: "shield.lefthalf.fill", iconColor: .purple, title: "개인정보 처리방침", subtitle: "개인정보 보호 정책 및 이용약관")
+                MyPageRow(icon: "shield.lefthalf.fill", iconColor: .purple, title: "개인정보 처리방침", subtitle: "개인정보 보호 정책 및 이용약관")
             }
         }
         .padding(7)

@@ -20,10 +20,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct TodaysPlayerApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var favoriteViewModel = FavoriteViewModel()
     
     var body: some Scene {
         WindowGroup {
             LoginView()
+                .environmentObject(favoriteViewModel)
         }
     }
 }

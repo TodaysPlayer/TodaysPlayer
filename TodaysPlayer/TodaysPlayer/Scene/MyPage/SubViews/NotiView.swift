@@ -13,8 +13,6 @@ struct NotiView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Removed the header HStack with title and delete button
-
             // 내용
             if notifications.isEmpty {
                 VStack(spacing: 12) {
@@ -62,7 +60,7 @@ struct NotiView: View {
         // 시트(아래에서 올라오는 모달) 표현 설정
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-//        .navigationBarBackButtonHidden()
+        .background(Color.gray.opacity(0.1))
     }
 }
 

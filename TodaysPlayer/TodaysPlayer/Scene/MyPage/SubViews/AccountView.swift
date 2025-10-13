@@ -17,15 +17,16 @@ struct AccountView: View {
     
     private var pwEdit: some View {
         NavigationLink(destination: PwEditView()) {
-            MyPageRowView(icon: "key.viewfinder", iconColor: .blue, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
+            MyPageRow(icon: "key.viewfinder", iconColor: .blue, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
         }
+        .padding(.horizontal)
     }
     
     private var checkOut: some View {
         Button {
             showDeleteAlert = true
         } label: {
-            MyPageRowView(icon: "person.slash.fill", iconColor: .red, title: "회원 탈퇴", subtitle: "모든 정보를 지우고 회원 탈퇴 합니다.")
+            MyPageRow(icon: "person.slash.fill", iconColor: .red, title: "회원 탈퇴", subtitle: "모든 정보를 지우고 회원 탈퇴 합니다.")
         }
         .alert("정말 탈퇴하시겠습니까?", isPresented: $showDeleteAlert) {
             Button("취소", role: .cancel) { }
@@ -59,6 +60,7 @@ struct AccountView: View {
                 }
             }
         }
+        .padding(.horizontal)
     }
     
     var body: some View {
@@ -74,6 +76,7 @@ struct AccountView: View {
                         .bold()
                 }
             }
+            .background(Color.gray.opacity(0.1))
         }
     }
     
