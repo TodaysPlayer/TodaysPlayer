@@ -9,6 +9,20 @@ struct FirebaseMatchListView: View {
     // 부모 뷰(ApplyView)로부터 선택된 날짜 받기
     var selectedDate: Date
     
+    // ⭐️ TODO: 로그인 완성 후 수정 필요!
+    // ========================================
+    // [방법 1] AuthManager 사용하는 경우:
+    // @EnvironmentObject var authManager: AuthManager
+    // 그리고 아래 currentUserId 부분을 authManager.currentUserId로 변경
+    //
+    // [방법 2] Firebase Auth 직접 사용하는 경우:
+    // import FirebaseAuth 추가
+    // Auth.auth().currentUser?.uid ?? "temp_user_id"로 변경
+    // ========================================
+    private var currentUserId: String {
+        "temp_user_id" // 임시 ID - 로그인 완성 후 실제 사용자 ID로 교체!
+    }
+    
     // 날짜별 필터링된 매치
     private var filteredMatches: [Match] {
         matches.filter { match in
@@ -39,7 +53,10 @@ struct FirebaseMatchListView: View {
                 } else {
                     // matches 대신 filteredMatches 사용
                     ForEach(filteredMatches, id: \.id) { match in
-                        NavigationLink(destination: MatchDetailView(match: match)) {
+                        NavigationLink(destination: MatchDetailView(
+                            match: match,
+                            currentUserId: "temp_user_id" // 임시 아이디 추가
+                        )) {
                             VStack(alignment: .leading, spacing: 12) {
                                 // 1️⃣ 풋살/축구 태그
                                 HStack {

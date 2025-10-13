@@ -11,6 +11,7 @@ import MapKit
 // MARK: - 메인 뷰
 struct MatchDetailView: View {
     let match: Match
+    let currentUserId: String // 로그인한 아이디
     let postedMatchCase: PostedMatchCase = .allMatches // 기본값
     
     var body: some View {
@@ -58,7 +59,8 @@ struct MatchDetailView: View {
         .safeAreaInset(edge: .bottom) {
             MatchActionButtonsViewForMatch(
                 match: match,
-                postedMatchCase: postedMatchCase
+                postedMatchCase: postedMatchCase,
+                currentUserId: currentUserId
             )
         }
     }
@@ -290,22 +292,42 @@ struct MatchLocationSectionForMatch: View {
 struct MatchActionButtonsViewForMatch: View {
     let match: Match
     let postedMatchCase: PostedMatchCase
+    let currentUserId: String
     
     private var actionType: MatchActionType {
         postedMatchCase.defaultActionType
     }
     
+    // 본인이 작성한 매치인지 확인
+    private var isMyMatch: Bool {
+        match.organizerId == currentUserId
+    }
+    
     var body: some View {
-        NavigationLink(
-            destination: ApplyMatchView(match: match)
-        ) {
-            Text(actionType.title)
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(actionType.backgroundColor)
-                .foregroundColor(.white)
-                .cornerRadius(12)
+        Group {
+            if isMyMatch {
+                // 본인 매치일 때 - 비활성화된 버튼
+                Text("본인이 작성한 매치입니다")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            } else {
+                // 다른 사람 매치일 때 - 신청 가능
+                NavigationLink(
+                    destination: ApplyMatchView(match: match)
+                ) {
+                    Text(actionType.title)
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(actionType.backgroundColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+            }
         }
         .padding()
         .background(Color(.systemBackground))
