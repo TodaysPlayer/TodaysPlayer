@@ -114,7 +114,7 @@ struct ApplyView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 8)  // 최소한의 상단 여백
-                    .padding(.bottom, 12)
+                    .padding(.bottom, 8)
                     
                     // 스크랩, 필터, 지역 버튼 (통일된 스타일)
                     HStack(spacing: 12) {
@@ -176,14 +176,15 @@ struct ApplyView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
+                    .padding(.bottom, 8)
                     
                     // 주간 달력 추가
                     CalendarView(selectedDate: $selectedDate)
-                        .frame(height: 200)
+                        .frame(height: 150)
                         .clipped()
                         .padding(.horizontal, 16)
-                        .padding(.bottom, -100)
+                        .padding(.top, 8)
+                        .padding(.bottom, 8)
                     
                     // 게시글 공고 스크롤뷰
                     ScrollView {
@@ -202,7 +203,7 @@ struct ApplyView: View {
                                 }
                             
 //                            ApplyMatchListView(filter: currentFilter)
-                            FirebaseMatchListView()
+                            FirebaseMatchListView(selectedDate: selectedDate)
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 0)

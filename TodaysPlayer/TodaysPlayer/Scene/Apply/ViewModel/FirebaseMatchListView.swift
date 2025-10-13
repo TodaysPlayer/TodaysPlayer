@@ -6,6 +6,16 @@ struct FirebaseMatchListView: View {
     @State private var matches: [Match] = []
     @State private var isLoading = false
     
+    // 부모 뷰(ApplyView)로부터 선택된 날짜 받기
+    var selectedDate: Date
+    
+    // 날짜별 필터링된 매치
+    private var filteredMatches: [Match] {
+        matches.filter { match in
+            Calendar.current.isDate(match.dateTime, inSameDayAs: selectedDate)
+        }
+    }
+    
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
@@ -15,19 +25,39 @@ struct FirebaseMatchListView: View {
                     Text("매치가 없습니다")
                         .foregroundColor(.secondary)
                         .padding()
+                } else if filteredMatches.isEmpty {
+                    // 선택한 날짜에 매치가 없을 때
+                    VStack(spacing: 8) {
+                        Image(systemName: "calendar.badge.exclamationmark")
+                            .font(.system(size: 40))
+                            .foregroundColor(.secondary)
+                        Text("선택한 날짜에 매치가 없습니다")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 40)
                 } else {
-                    ForEach(matches, id: \.id) { match in
-                        // 👇 NavigationLink로 카드 전체를 감싸기
+                    // matches 대신 filteredMatches 사용
+                    ForEach(filteredMatches, id: \.id) { match in
                         NavigationLink(destination: MatchDetailView(match: match)) {
-                            // 간단한 카드 UI
                             VStack(alignment: .leading, spacing: 12) {
                                 Text(match.title)
                                     .font(.headline)
-                                    .foregroundColor(.primary) // 👈 텍스트 색상 명시
+                                    .foregroundColor(.primary)
                                 
                                 Text(match.description)
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
+                                
+                                // 날짜/시간 표시
+                                HStack(spacing: 4) {
+                                    Image(systemName: "calendar")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                    Text(match.dateTime.formatForDisplay())
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
                                 
                                 HStack {
                                     Text(match.matchType == "futsal" ? "풋살" : "축구")
@@ -40,13 +70,13 @@ struct FirebaseMatchListView: View {
                                     
                                     Text("\(match.participants.count)/\(match.maxParticipants)명")
                                         .font(.caption)
-                                        .foregroundColor(.primary) // 👈 텍스트 색상 명시
+                                        .foregroundColor(.primary)
                                     
                                     Spacer()
                                     
                                     Text("\(match.price)원")
                                         .font(.caption)
-                                        .foregroundColor(.primary) // 👈 텍스트 색상 명시
+                                        .foregroundColor(.primary)
                                 }
                             }
                             .padding()
@@ -54,7 +84,7 @@ struct FirebaseMatchListView: View {
                             .cornerRadius(12)
                             .shadow(color: .black.opacity(0.1), radius: 4)
                         }
-                        .buttonStyle(PlainButtonStyle()) // 👈 기본 버튼 스타일 제거
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }
@@ -90,7 +120,7 @@ struct FirebaseMatchListView: View {
                         print("✅ Match 디코딩 성공: \(match.title)")
                         return match
                     } catch {
-                        print("❌ Match 디코딩 실패: \(error)")
+                        print("Match 디코딩 실패: \(error)")
                         return nil
                     }
                 }
@@ -102,7 +132,7 @@ struct FirebaseMatchListView: View {
                 }
                 
             } catch {
-                print("❌ 에러: \(error.localizedDescription)")
+                print("에러: \(error.localizedDescription)")
                 await MainActor.run {
                     self.isLoading = false
                 }
