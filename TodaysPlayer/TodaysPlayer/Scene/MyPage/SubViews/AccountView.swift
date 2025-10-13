@@ -19,6 +19,7 @@ struct AccountView: View {
         NavigationLink(destination: PwEditView()) {
             MyPageRow(icon: "key.viewfinder", iconColor: .blue, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
         }
+        .padding(.horizontal)
     }
     
     private var checkOut: some View {
@@ -59,6 +60,7 @@ struct AccountView: View {
                 }
             }
         }
+        .padding(.horizontal)
     }
     
     var body: some View {
