@@ -37,52 +37,21 @@ struct FirebaseMatchListView: View {
                     }
                     .padding(.top, 40)
                 } else {
-                    // matches 대신 filteredMatches 사용
+                    // MatchItemView 사용
                     ForEach(filteredMatches, id: \.id) { match in
                         NavigationLink(destination: MatchDetailView(match: match)) {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text(match.title)
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                
-                                Text(match.description)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                
-                                // 날짜/시간 표시
-                                HStack(spacing: 4) {
-                                    Image(systemName: "calendar")
-                                        .font(.caption)
-                                        .foregroundColor(.blue)
-                                    Text(match.dateTime.formatForDisplay())
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                HStack {
-                                    Text(match.matchType == "futsal" ? "풋살" : "축구")
-                                        .font(.caption)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 4)
-                                        .background(Color.green)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(8)
-                                    
-                                    Text("\(match.participants.count)/\(match.maxParticipants)명")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                    
-                                    Spacer()
-                                    
-                                    Text("\(match.price)원")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                }
-                            }
-                            .padding()
-                            .background(Color(.systemBackground))
-                            .cornerRadius(12)
-                            .shadow(color: .black.opacity(0.1), radius: 4)
+                            MatchItemView(
+                                location: match.location.name,
+                                address: match.location.address,
+                                distance: "0km", // TODO: 거리 계산 필요하면 추가
+                                time: match.dateTime.formatForDisplay(),
+                                participants: "\(match.participants.count)/\(match.maxParticipants)",
+                                gender: GenderType(rawValue: match.gender) ?? .mixed,
+                                rating: match.rating != nil ? String(format: "%.1f", match.rating!) : "0.0",
+                                price: match.price == 0 ? "무료" : "\(match.price)원",
+                                skillLevel: skillLevelKorean(match.skillLevel),
+                                tags: match.createMatchTags()
+                            )
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
@@ -92,6 +61,17 @@ struct FirebaseMatchListView: View {
         }
         .onAppear {
             fetchMatches()
+        }
+    }
+    
+    // 실력 레벨을 한글로 변환하는 헬퍼 함수
+    private func skillLevelKorean(_ level: String) -> String {
+        switch level.lowercased() {
+        case "beginner": return "입문자"
+        case "amateur": return "초급"
+        case "elite": return "중급"
+        case "professional": return "상급"
+        default: return "무관"
         }
     }
     
