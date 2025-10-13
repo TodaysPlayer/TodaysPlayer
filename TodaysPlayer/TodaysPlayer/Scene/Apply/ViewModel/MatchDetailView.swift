@@ -11,7 +11,6 @@ import MapKit
 // MARK: - 메인 뷰
 struct MatchDetailView: View {
     let match: Match
-    let currentUserId: String // 로그인한 아이디
     let postedMatchCase: PostedMatchCase = .allMatches // 기본값
     
     var body: some View {
@@ -60,7 +59,7 @@ struct MatchDetailView: View {
             MatchActionButtonsViewForMatch(
                 match: match,
                 postedMatchCase: postedMatchCase,
-                currentUserId: currentUserId
+                currentUserId: AuthHelper.currentUserId
             )
         }
     }
@@ -292,7 +291,6 @@ struct MatchLocationSectionForMatch: View {
 struct MatchActionButtonsViewForMatch: View {
     let match: Match
     let postedMatchCase: PostedMatchCase
-    let currentUserId: String
     
     private var actionType: MatchActionType {
         postedMatchCase.defaultActionType
@@ -300,7 +298,7 @@ struct MatchActionButtonsViewForMatch: View {
     
     // 본인이 작성한 매치인지 확인
     private var isMyMatch: Bool {
-        match.organizerId == currentUserId
+        match.organizerId == AuthHelper.currentUserId
     }
     
     var body: some View {
