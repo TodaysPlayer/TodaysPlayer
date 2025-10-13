@@ -59,12 +59,12 @@ struct FirebaseMatchListView: View {
                                     .font(.headline)
                                     .foregroundColor(.primary)
                                 
-                                // 3️⃣ 시간 (시작~종료)
+                                // 3️⃣ 시간 (시작 시간만)
                                 HStack(spacing: 4) {
                                     Image(systemName: "clock")
                                         .font(.caption)
                                         .foregroundColor(.primary)
-                                    Text(match.dateTime.formatTimeRange(duration: match.duration))
+                                    Text(match.dateTime.formatForDisplay())
                                         .font(.caption)
                                         .foregroundColor(.primary)
                                 }
