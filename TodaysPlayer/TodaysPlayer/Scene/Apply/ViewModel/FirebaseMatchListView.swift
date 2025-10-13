@@ -37,21 +37,87 @@ struct FirebaseMatchListView: View {
                     }
                     .padding(.top, 40)
                 } else {
-                    // MatchItemView 사용
+                    // matches 대신 filteredMatches 사용
                     ForEach(filteredMatches, id: \.id) { match in
                         NavigationLink(destination: MatchDetailView(match: match)) {
-                            MatchItemView(
-                                location: match.location.name,
-                                address: match.location.address,
-                                distance: "0km", // TODO: 거리 계산 필요하면 추가
-                                time: match.dateTime.formatForDisplay(),
-                                participants: "\(match.participants.count)/\(match.maxParticipants)",
-                                gender: GenderType(rawValue: match.gender) ?? .mixed,
-                                rating: match.rating != nil ? String(format: "%.1f", match.rating!) : "0.0",
-                                price: match.price == 0 ? "무료" : "\(match.price)원",
-                                skillLevel: skillLevelKorean(match.skillLevel),
-                                tags: match.createMatchTags()
-                            )
+                            VStack(alignment: .leading, spacing: 12) {
+                                // 1️⃣ 풋살/축구 태그
+                                HStack {
+                                    Text(match.matchType == "futsal" ? "풋살" : "축구")
+                                        .font(.caption)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(match.matchType == "futsal" ? Color.green : Color.blue)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(8)
+                                    
+                                    Spacer()
+                                }
+                                
+                                // 2️⃣ 제목
+                                Text(match.title)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                
+                                // 3️⃣ 시간 (시작~종료)
+                                HStack(spacing: 4) {
+                                    Image(systemName: "clock")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                    Text(match.dateTime.formatTimeRange(duration: match.duration))
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                }
+                                
+                                // 4️⃣ 장소명
+                                HStack(spacing: 4) {
+                                    Image(systemName: "mappin.circle")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                    Text(match.location.name)
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                }
+                                
+                                // 5️⃣ 인원 / 참가비 / 성별 / 실력 (간격 넓힘)
+                                HStack(spacing: 16) {
+                                    // 인원
+                                    HStack(spacing: 2) {
+                                        Image(systemName: "person.2")
+                                            .font(.caption2)
+                                            .foregroundColor(.primary)
+                                        Text("\(match.participants.count)/\(match.maxParticipants)명")
+                                            .font(.caption)
+                                            .foregroundColor(.primary)
+                                    }
+                                    
+                                    // 참가비
+                                    HStack(spacing: 2) {
+                                        Image(systemName: "wonsign.circle")
+                                            .font(.caption2)
+                                            .foregroundColor(.primary)
+                                        Text(match.price == 0 ? "무료" : "\(match.price)원")
+                                            .font(.caption)
+                                            .foregroundColor(.primary)
+                                    }
+                                    
+                                    // 성별
+                                    Text(match.genderKorean)
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                    
+                                    // 실력
+                                    Text(skillLevelKorean(match.skillLevel))
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                    
+                                    Spacer()
+                                }
+                            }
+                            .padding()
+                            .background(Color(.systemBackground))
+                            .cornerRadius(12)
+                            .shadow(color: .black.opacity(0.1), radius: 4)
                         }
                         .buttonStyle(PlainButtonStyle())
                     }

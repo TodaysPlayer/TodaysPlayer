@@ -46,4 +46,24 @@ extension Date {
         formatter.unitsStyle = .abbreviated
         return formatter.localizedString(for: self, relativeTo: Date())
     }
+    
+    func formatTimeRange(duration: Int) -> String {
+        let formatter = DateFormatter()
+        let calendar = Calendar.current
+        
+        let endTime = self.addingTimeInterval(TimeInterval(duration * 60))
+        
+        if calendar.isDateInToday(self) {
+            formatter.dateFormat = "HH시mm분"
+            return "오늘 \(formatter.string(from: self))~\(formatter.string(from: endTime))"
+        } else if calendar.isDateInTomorrow(self) {
+            formatter.dateFormat = "HH시mm분"
+            return "내일 \(formatter.string(from: self))~\(formatter.string(from: endTime))"
+        } else {
+            formatter.dateFormat = "MM월dd일 HH시mm분"
+            let startStr = formatter.string(from: self)
+            formatter.dateFormat = "HH시mm분"
+            return "\(startStr)~\(formatter.string(from: endTime))"
+        }
+    }
 }
