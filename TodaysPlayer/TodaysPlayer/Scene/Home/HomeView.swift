@@ -16,43 +16,41 @@ struct HomeView: View {
     @State private var hasAppeared = false  // 중복 로딩 방지
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
+        ScrollView {
+            VStack(spacing: 20) {
 #if DEBUG
-                    // 개발용 테스트 뷰
-                    TestView()
+                // 개발용 테스트 뷰
+                TestView()
 #endif
-                    
-                    // 다음 경기
-                    NextMatchCard(
-                        user: viewModel.user,
-                        nextMatch: viewModel.getNextMatch()
-                    )
-                    .padding(.top, 24)
-                    
-                    // 내 주변 가까운 매치
-                    NearbyMatchesCard(
-                        matches: viewModel.getNearbyMatches(),
-                        viewModel: viewModel
-                    )
-                    
-                    // 내 활동 통계
-                    ActivityStatsCard()
-                    
-                    // 프로모션 배너
-                    PromotionalBanner(viewModel: viewModel)
-                    
-                    // 하단 여백
-                    Color.clear
-                        .frame(height: 20)
-                }
-                .padding(.horizontal, 24)
+                
+                // 다음 경기
+                NextMatchCard(
+                    user: viewModel.user,
+                    nextMatch: viewModel.getNextMatch()
+                )
+                .padding(.top, 24)
+                
+                // 내 주변 가까운 매치
+                NearbyMatchesCard(
+                    matches: viewModel.getNearbyMatches(),
+                    viewModel: viewModel
+                )
+                
+                // 내 활동 통계
+                ActivityStatsCard()
+                
+                // 프로모션 배너
+                PromotionalBanner(viewModel: viewModel)
+                
+                // 하단 여백
+                Color.clear
+                    .frame(height: 20)
             }
-            .background(Color.gray.opacity(0.1))
-            .refreshable {
-                await viewModel.loadInitialData()
-            }
+            .padding(.horizontal, 24)
+        }
+        .background(Color.gray.opacity(0.1))
+        .refreshable {
+            await viewModel.loadInitialData()
         }
         .onAppear {
             // 중복 호출 방지

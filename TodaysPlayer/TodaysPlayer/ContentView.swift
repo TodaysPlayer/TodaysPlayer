@@ -11,7 +11,9 @@ struct ContentView: View {
     var body: some View {
         TabView {
             Tab("홈", systemImage: "house") {
-                HomeView()
+                NavigationStack {
+                    HomeView()
+                }
             }
             
             Tab("용병 신청", systemImage: "soccerball") {
