@@ -75,26 +75,6 @@ enum ApplyStatus: String, TagStyle, CaseIterable {
     
     // MARK: - TagStyle title
     var title: String { rawValue }
-
-    // MARK: - 필터용 문자열
-    var filterTitle: String {
-        switch self {
-        case .standby: return "대기중인 경기"
-        case .accepted: return "확정된 경기"
-        case .rejected: return "거절된 경기"
-        case .allType: return "전체"
-        }
-    }
-    
-    // MARK: - filterTitle -> ApplyStatus 변환
-    init(filterTitle: String) {
-        switch filterTitle {
-        case "대기중인 경기": self = .standby
-        case "확정된 경기": self = .accepted
-        case "거절된 경기": self = .rejected
-        default: self = .allType
-        }
-    }
     
     // MARK: - TagStyle 색상
     var backgroundColor: Color {

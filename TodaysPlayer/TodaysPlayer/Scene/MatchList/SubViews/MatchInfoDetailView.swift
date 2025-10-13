@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct MatchInfoDetailView: View {
-    let matchInfo: MatchInfo
+    let matchInfo: Match
     
     var body: some View {
         // 시간
         HStack {
             Image(systemName: "fitness.timer")
-            Text(matchInfo.matchTime)
+            Text(matchInfo.dateTime.formatForDisplay())
         }
         
         // 장소
         HStack {
             Image(systemName: "location")
-            Text(matchInfo.matchLocation)
+            Text(matchInfo.location.name)
         }
         
         
@@ -28,11 +28,14 @@ struct MatchInfoDetailView: View {
         HStack {
             Image(systemName: "person.fill")
             
-            let personCount = "\(matchInfo.applyCount) / \(matchInfo.maxCount)"
+            let participants = matchInfo.participants.map { (_, value: String) in
+                value != "rejected"
+            }.count
+            let personCount = "\(participants) / \(matchInfo.maxParticipants)"
             
-            Text(personCount.highlighted(part: String(matchInfo.applyCount), color: .green))
+            Text(personCount.highlighted(part: String(participants), color: .green))
             
-            let progressValue: Double = Double(matchInfo.applyCount) / Double(matchInfo.maxCount)
+            let progressValue: Double = Double(participants) / Double(matchInfo.maxParticipants)
             
             ProgressView(value: progressValue, total: 1.0)
                 .progressViewStyle(LinearGaugeProgressStyle())
@@ -44,17 +47,17 @@ struct MatchInfoDetailView: View {
         // 참여비 성별 실력
         HStack {
             Image(systemName: "person.fill")
-            Text("\(matchInfo.matchFee)원")
+            Text("\(matchInfo.price)원")
             
             Spacer()
             
             Image(systemName: "person.fill")
-            Text(matchInfo.genderLimit)
+            Text(matchInfo.gender)
             
             Spacer()
             
             Image(systemName: "person.fill")
-            Text(matchInfo.levelLimit)
+            Text(matchInfo.skillLevel)
             
             Spacer()
         }

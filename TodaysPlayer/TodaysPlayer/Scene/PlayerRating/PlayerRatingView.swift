@@ -65,6 +65,6 @@ struct PlayerRatingView: View {
 
 
 
-#Preview {
-    PlayerRatingView(viewModel: PlayerRatingViewModel(matchInfo: mockMatchData.first!))
-}
+//#Preview {
+//    PlayerRatingView(viewModel: PlayerRatingViewModel(matchInfo: mockMatchData.first!))
+//}
