@@ -201,7 +201,8 @@ struct ApplyView: View {
                                     isScrolling = true
                                 }
                             
-                            ApplyMatchListView(filter: currentFilter)
+//                            ApplyMatchListView(filter: currentFilter)
+                            FirebaseMatchListView()
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 0)
