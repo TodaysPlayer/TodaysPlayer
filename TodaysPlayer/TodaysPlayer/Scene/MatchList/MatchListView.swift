@@ -5,7 +5,7 @@
 //  Created by J on 9/24/25.
 //
 //  ⚠️ TODO (2025.10.13 - 소정)
-//  ApplyMatchDetailView가 삭제되어 임시로 주석 처리했습니다.
+//  ApplyMatchDetailView를 사용하지않게 되어 임시로 주석 처리했습니다.
 //
 //  해결 방법:
 //  1. MatchInfo를 Match로 변환하는 extension 추가

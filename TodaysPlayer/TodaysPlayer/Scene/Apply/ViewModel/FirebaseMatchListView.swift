@@ -120,7 +120,7 @@ struct FirebaseMatchListView: View {
                         print("✅ Match 디코딩 성공: \(match.title)")
                         return match
                     } catch {
-                        print("❌ Match 디코딩 실패: \(error)")
+                        print("Match 디코딩 실패: \(error)")
                         return nil
                     }
                 }
@@ -132,7 +132,7 @@ struct FirebaseMatchListView: View {
                 }
                 
             } catch {
-                print("❌ 에러: \(error.localizedDescription)")
+                print("에러: \(error.localizedDescription)")
                 await MainActor.run {
                     self.isLoading = false
                 }
