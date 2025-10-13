@@ -17,6 +17,7 @@ struct ParticipantEntity: Hashable {
     let description: String
     let appliedDate: String
     var status: ApplyStatus
+    var rejectionReason: String?
 }
 
 var mockParticipants: [ParticipantEntity] = [

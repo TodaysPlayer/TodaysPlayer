@@ -5,32 +5,40 @@
 //  Created by 최용헌 on 9/30/25.
 //
 
+
 import Foundation
-// 거절 누르면 바텀이 뜰텐데 뷰를 만들고 시트로 절반만 뜨게 하고 뷰한테 viewM
+
 @Observable
 final class ParticipantListViewModel {
+    let matchID: Int
     var participantDatas: [ParticipantEntity]
+    
     var selectedStatus: ApplyStatus = .standby
-    var rejectedPerson: ParticipantEntity? = nil
+    var selectedPersonInfo: ParticipantEntity? = nil
     
-    var isShowWriteReasonView: Bool = false
+    var isShowAcceptAlert: Bool = false
+    var isShowRejectSheet: Bool = false
     
-    init(){
+    var toastManager: ToastMessageManager = ToastMessageManager()
+    
+    init(matchID: Int){
+        self.matchID = matchID
         self.participantDatas = mockParticipants.filter { $0.status == .standby }
     }
     
     /// 신청자 정보 가져오기
-    func fetchParticipantDatas(status: ApplyStatus){
-        participantDatas = mockParticipants.filter { $0.status == status }
-    }
-    
-    func rejectButtonTapped(_ rejectCase: RejectCase, _ info: ParticipantEntity){
-        isShowWriteReasonView.toggle()
-        rejectedPerson = info
+    func fetchParticipantDatas(type: String){
+        guard let type = ApplyStatus(rawValue: type) else { return }
+        participantDatas = mockParticipants.filter { $0.status == type }
     }
     
     /// 신청 수락 / 거절
-    func managementAppliedStatus(_ info: ParticipantEntity, _ status: ApplyStatus){
+    func managementAppliedStatus(
+        status: ApplyStatus,
+        rejectCase: RejectCase? = nil,
+        _ reason: String? = ""
+    ){
+        guard let info = selectedPersonInfo else { return }
         switch status {
         case .accepted:
             participantDatas.removeAll(where: { $0.userName == info.userName })
@@ -44,6 +52,7 @@ final class ParticipantListViewModel {
             
             if let index = mockParticipants.firstIndex(where: { $0.userName == info.userName }) {
                 mockParticipants[index].status = .rejected
+                mockParticipants[index].rejectionReason = reason == "" ? rejectCase?.title : reason
             }
             
         default: return

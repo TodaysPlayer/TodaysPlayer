@@ -9,11 +9,15 @@ import SwiftUI
 
 
 struct MatchTagView: View {
-    @State private var isShowAlert: Bool = false
     let matchInfo: MatchInfo
     let postedMatchCase: PostedMatchCase
-    var deleteAppliedMatch: ((Int) -> Void)? = nil
+    private var leftPersonCount: Int
     
+    init(info: MatchInfo, matchCase: PostedMatchCase) {
+        self.matchInfo = info
+        self.postedMatchCase = matchCase
+        self.leftPersonCount = matchInfo.maxCount - matchInfo.applyCount
+    }
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
             // 태그
@@ -22,44 +26,24 @@ struct MatchTagView: View {
                     .matchTagStyle(tagType: matchInfo.matchType.rawValue == MatchType.futsal.rawValue ? MatchType.futsal : MatchType.soccer)
                 
                 // 조건부 : 신청상태( 확정/대기중/거절 )
-                if postedMatchCase == .appliedMatch {
-                    Text(matchInfo.applyStatus.rawValue)
-                        .matchTagStyle(tagType: matchInfo.applyStatus)
-                }
                 
-                if matchInfo.maxCount - matchInfo.applyCount == 1 {
-                    Text(MatchInfoStatus.lastOne.rawValue)
-                        .matchTagStyle(tagType: MatchInfoStatus.lastOne)
-                } else {
-                    Text(MatchInfoStatus.deadline.rawValue)
-                        .matchTagStyle(tagType: MatchInfoStatus.deadline)
-                }
+                Text(matchInfo.applyStatus.rawValue)
+                    .matchTagStyle(tagType: matchInfo.applyStatus)
+                    .visible(postedMatchCase == .appliedMatch)
+                
+                Text(MatchInfoStatus.lastOne.rawValue)
+                    .matchTagStyle(tagType: MatchInfoStatus.lastOne)
+                    .visible(leftPersonCount == 1 && matchInfo.applyStatus != .rejected)
+                
+                Text(MatchInfoStatus.deadline.rawValue)
+                    .matchTagStyle(tagType: MatchInfoStatus.deadline)
+                    .visible(leftPersonCount != 1 && matchInfo.applyStatus != .rejected)
+                
             }
             .font(.system(size: 14))
             
             Spacer()
-            
-            // 추가: 조건부 x버튼
-            if postedMatchCase == .appliedMatch {
-                Button {
-                    print("x버튼 탭")
-                    isShowAlert = true
-                } label: {
-                    Image(systemName: "xmark")
-                }
-                .padding(.horizontal, 10)
-                .foregroundStyle(Color.black)
-                .alert("삭제할까요?", isPresented: $isShowAlert) {
-                    Button("취소"){
-                        isShowAlert = false
-                    }
-                    
-                    Button("삭제"){
-                        deleteAppliedMatch?(matchInfo.matchId)
-                    }
-                    .foregroundStyle(Color.green)
-                }
-            }
         }
     }
 }
+

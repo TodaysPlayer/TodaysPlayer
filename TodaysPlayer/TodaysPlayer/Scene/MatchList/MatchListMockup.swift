@@ -100,7 +100,7 @@ let mockMatchData: [MatchInfo] = [
         genderLimit: "남성",
         levelLimit: "상급",
         imageURL: "url_005",
-        postUserName: "저가매치",
+        postUserName: "용헌",
         rejectionReason: "",
         matchDescription: "구장비가 저렴한 곳이라 참가비도 저렴합니다! 실력자 위주로 2시간 동안 빡세게 뛸 예정이니 체력 준비 단단히 하고 오세요."
     ),
