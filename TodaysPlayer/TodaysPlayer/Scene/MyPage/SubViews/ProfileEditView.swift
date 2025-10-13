@@ -97,9 +97,10 @@ struct ProfileEditView: View {
                             }
                         }
                     }
-                    Text("프로필 사진을 변경하려면 카메라 아이콘을 클릭하세요.")
-                        .font(.caption)
-                        .foregroundColor(.gray)
+                        Text("프로필 사진을 변경하려면 카메라 아이콘을 클릭하세요.")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
                 }
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 16).fill(Color(.white)))

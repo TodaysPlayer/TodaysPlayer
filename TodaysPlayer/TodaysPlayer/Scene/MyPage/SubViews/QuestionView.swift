@@ -107,8 +107,8 @@ struct QuestionView: View {
                     if bodyText.isEmpty {
                         Text("문의하실 내용을 자세히 작성해주세요. 문제 상황, 발생 시간, 사용 환경 등을 포함해주시면 더 빠른 답변이 가능합니다.")
                             .foregroundColor(.secondary)
-                            .padding(.top, 16)
-                            .padding(.horizontal, 18)
+                            .padding(.top, 15)
+                            .padding(.horizontal, 12)
                             .allowsHitTesting(false)
                     }
                 }
