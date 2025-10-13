@@ -13,7 +13,6 @@ import PhotosUI
 struct ProfileEditView: View {
     @Environment(\.dismiss) private var dismiss
     
-    // MARK: - AppStorage (영구 저장되는 사용자 프로필 값)
     // MARK: - Auth Info (로그인 계정에서 제공)
     /// 로그인 계정 이름 (읽기 전용, 로그인 과정에서 설정)
     @AppStorage("auth_name") private var authName: String = ""
@@ -22,14 +21,8 @@ struct ProfileEditView: View {
     /// 로그인 계정 이메일 (읽기 전용, 로그인 과정에서 설정)
     @AppStorage("auth_email") private var authEmail: String = ""
     
-    /// 이름 (로그인 정보에서 자동 채움, 읽기 전용)
-    @AppStorage("profile_name") private var name: String = "홍길동"
     /// 닉네임 (표시용 별명)
     @AppStorage("profile_nickname") private var nickname: String = ""
-    /// 연락처 (로그인 정보에서 자동 채움, 읽기 전용)
-    @AppStorage("profile_phone") private var phone: String = ""
-    /// 이메일 (로그인 정보에서 자동 채움, 읽기 전용)
-    @AppStorage("profile_email") private var email: String = ""
     /// 거주 지역 (자유 입력)
     @AppStorage("profile_region") private var region: String = ""
     /// 주 포지션 (선택 항목)
@@ -52,7 +45,6 @@ struct ProfileEditView: View {
     @State private var editIntro: String = ""
     @State private var didLoad: Bool = false
     @State private var editAvatarData: Data?
-    @State private var bodyText: String = ""
     /// PhotosPicker에서 선택한 항목 (이미지 선택 결과)
     @State private var selectedPhotoItem: PhotosPickerItem?
 
@@ -119,7 +111,7 @@ struct ProfileEditView: View {
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("이름").font(.caption).foregroundColor(.gray)
-                            TextField("이름", text: $name)
+                            TextField("이름", text: .constant(authName.isEmpty ? defaultName : authName))
                                 .padding(5.5)
                                 .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                                 .font(.body)
@@ -137,7 +129,7 @@ struct ProfileEditView: View {
                         HStack {
                             Image(systemName: "phone")
                                 .foregroundColor(.black)
-                            TextField("연락처", text: $phone)
+                            TextField("연락처", text: .constant(authPhone.isEmpty ? defaultPhone : authPhone))
                                 .foregroundColor(.black)
                                 .font(.body)
                                 .disabled(true)
@@ -150,7 +142,7 @@ struct ProfileEditView: View {
                         HStack {
                             Image(systemName: "envelope")
                                 .foregroundColor(.black)
-                            TextField("이메일", text: $email)
+                            TextField("이메일", text: .constant(authEmail.isEmpty ? defaultEmail : authEmail))
                                 .foregroundColor(.black)
                                 .font(.body)
                                 .disabled(true)
@@ -228,11 +220,13 @@ struct ProfileEditView: View {
                         }
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("자기소개").font(.caption).foregroundColor(.gray)
-                        TextField("간단한 자기소개를 입력하세요.", text: $editIntro)
-                            .textFieldStyle(.roundedBorder)
-                            .foregroundColor(.black)
+                        Text("자기소개 (플레이 스타일 / 축구 경력 / 각오 등)").font(.caption).foregroundColor(.gray)
+                        TextEditor(text: $editIntro)
                             .font(.body)
+                            .foregroundColor(.black)
+                            .padding(4)
+                            .frame(minHeight: 120)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1)))
                     }
                 }
                 .padding()
@@ -269,15 +263,6 @@ struct ProfileEditView: View {
         .onAppear {
             // 저장된 프로필 값을 편집용 상태 변수들로 복사
             if !didLoad {
-                // 로그인 계정 정보로 이름/연락처/이메일을 자동 채움 (값이 있으면 덮어씀)
-                if !authName.isEmpty { name = authName }
-                if !authPhone.isEmpty { phone = authPhone }
-                if !authEmail.isEmpty { email = authEmail }
-                // 로그인 정보가 없어 비어있는 경우, 기본값으로 채움
-                if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { name = defaultName }
-                if phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { phone = defaultPhone }
-                if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { email = defaultEmail }
-
                 editAvatarData = avatarData
                 editNickname = nickname
                 editRegion = region

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 // 통계 뷰
 struct StatView: View {

@@ -1,15 +1,12 @@
 //
-//  MyPageRowView.swift
+//  StatView.swift
 //  TodaysPlayer
 //
 //  Created by jonghyuck on 9/29/25.
 //
 
 import SwiftUI
-import Foundation
 
-// 마이페이지의 메뉴 리스트 한 행을 표시하는 뷰
-// - 좌측 아이콘, 제목/부제목, 우측 이동 화살표로 구성됩니다.
 struct MyPageRowView: View {
     // SF Symbols 아이콘 이름
     let icon: String
@@ -19,6 +16,7 @@ struct MyPageRowView: View {
     let title: String
     // 행 부제목(설명)
     let subtitle: String
+    
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
@@ -41,4 +39,3 @@ struct MyPageRowView: View {
         .cornerRadius(14)
     }
 }
-

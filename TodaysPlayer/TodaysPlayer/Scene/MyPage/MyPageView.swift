@@ -76,7 +76,7 @@ struct MyPageView: View {
                         .font(.system(size: 20))
                         .foregroundStyle(.black)
                 }
-                NavigationLink(destination: SettingView()) {
+                NavigationLink(destination: AccountView()) {
                     Image(systemName: "gearshape")
                         .font(.system(size: 20))
                         .foregroundStyle(.black)

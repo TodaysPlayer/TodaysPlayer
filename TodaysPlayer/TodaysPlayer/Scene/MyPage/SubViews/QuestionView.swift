@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 private enum InquiryType: String, CaseIterable, Identifiable {
     case account = "계정/로그인"

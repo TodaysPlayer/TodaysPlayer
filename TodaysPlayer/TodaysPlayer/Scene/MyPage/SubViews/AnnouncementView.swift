@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 struct AnnouncementView: View {
     // 별도 파일의 데이터를 사용합니다. 필요 시 주입 가능하도록 기본값 제공

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 struct NotiView: View {
     // 주입 가능한 알림 데이터. 바인딩으로 받아 삭제가 반영됩니다.
@@ -60,6 +59,7 @@ struct NotiView: View {
         // 시트(아래에서 올라오는 모달) 표현 설정
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
+        .navigationBarBackButtonHidden()
     }
 }
 

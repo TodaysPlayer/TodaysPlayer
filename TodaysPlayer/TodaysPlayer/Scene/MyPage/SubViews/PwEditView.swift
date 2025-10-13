@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 struct PwEditView: View {
     @Environment(\.presentationMode) var presentationMode
