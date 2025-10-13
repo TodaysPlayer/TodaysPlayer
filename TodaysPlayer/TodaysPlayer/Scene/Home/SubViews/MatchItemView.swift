@@ -22,11 +22,11 @@ struct MatchItemView: View {
     private var genderIcon: String {
         switch gender {
         case .male:
-            return "person"
+            return "icon_male"
         case .female:
-            return "person"
+            return "icon_female"
         case .mixed:
-            return "person.2"
+            return "icon_mixed"
         }
     }
     
@@ -70,6 +70,7 @@ struct MatchItemView: View {
                     .font(.system(size: 12))
                 
                 Text(address)
+                    .lineLimit(1)
                     .font(.caption)
                     .foregroundColor(.black)
                 
@@ -100,11 +101,13 @@ struct MatchItemView: View {
                         .foregroundColor(.black)
                 }
                 .padding(.leading, 10)
-                .padding(.trailing, 1)
+                .padding(.trailing, 10)
                 
                 HStack(spacing: 4) {
-                    Image(systemName: genderIcon)
-                        .font(.system(size: 12))
+                    Image(genderIcon)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(genderColor)
                 }
                 
@@ -142,7 +145,7 @@ struct MatchItemView: View {
 #Preview {
     MatchItemView(
         location: "강남풋살파크",
-        address: "강남구 테헤란로 152",
+        address: "서울특별시 성북구 안암동2가 121-302850",
         distance: "1.2km",
         time: "오늘 20:00",
         participants: "2/10",

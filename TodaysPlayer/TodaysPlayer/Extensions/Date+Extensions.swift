@@ -15,13 +15,13 @@ extension Date {
         let calendar = Calendar.current
         
         if calendar.isDateInToday(self) {
-            formatter.dateFormat = "HH시mm분"
+            formatter.dateFormat = "HH:mm"
             return "오늘 \(formatter.string(from: self))"
         } else if calendar.isDateInTomorrow(self) {
-            formatter.dateFormat = "HH시mm분"
+            formatter.dateFormat = "HH:mm"
             return "내일 \(formatter.string(from: self))"
         } else {
-            formatter.dateFormat = "MM월dd일  HH시mm분"
+            formatter.dateFormat = "MM월dd일  HH:mm"
             return formatter.string(from: self)
         }
     }
@@ -29,7 +29,7 @@ extension Date {
     /// 간단한 시간 포맷팅 (HH:mm)
     func formatTime() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH시mm분"
+        formatter.dateFormat = "HH:mm"
         return formatter.string(from: self)
     }
     
