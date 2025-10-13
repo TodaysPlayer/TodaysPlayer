@@ -9,7 +9,7 @@ import Foundation
 
 @Observable
 final class PlayerRatingViewModel {
-    var matchInfo: MatchInfo
+    var matchInfo: Match
     var expandedUserID: String? = nil   // 평가하기 버튼 터치 시 확장여부
     var ratings: [String: [String: Int]] = [:] // userID별로 항목별 점수 저장
     var comments: [String: String] = [:]
@@ -53,7 +53,7 @@ final class PlayerRatingViewModel {
         )
     ]
     
-    init(matchInfo: MatchInfo) {
+    init(matchInfo: Match) {
         self.matchInfo = matchInfo
     }
     
