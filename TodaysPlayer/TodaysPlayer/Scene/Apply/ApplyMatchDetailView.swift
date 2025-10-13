@@ -16,7 +16,7 @@ struct ApplyMatchDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // 기존 MatchTagView 재사용
-                MatchTagView(matchInfo: matchInfo, postedMatchCase: .allMatches)
+                MatchTagView(info: matchInfo, matchCase: .allMatches)
                 
                 // 헤더
                 MatchDetailHeaderView(
@@ -365,9 +365,18 @@ struct MatchActionButtonsView: View {
     }
     
     var body: some View {
-        NavigationLink(
-            destination: ApplyMatchView()
-        ) {
+        NavigationLink {
+            switch postedMatchCase {
+            case .allMatches:
+                ApplyMatchView()
+            case .appliedMatch:
+                ApplyMatchView()    // 신청 못하게 막기
+            case .myRecruitingMatch:
+                ParticipantListView(viewModel: ParticipantListViewModel(matchID: matchInfo.matchId))
+            case .finishedMatch:
+                ApplyMatchView()    // 신청 못하게 막기
+            }
+        } label: {
             Text(actionType.title)
                 .font(.headline)
                 .frame(maxWidth: .infinity)
@@ -379,6 +388,21 @@ struct MatchActionButtonsView: View {
         .padding()
         .background(Color(.systemBackground))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
+
+//        NavigationLink(
+//            destination: ApplyMatchView()
+//        ) {
+//            Text(actionType.title)
+//                .font(.headline)
+//                .frame(maxWidth: .infinity)
+//                .padding()
+//                .background(actionType.backgroundColor)
+//                .foregroundColor(.white)
+//                .cornerRadius(12)
+//        }
+//        .padding()
+//        .background(Color(.systemBackground))
+//        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
     }
 }
 

@@ -7,131 +7,109 @@
 
 import SwiftUI
 
-private struct LinearGaugeProgressStyle: ProgressViewStyle {
-    var tintColor: Color = .green
-    var backgroundColor: Color = .gray.opacity(0.2)
+struct MatchInfoDetailView: View {
+    let matchInfo: MatchInfo
     
-    func makeBody(configuration: Configuration) -> some View {
-        let fractionCompleted = configuration.fractionCompleted ?? 0
+    var body: some View {
+        // 시간
+        HStack {
+            Image(systemName: "fitness.timer")
+            Text(matchInfo.matchTime)
+        }
         
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Capsule()
-                    .fill(backgroundColor)
-                
-                Capsule()
-                    .fill(tintColor)
-                    .frame(width: fractionCompleted * geometry.size.width)
-                
-            }
-            .frame(width: geometry.size.width, height: geometry.size.height)
+        // 장소
+        HStack {
+            Image(systemName: "location")
+            Text(matchInfo.matchLocation)
+        }
+        
+        
+        // 인원수
+        HStack {
+            Image(systemName: "person.fill")
+            
+            let personCount = "\(matchInfo.applyCount)/\(matchInfo.maxCount)"
+            
+            Text(personCount.highlighted(part: String(matchInfo.applyCount), color: .green))
+            
+            let progressValue: Double = Double(matchInfo.applyCount) / Double(matchInfo.maxCount)
+            
+            ProgressView(value: progressValue, total: 1.0)
+                .progressViewStyle(LinearGaugeProgressStyle())
+                .frame(height: 20)
+            
+            Spacer()
+        }
+        
+        // 참여비 성별 실력
+        HStack {
+            Image(systemName: "person.fill")
+            Text("\(matchInfo.matchFee)원")
+            
+            Spacer()
+            
+            Image(systemName: "person.fill")
+            Text(matchInfo.genderLimit)
+            
+            Spacer()
+            
+            Image(systemName: "person.fill")
+            Text(matchInfo.levelLimit)
+            
+            Spacer()
         }
     }
 }
 
-
 /// 경기정보 View
-struct MatchInfoView: View {    
+/// 거절된거 다르게 표시
+/// 내가 모집한 경기 가 끝났으면 평가하기 버튼 추가
+struct MatchInfoView: View {
     let matchInfo: MatchInfo
-//    var showRejectionButton: Bool = false // 거절사유 버튼 플래그 추가
     let postedMatchCase: PostedMatchCase
-
+    let userName: String
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             // 제목
             Text(matchInfo.matchTitle)
+                .foregroundStyle(Color.black)
                 .font(.headline)
                 .bold()
             
-            // 시간
-            HStack {
-                Image(systemName: "fitness.timer")
-                Text(matchInfo.matchTime)
-            }
+            MatchInfoDetailView(matchInfo: matchInfo)
+                .visible(matchInfo.applyStatus != .rejected)
             
-            // 장소
-            HStack {
-                Image(systemName: "location")
-                Text(matchInfo.matchLocation)
-            }
+            Text("경기 주최자의 거절사유입니다.")
+                .visible(matchInfo.applyStatus == .rejected)
             
+            Text(matchInfo.rejectionReason)
+                .modifier(DescriptionTextStyle())
+                .visible(matchInfo.applyStatus == .rejected)
             
-            // 인원수
+            Divider()
+                .visible(postedMatchCase != .myRecruitingMatch)
+            
             HStack {
                 Image(systemName: "person.fill")
+                    .clipShape(.circle)
                 
-                let personCount = "\(matchInfo.applyCount)/\(matchInfo.maxCount)"
-                
-                Text(personCount.highlighted(part: String(matchInfo.applyCount), color: .green))
-                
-                let progressValue: Double = Double(matchInfo.applyCount) / Double(matchInfo.maxCount)
-                
-                ProgressView(value: progressValue, total: 1.0)
-                    .progressViewStyle(LinearGaugeProgressStyle())
-                    .frame(height: 20)
+                Text(matchInfo.postUserName)
                 
                 Spacer()
             }
+            .visible(postedMatchCase != .myRecruitingMatch)
             
-            // 참여비 성별 실력
-            HStack {
-                Image(systemName: "person.fill")
-                Text("\(matchInfo.matchFee)원")
-                
-                Spacer()
-                
-                Image(systemName: "person.fill")
-                Text(matchInfo.genderLimit)
-                
-                Spacer()
-                
-                Image(systemName: "person.fill")
-                Text(matchInfo.levelLimit)
-                
-                Spacer()
+            
+            NavigationLink {
+                PlayerRatingView(viewModel: PlayerRatingViewModel(matchInfo: matchInfo))
+            } label: {
+                Text("참여자 평가하기")
             }
-            
-            
-            // 내가 작성한 글이면 없애기
-            if postedMatchCase != .myRecruitingMatch {
-                Divider()
-
-                HStack {
-                    Image(systemName: "person.fill")
-                        .clipShape(.circle)
-                    
-                    Text(matchInfo.postUserName)
-                    
-                    Spacer()
-                }
-            }
-            
-            // 조건부: 거절 사유 버튼
-            if postedMatchCase == .appliedMatch && matchInfo.applyStatus == .rejected {
-                NavigationLink {
-                    RejectionReasonView(matchId: matchInfo.matchId,
-                                        rejectionReasion: matchInfo.rejectionReason)
-                } label: {
-                    HStack(alignment: .center){
-                        Spacer()
-                        
-                        Text("거절사유 확인하기")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 12)
-                            .background(Color.red)
-                            .cornerRadius(12)
-                        
-                        Spacer()
-                    }
-                }
-                .buttonStyle(PlainButtonStyle())
-                .listRowInsets(EdgeInsets())
-                .listRowSeparator(.hidden)
-
-            }
+            .visible(postedMatchCase == .finishedMatch && matchInfo.postUserName == userName)
         }
+        .foregroundStyle(Color.black)
+        
     }
 }
 
