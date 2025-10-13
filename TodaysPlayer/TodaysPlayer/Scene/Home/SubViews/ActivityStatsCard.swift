@@ -98,3 +98,4 @@ struct ActivityStatsCard: View {
 #Preview {
     ActivityStatsCard()
 }
+

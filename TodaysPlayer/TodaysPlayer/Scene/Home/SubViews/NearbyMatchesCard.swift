@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NearbyMatchesCard: View {
+    @Environment(TabSelection.self) var tabSelection
+
     let matches: [Match]
     let viewModel: HomeViewModel
     
@@ -39,18 +41,22 @@ struct NearbyMatchesCard: View {
                         .padding(.vertical, 20)
                 } else {
                     ForEach(Array(matches.enumerated()), id: \.element.id) { index, match in
-                        MatchItemView(
-                            location: match.location.name,
-                            address: match.location.address,
-                            distance: viewModel.formatDistance(to: match.location.coordinates),
-                            time: match.dateTime.formatForDisplay(),
-                            participants: "\(match.participants.count)/\(match.maxParticipants)",
-                            gender: GenderType(rawValue: match.gender) ?? .mixed,
-                            rating: match.rating != nil ? String(format: "%.1f", match.rating!) : "0.0",
-                            price: match.price == 0 ? "무료" : String.formatPrice(match.price),
-                            skillLevel: match.skillLevel.skillLevelToKorean(),
-                            tags: match.createMatchTags()
-                        )
+                        NavigationLink {
+                            Text("MatchTitle: \(match.title)")
+                        } label: {
+                            MatchItemView(
+                                location: match.location.name,
+                                address: match.location.address,
+                                distance: viewModel.formatDistance(to: match.location.coordinates),
+                                time: match.dateTime.formatForDisplay(),
+                                participants: "\(match.participants.count)/\(match.maxParticipants)",
+                                gender: GenderType(rawValue: match.gender) ?? .mixed,
+                                rating: match.rating != nil ? String(format: "%.1f", match.rating!) : "0.0",
+                                price: match.price == 0 ? "무료" : String.formatPrice(match.price),
+                                skillLevel: match.skillLevel.skillLevelToKorean(),
+                                tags: match.createMatchTags()
+                            )
+                        }
                     }
                 }
             }
@@ -58,7 +64,7 @@ struct NearbyMatchesCard: View {
             
             // 더 많은 매치 보기 버튼
             Button(action: {
-                // 더 많은 매치 보기 기능
+                tabSelection.selectedTab = 1
             }) {
                 Text("더 많은 매치 보기")
                     .font(.headline)
@@ -84,4 +90,5 @@ struct NearbyMatchesCard: View {
 
 #Preview {
     NearbyMatchesCard(matches: [], viewModel: HomeViewModel())
+        .environment(TabSelection())
 }
