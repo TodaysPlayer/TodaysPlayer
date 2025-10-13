@@ -13,6 +13,14 @@ struct MatchDetailView: View {
     let match: Match
     let postedMatchCase: PostedMatchCase = .allMatches // 기본값
     
+    // ✅ FavoriteViewModel 추가
+    @EnvironmentObject var favoriteViewModel: FavoriteViewModel
+    
+    // 본인이 작성한 매치인지 확인
+    private var isMyMatch: Bool {
+        match.organizerId == AuthHelper.currentUserId
+    }
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -53,6 +61,23 @@ struct MatchDetailView: View {
             ToolbarItem(placement: .principal) {
                 Text("매칭 정보")
                     .font(.headline)
+            }
+            
+            // ✅ 북마크 버튼 추가
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    if !isMyMatch {
+                        favoriteViewModel.toggleFavorite(
+                            matchId: match.id,
+                            organizerId: match.organizerId
+                        )
+                    }
+                }) {
+                    Image(systemName: favoriteViewModel.isFavorited(matchId: match.id) ? "bookmark.fill" : "bookmark")
+                        .font(.system(size: 20))
+                        .foregroundColor(isMyMatch ? .gray : (favoriteViewModel.isFavorited(matchId: match.id) ? .blue : .primary))
+                }
+                .disabled(isMyMatch) // 본인 매치는 비활성화
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -295,17 +320,36 @@ struct MatchActionButtonsViewForMatch: View {
         postedMatchCase.defaultActionType
     }
     
+    // 본인이 작성한 매치인지 확인
+    private var isMyMatch: Bool {
+        match.organizerId == AuthHelper.currentUserId
+    }
+    
     var body: some View {
-        NavigationLink(
-            destination: ApplyMatchView(match: match)
-        ) {
-            Text(actionType.title)
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(actionType.backgroundColor)
-                .foregroundColor(.white)
-                .cornerRadius(12)
+        Group {
+            if isMyMatch {
+                // 본인 매치일 때 - 비활성화된 버튼
+                Text("본인이 작성한 매치입니다")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            } else {
+                // 다른 사람 매치일 때 - 신청 가능
+                NavigationLink(
+                    destination: ApplyMatchView(match: match)
+                ) {
+                    Text(actionType.title)
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(actionType.backgroundColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+            }
         }
         .padding()
         .background(Color(.systemBackground))
