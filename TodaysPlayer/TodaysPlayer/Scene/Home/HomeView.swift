@@ -18,11 +18,6 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-#if DEBUG
-                // 개발용 테스트 뷰
-                TestView()
-#endif
-                
                 // 다음 경기
                 NextMatchCard(
                     user: viewModel.user,
