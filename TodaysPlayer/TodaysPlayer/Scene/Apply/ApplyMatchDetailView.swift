@@ -365,29 +365,45 @@ struct MatchActionButtonsView: View {
     }
     
     var body: some View {
-        NavigationLink {
-            switch postedMatchCase {
-            case .allMatches:
-                ApplyMatchView()
-            case .appliedMatch:
-                ApplyMatchView()    // 신청 못하게 막기
-            case .myRecruitingMatch:
-                ParticipantListView(viewModel: ParticipantListViewModel(matchID: matchInfo.matchId))
-            case .finishedMatch:
-                ApplyMatchView()    // 신청 못하게 막기
-            }
-        } label: {
+        Button(action: {
+            print("⚠️ ApplyMatchDetailView는 목업 화면입니다")
+            print("⚠️ 실제 신청은 FirebaseMatchListView → MatchDetailView에서 가능합니다")
+        }) {
             Text(actionType.title)
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(actionType.backgroundColor)
+                .background(actionType.backgroundColor.opacity(0.5)) // 비활성화 표시
                 .foregroundColor(.white)
                 .cornerRadius(12)
         }
         .padding()
         .background(Color(.systemBackground))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
+//    var body: some View {
+//        NavigationLink {
+//            switch postedMatchCase {
+//            case .allMatches:
+//                ApplyMatchView()
+//            case .appliedMatch:
+//                ApplyMatchView()    // 신청 못하게 막기
+//            case .myRecruitingMatch:
+//                ParticipantListView(viewModel: ParticipantListViewModel(matchID: matchInfo.matchId))
+//            case .finishedMatch:
+//                ApplyMatchView()    // 신청 못하게 막기
+//            }
+//        } label: {
+//            Text(actionType.title)
+//                .font(.headline)
+//                .frame(maxWidth: .infinity)
+//                .padding()
+//                .background(actionType.backgroundColor)
+//                .foregroundColor(.white)
+//                .cornerRadius(12)
+//        }
+//        .padding()
+//        .background(Color(.systemBackground))
+//        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
 
 //        NavigationLink(
 //            destination: ApplyMatchView()
