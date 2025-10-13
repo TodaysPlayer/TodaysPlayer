@@ -67,6 +67,13 @@ struct AccountView: View {
                 pwEdit
                 checkOut
             }
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("계정 관리")
+                        .font(.title2)
+                        .bold()
+                }
+            }
         }
     }
     
