@@ -8,26 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var tabSelection = TabSelection()
+    
     var body: some View {
-        TabView {
-            Tab("홈", systemImage: "house") {
+        TabView(selection: $tabSelection.selectedTab) {
+            Tab("홈", systemImage: "house", value: 0) {
                 NavigationStack {
                     HomeView()
                 }
             }
             
-            Tab("용병 신청", systemImage: "soccerball") {
+            Tab("용병 신청", systemImage: "soccerball", value: 1) {
                 ApplyView()
             }
             
-            Tab("나의 매치", systemImage: "checklist") {
+            Tab("나의 매치", systemImage: "checklist", value: 2) {
                 MatchListView()
             }
             
-            Tab("프로필", systemImage: "person") {
+            Tab("프로필", systemImage: "person", value: 3) {
                 MyPageView()
             }
         }
+        .environment(tabSelection)
     }
 }
 
