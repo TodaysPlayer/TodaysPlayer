@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FSCalendar
 
 struct WritePostView: View {
     @State private var viewModel = WritePostViewModel()
@@ -314,48 +313,6 @@ struct MonthCalendarSheet: View {
             .navigationBarItems(trailing: Button("닫기") {
                 showCalendar = false
             })
-        }
-    }
-}
-
-// MARK: - FSCalendar UIViewRepresentable (월간 모드)
-struct MonthCalendarView: UIViewRepresentable {
-    @Binding var selectedDate: Date
-    
-    func makeUIView(context: Context) -> FSCalendar {
-        let calendar = FSCalendar()
-        calendar.scope = .month  // 월간 달력 모드
-        calendar.delegate = context.coordinator
-        calendar.dataSource = context.coordinator
-        calendar.locale = Locale(identifier: "ko_KR")
-        
-        // 달력 스타일 설정
-        calendar.appearance.headerTitleColor = .black
-        calendar.appearance.weekdayTextColor = .gray
-        calendar.appearance.todayColor = .systemBlue
-        calendar.appearance.selectionColor = .systemGreen
-        calendar.appearance.headerMinimumDissolvedAlpha = 0.0
-        
-        return calendar
-    }
-    
-    func updateUIView(_ uiView: FSCalendar, context: Context) {
-        uiView.select(selectedDate)
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, FSCalendarDelegate, FSCalendarDataSource {
-        var parent: MonthCalendarView
-        
-        init(_ parent: MonthCalendarView) {
-            self.parent = parent
-        }
-        
-        func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-            parent.selectedDate = date
         }
     }
 }
