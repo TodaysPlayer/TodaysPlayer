@@ -52,6 +52,7 @@ struct GameFilter {
     var skillLevels: Set<SkillLevel> = [] // 복수선택: 프로, 아마추어 둘 다 가능
     var gender: Gender? = nil // 단일 선택: 남자만 or 여자만
     var feeType: FeeType? = nil // 단일 선택: 무료 or 유료
+    var region: Region = .seoul
     
     // 서버로 보낼 딕셔너리 형태로 변환
     func toDictionary() -> [String: Any] {
@@ -98,7 +99,7 @@ struct ApplyView: View {
     // 필터 관련 상태
     @State private var currentFilter = GameFilter()
     
-    // ✅ FavoriteViewModel 추가
+    // FavoriteViewModel 추가
     @EnvironmentObject var favoriteViewModel: FavoriteViewModel
     
     var body: some View {
@@ -124,10 +125,10 @@ struct ApplyView: View {
                     
                     // 스크랩, 필터, 지역 버튼 (통일된 스타일)
                     HStack(spacing: 12) {
-                        // ✅ 스크랩 버튼 (아이콘 변경)
+                        // 스크랩 버튼 (아이콘 변경)
                         NavigationLink(destination: ScrapView()) {
                             HStack(spacing: 6) {
-                                // ✅ 삼항연산자로 아이콘 변경
+                                // 삼항연산자로 아이콘 변경
                                 Image(systemName: favoriteViewModel.favoritedMatchIds.isEmpty ? "bookmark" : "bookmark.fill")
                                     .font(.system(size: 14))
                                     .foregroundColor(.blue)
@@ -167,7 +168,7 @@ struct ApplyView: View {
                                 Image(systemName: "location")
                                     .font(.system(size: 14))
                                     .foregroundColor(.blue)
-                                Text(selectedRegion.rawValue)
+                                Text(filterViewModel.currentFilter.region.rawValue)
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(.primary)
                                 Image(systemName: "chevron.down")
@@ -236,7 +237,7 @@ struct ApplyView: View {
         }
         .sheet(isPresented: $isRegionSheetPresented) {
             RegionBottomSheet(
-                selectedRegion: $selectedRegion,
+                filterViewModel: filterViewModel,
                 isPresented: $isRegionSheetPresented
             )
         }
@@ -247,7 +248,7 @@ struct ApplyView: View {
             .environmentObject(filterViewModel)
         }
         .onAppear {
-            // ✅ 초기 데이터 로드
+            //  초기 데이터 로드
             filterViewModel.selectedDate = selectedDate
             filterViewModel.fetchInitialMatches()
         }
