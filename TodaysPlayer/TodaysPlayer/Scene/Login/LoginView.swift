@@ -11,35 +11,44 @@ struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isLoggedIn: Bool = false
-
+    @State private var showSignUp = false
+    
+    // 알림창 상태
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
+    // 입력칸 밑 에러 메시지
+    @State private var emailErrorMessage = ""
+    @State private var passwordErrorMessage = ""
+    
+    // 임시 가입된 이메일 리스트 (테스트용)
+    private let registeredEmails = ["test@example.com", "user1@naver.com", "hello@gmail.com"]
+    
+    enum Field { case email, password }
+    @FocusState private var focusedField: Field?
     
     var body: some View {
         NavigationView {
             ZStack {
                 Color.gray.opacity(0.1)
-                    //.ignoresSafeArea()
+                    .ignoresSafeArea()
+                    .onTapGesture { focusedField = nil } // 배경 터치 시 키보드 닫기
                 
                 VStack(spacing: 30) {
-                    // 앱 로고 및 브랜딩
+                    
+                    // 로고 및 타이틀
                     VStack(spacing: 16) {
-                        // 로고
                         ZStack {
                             Circle()
                                 .fill(Color.blue)
                                 .frame(width: 80, height: 80)
-                            
                             Image(systemName: "shield.fill")
                                 .foregroundColor(.white)
                                 .font(.system(size: 40))
                         }
-                        
-                        // 앱 이름
                         Text("오늘의 용병")
                             .font(.title)
                             .fontWeight(.bold)
-                            .foregroundColor(.black)
-                        
-                        // 태그라인
                         Text("빠르고 쉬운 로컬 스포츠 매칭")
                             .font(.subheadline)
                             .foregroundColor(.gray)
@@ -51,145 +60,153 @@ struct LoginView: View {
                         Text("로그인")
                             .font(.title2)
                             .fontWeight(.bold)
-                            .foregroundColor(.black)
                             .padding(.bottom, 10)
                         
                         // 이메일 입력 필드
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text("이메일")
-                                .font(.subheadline)
-                                .foregroundColor(.black)
-                            
                             HStack {
                                 Image(systemName: "envelope")
                                     .foregroundColor(.gray)
-                                    .padding(.leading, 12)
-                                
                                 TextField("이메일을 입력하세요", text: $email)
-                                    .textFieldStyle(PlainTextFieldStyle())
-                                    .padding(.vertical, 12)
-                                    .padding(.trailing, 12)
+                                    .textInputAutocapitalization(.never)
+                                    .disableAutocorrection(true)
+                                    .keyboardType(.emailAddress)
+                                    .focused($focusedField, equals: .email)
+                                    .submitLabel(.next)
+                                    .onSubmit { focusedField = .password }
                             }
+                            .padding()
                             .background(Color.gray.opacity(0.1))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .cornerRadius(8)
+                            
+                            // 이메일 에러 메시지
+                            if !emailErrorMessage.isEmpty {
+                                Text(emailErrorMessage)
+                                    .font(.caption)
+                                    .foregroundColor(.red)
+                            }
                         }
                         
                         // 비밀번호 입력 필드
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text("비밀번호")
-                                .font(.subheadline)
-                                .foregroundColor(.black)
-                            
                             HStack {
                                 Image(systemName: "lock")
                                     .foregroundColor(.gray)
-                                    .padding(.leading, 12)
-                                
                                 SecureField("비밀번호를 입력하세요", text: $password)
-                                    .textFieldStyle(PlainTextFieldStyle())
-                                    .padding(.vertical, 12)
-                                    .padding(.trailing, 12)
+                                    .focused($focusedField, equals: .password)
+                                    .submitLabel(.done)
+                                    .onSubmit { login() }
                             }
+                            .padding()
                             .background(Color.gray.opacity(0.1))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .cornerRadius(8)
+                            
+                            // 비밀번호 에러 메시지
+                            if !passwordErrorMessage.isEmpty {
+                                Text(passwordErrorMessage)
+                                    .font(.caption)
+                                    .foregroundColor(.red)
+                            }
                         }
                         
                         // 로그인 버튼
-                        Button(action: {
-                            // 임시로 로그인 성공 처리
-                            isLoggedIn = true
-                        }) {
+                        Button { login() } label: {
                             Text("로그인")
-                                .font(.headline)
-                                .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
+                                .padding()
                                 .background(Color.blue)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
                         }
-                        Button(action: {
-                            // 네이버 로그인 기능
-                        }) {
-                            HStack {
-                                Image(systemName: "n.circle.fill")
-                                    .font(.title2)
-                                    .foregroundColor(.white)
-                                
-                                Text("네이버로 로그인하기")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.green)
-                            .cornerRadius(8)
-                        }
-                        
-                        Button(action: {
-                            // 인스타그램 로그인 기능
-                        }) {
-                            HStack {
-                                Image(systemName: "i.circle.fill")
-                                    .font(.title3)
-                                    .foregroundColor(.white)
-                                
-                                Text("인스타그램으로 로그인하기")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.blue)
-                            .cornerRadius(8)
-                        }
-                        
-                        // 비밀번호 찾기 링크
-                        Button(action: {
-                            // 비밀번호 찾기 기능
-                        }) {
+                        NavigationLink(destination: PasswordResetView()) {
                             Text("비밀번호를 잊으셨나요?")
-                                .font(.subheadline)
                                 .foregroundColor(.gray)
                         }
                         
-                        // 회원가입 버튼
-                        Button(action: {
-                            // 회원가입 기능
-                        }) {
+                        NavigationLink(destination: SignUpView()) {
                             Text("이메일로 회원가입")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(Color.white)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                )
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.3))
+                            )
                         }
                     }
-                    .padding(24)
+                    .padding()
                     .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-                    .padding(.horizontal, 20)
+                    .cornerRadius(16)
+                    .shadow(radius: 5)
+                    .padding(.horizontal)
                     
                     Spacer()
-                    
-                    // 약관 동의 안내
-                    Text("로그인 시 서비스 이용약관 및 개인정보처리방침에 동의하게 됩니다.")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 30)
                 }
             }
+        }
+        // Alert 표시
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("로그인 오류"),
+                message: Text(alertMessage),
+                dismissButton: .default(Text("확인"))
+            )
         }
         .fullScreenCover(isPresented: $isLoggedIn) {
             ContentView()
         }
+    }
+    
+    // 로그인 처리 함수
+    private func login() {
+        // 에러 초기화
+        emailErrorMessage = ""
+        passwordErrorMessage = ""
+        
+        // 이메일 검증
+        if email.isEmpty {
+            focusedField = .email
+            alertMessage = "이메일을 입력하세요"
+            emailErrorMessage = alertMessage
+            showAlert = true
+            return
+        }
+        if !email.contains("@") || !email.contains(".") {
+            focusedField = .email
+            alertMessage = "올바른 이메일 형식을 입력하세요"
+            emailErrorMessage = alertMessage
+            showAlert = true
+            return
+        }
+        if !registeredEmails.contains(email) {
+            focusedField = .email
+            alertMessage = "가입되지 않은 이메일입니다"
+            emailErrorMessage = alertMessage
+            showAlert = true
+            return
+        }
+        
+        // 비밀번호 검증
+        if password.isEmpty {
+            focusedField = .password
+            alertMessage = "비밀번호를 입력하세요"
+            passwordErrorMessage = alertMessage  // ⬅️ Alert 닫은 후에도 필드 밑에 표시
+            showAlert = true
+            return
+        }
+        if password.count < 8 {
+            focusedField = .password
+            alertMessage = "비밀번호는 8자 이상이어야 합니다"
+            passwordErrorMessage = alertMessage
+            showAlert = true
+            return
+        }
+        
+        // 로그인 성공
+        focusedField = nil
+        isLoggedIn = true
     }
 }
 
