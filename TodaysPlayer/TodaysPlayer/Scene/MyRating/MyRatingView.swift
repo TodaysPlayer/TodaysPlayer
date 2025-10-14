@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MyRatingView: View {
-    let matchInfo: MatchInfo
     let userRating: UserRating = UserRating(
         userId: "",
         totalRatingCount: 12,
@@ -36,5 +35,5 @@ struct MyRatingView: View {
 }
 
 #Preview {
-    MyRatingView(matchInfo: mockMatchData.first!)
+    MyRatingView()
 }

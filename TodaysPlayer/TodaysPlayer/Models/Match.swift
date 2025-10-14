@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Match: Codable, Identifiable {
+struct Match: Codable, Identifiable, Hashable {
     let id: String
     let title: String
     let description: String

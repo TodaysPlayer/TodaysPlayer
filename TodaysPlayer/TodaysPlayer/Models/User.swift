@@ -21,6 +21,7 @@ struct User: Codable, Identifiable, Hashable {
     let createdAt: Date
     let updatedAt: Date
     let isActive: Bool
+    // 평점, 참여 경기 횟수
     
     enum CodingKeys: String, CodingKey {
         case id = "userId"

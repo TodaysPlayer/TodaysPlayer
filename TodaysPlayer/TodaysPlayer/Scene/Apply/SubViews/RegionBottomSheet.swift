@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RegionBottomSheet: View {
     // 부모 뷰에서 받아올 데이터
-    @Binding var selectedRegion: Region
+    @ObservedObject var filterViewModel: FilterViewModel
     @Binding var isPresented: Bool
     
     var body: some View {
@@ -53,7 +53,7 @@ struct RegionBottomSheet: View {
     // 지역 선택 행
     private func regionRow(_ region: Region) -> some View {
         Button(action: {
-            selectedRegion = region
+            filterViewModel.updateRegion(region)
             isPresented = false
             
             // 지역 변경 로직 (나중에 ViewModel로 이동 예정)
@@ -66,7 +66,7 @@ struct RegionBottomSheet: View {
                 
                 Spacer()
                 
-                if selectedRegion == region {
+                if filterViewModel.currentFilter.region == region {
                     Image(systemName: "checkmark")
                         .foregroundColor(.blue)
                         .font(.system(size: 16, weight: .medium))
@@ -78,14 +78,4 @@ struct RegionBottomSheet: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-}
-
-#Preview {
-    @Previewable @State var selectedRegion: Region = .incheon
-    @Previewable @State var isPresented = true
-    
-    return RegionBottomSheet(
-        selectedRegion: $selectedRegion,
-        isPresented: $isPresented
-    )
 }
