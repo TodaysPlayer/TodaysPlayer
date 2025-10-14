@@ -32,7 +32,7 @@ struct HomeView: View {
                 )
                 
                 // 내 활동 통계
-                ActivityStatsCard()
+//                ActivityStatsCard()
                 
                 // 프로모션 배너
                 PromotionalBanner(viewModel: viewModel)

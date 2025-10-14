@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MatchItemView: View {
+    let title: String
     let location: String
-    let address: String
     let distance: String
     let time: String
     let participants: String
@@ -45,7 +45,7 @@ struct MatchItemView: View {
         VStack(alignment: .leading, spacing: 12) {
             // 상단: 제목과 평점
             HStack {
-                Text(location)
+                Text(title)
                     .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundColor(.black)
@@ -71,7 +71,7 @@ struct MatchItemView: View {
                     .foregroundColor(.gray)
                     .font(.system(size: 12))
                 
-                Text(address)
+                Text(location)
                     .lineLimit(1)
                     .font(.caption)
                     .foregroundColor(.black)
@@ -146,8 +146,8 @@ struct MatchItemView: View {
 
 #Preview {
     MatchItemView(
+        title: "풋살 초보분들 찾아여~",
         location: "강남풋살파크",
-        address: "서울특별시 성북구 안암동2가 121-302850",
         distance: "1.2km",
         time: "오늘 20:00",
         participants: "2/10",

@@ -65,8 +65,8 @@ struct NearbyMatchesCard: View {
                         Text("MatchTitle: \(match.title)")
                     } label: {
                         MatchItemView(
+                            title: match.title,
                             location: match.location.name,
-                            address: match.location.address,
                             distance: viewModel.formatDistance(to: match.location.coordinates),
                             time: match.dateTime.formatForDisplay(),
                             participants: "\(match.participants.count)/\(match.maxParticipants)",
@@ -130,8 +130,8 @@ struct NearbyMatchesCard: View {
                     .multilineTextAlignment(.center)
                 
                 Text("설정 → 앱 → TodaysPlayer → 위치 → 앱을\n사용하는 동안으로 변경해주세요")
-                    .font(.system(size: 14))
-                    .foregroundColor(.black)
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
             }
             .padding(.horizontal, 20)
