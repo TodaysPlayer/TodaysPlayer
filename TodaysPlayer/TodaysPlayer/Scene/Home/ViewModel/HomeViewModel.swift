@@ -273,10 +273,16 @@ class HomeViewModel {
         return earthRadius * c
     }
     
-    func requestLocationPermission() async {
+    func requestLocationPermission(shouldOpenSettings: Bool = false) async {
         // 위치 권한 요청
         await MainActor.run {
-            self.locationManager.requestLocationPermission()
+            self.locationManager.requestLocationPermission(shouldOpenSettings: shouldOpenSettings)
         }
+    }
+    
+    func hasLocationPermission() -> Bool {
+        // 위치 권한이 허용되었는지 확인
+        return locationManager.authorizationStatus == .authorizedWhenInUse || 
+               locationManager.authorizationStatus == .authorizedAlways
     }
 }
