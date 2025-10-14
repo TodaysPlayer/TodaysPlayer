@@ -118,7 +118,7 @@ class FilterViewModel: ObservableObject {
         isLoading = true
         
         do {
-            // ✅ 1️⃣ Firestore에서 전체 데이터 가져오기 (정렬만)
+            // 1. Firestore에서 전체 데이터 가져오기 (정렬만)
             let query: Query = db.collection("matches")
                 .order(by: "createdAt", descending: true)
             
@@ -137,33 +137,33 @@ class FilterViewModel: ObservableObject {
                 }
             }
             
-            // ✅ 2️⃣ 클라이언트에서 모든 필터 적용
+            // 2. 클라이언트에서 모든 필터 적용
             var filteredMatches = fetchedMatches
             
-            // 📍 지역 필터 (가장 먼저 적용)
+            // 지역 필터 (가장 먼저 적용)
             filteredMatches = filteredMatches.filter { match in
                 let extractedRegion = extractRegion(from: match.location.address)
                 return extractedRegion == currentFilter.region
             }
             
-            // 📅 날짜 필터
+            // 날짜 필터
             filteredMatches = filteredMatches.filter { match in
                 Calendar.current.isDate(match.dateTime, inSameDayAs: selectedDate)
             }
             
-            // ⚽️ 경기 종류 필터
+            // 경기 종류 필터
             if let matchType = currentFilter.matchType {
                 let firebaseValue = matchTypeToFirebase(matchType)
                 filteredMatches = filteredMatches.filter { $0.matchType == firebaseValue }
             }
             
-            // 👥 성별 필터
+            // 성별 필터
             if let gender = currentFilter.gender {
                 let firebaseValue = genderToFirebase(gender)
                 filteredMatches = filteredMatches.filter { $0.gender == firebaseValue }
             }
             
-            // 💰 참가비 필터
+            // 참가비 필터
             if let feeType = currentFilter.feeType {
                 switch feeType {
                 case .free:
@@ -173,7 +173,7 @@ class FilterViewModel: ObservableObject {
                 }
             }
             
-            // ⭐️ 실력 필터
+            // 실력 필터
             if !currentFilter.skillLevels.isEmpty {
                 let firebaseSkillLevels = currentFilter.skillLevels.map { skillLevelToFirebase($0) }
                 filteredMatches = filteredMatches.filter { match in
