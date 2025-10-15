@@ -147,8 +147,8 @@ struct MyPageView: View {
     }
 
     private var statsRow: some View {
-        HStack(spacing: 10) {
-            Stat(icon: "calendar", value: "5", label: "참여 경기", color: .green)
+        HStack {
+            Stat(icon: "calendar", value: "5", label: "신청한 경기", color: .green)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -158,7 +158,7 @@ struct MyPageView: View {
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                 )
-            Stat(icon: "person.3.fill", value: "12", label: "용병 참여", color: .orange)
+            Stat(icon: "person.3.fill", value: "1", label: "참여한 경기", color: .orange)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
                         .stroke(Color.gray.opacity(0.15), lineWidth: 1)

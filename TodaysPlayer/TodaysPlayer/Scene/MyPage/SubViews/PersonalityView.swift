@@ -20,9 +20,9 @@ struct PersonalityView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             HStack(spacing: 1) {
-                                Label("최종 업데이트: \n2025년 1월 1일", systemImage: "calendar")
+                                Label("최종 업데이트: \n2025년 10월 15일", systemImage: "calendar")
                                 Spacer()
-                                Label("시행일: \n2025년 1월 1일", systemImage: "clock")
+                                Label("시행일: \n2025년 10월 10일", systemImage: "clock")
                             }
                             .labelStyle(.titleAndIcon)
                             .font(.footnote)
@@ -126,9 +126,9 @@ struct PersonalityView: View {
                 // Section 8 변경 이력
                 CardSection(title: "개인정보 처리방침 변경 이력") {
                     VStack(alignment: .leading, spacing: 10) {
-                        ChangeLogItem(version: "버전 2.0", desc: "개인정보 수집 항목 추가, 위탁업체 정보 업데이트", date: "2025.01.01")
-                        ChangeLogItem(version: "버전 1.1", desc: "개인정보 보유기간 명시, 제3자 제공 조항 수정", date: "2024.10.15")
-                        ChangeLogItem(version: "버전 1.0", desc: "최초 제정", date: "2024.07.01")
+                        ChangeLogItem(version: "버전 2.0", desc: "개인정보 수집 항목 추가, 위탁업체 정보 업데이트", date: "2025.10.14")
+                        ChangeLogItem(version: "버전 1.1", desc: "개인정보 보유기간 명시, 제3자 제공 조항 수정", date: "2025.10.01")
+                        ChangeLogItem(version: "버전 1.0", desc: "최초 제정", date: "2025.09.24")
                     }
                 }
                 .padding(.horizontal)
