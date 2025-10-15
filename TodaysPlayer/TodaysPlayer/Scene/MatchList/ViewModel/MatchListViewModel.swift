@@ -21,8 +21,6 @@ final class MatchListViewModel {
     
     var isLoading: Bool = false
     var hasMore: Bool = true
-    var isLoadingMore: Bool = false
-    var showEndPulse: Bool = false
 
     var myMatchSegmentTitles: [String] = PostedMatchCase.allCases
         .map { $0.rawValue }
@@ -32,15 +30,15 @@ final class MatchListViewModel {
         didSet { updateDisplayedMatches() }
     }
 
-    private let userId: String = "9uHP3cOHe8T2xwxS9lx"
+    private let userId: String = "bJYjlQZuaqvw2FDB5uNa"
     private var lastAppliedSnapshot: DocumentSnapshot?
     private var lastRecruitingSnapshot: DocumentSnapshot?
-    private let pageSize = 2
+    private let pageSize = 5
     private let debounceDelay: UInt64 = 300_000_000
     private let repository = MatchRepository()
 
     init(){
-        Task { await loadInitialMatches() }
+        Task { await loadMoreMatches() }
     }
     
     
@@ -61,46 +59,19 @@ final class MatchListViewModel {
         }
 
         // 버튼에 맞는 매치 가져오기
-        Task { await loadInitialMatches() }
-    }
-
-    // 초기 로드
-    @MainActor
-    func loadInitialMatches() async {
-        await loadMatches(reset: true)
+        Task { await loadMoreMatches() }
     }
 
     @MainActor
     func loadMoreMatches() async {
-        await loadMatches(reset: false)
-    }
+        guard !isLoading, hasMore else { return }
+        isLoading = true
+        defer { isLoading = false }
 
-    // 통합 로더
-    @MainActor
-    func loadMatches(reset: Bool) async {
-        if reset {
-            guard !isLoading else { return }
-            isLoading = true
-        } else {
-            guard !isLoading, !isLoadingMore, hasMore else { return }
-            isLoadingMore = true
-        }
+        try? await Task.sleep(nanoseconds: debounceDelay)
 
-        defer {
-            if reset { isLoading = false } else { isLoadingMore = false }
-        }
-
-            try? await Task.sleep(nanoseconds: debounceDelay)
-     
         do {
-            if reset {
-                lastAppliedSnapshot = nil
-                lastRecruitingSnapshot = nil
-                displayedMatches = []
-                hasMore = true
-            }
-
-            let fetched: [Match]
+            let nextMatches: [Match]
             var fetchedCount: Int = 0
             switch postedMatchCase {
             case .appliedMatch:
@@ -109,7 +80,7 @@ final class MatchListViewModel {
                     pageSize: pageSize,
                     after: lastAppliedSnapshot
                 )
-                fetched = page.matches
+                nextMatches = page.matches
                 lastAppliedSnapshot = page.lastDocument
                 fetchedCount = page.fetchedCount
             case .myRecruitingMatch:
@@ -118,40 +89,25 @@ final class MatchListViewModel {
                     pageSize: pageSize,
                     after: lastRecruitingSnapshot
                 )
-                fetched = page.matches
+                nextMatches = page.matches
                 lastRecruitingSnapshot = page.lastDocument
                 fetchedCount = page.fetchedCount
             case .finishedMatch:
-                fetched = []
+                nextMatches = []
                 fetchedCount = 0
             default:
-                fetched = []
+                nextMatches = []
                 fetchedCount = 0
             }
 
-            if reset {
-                var map: [String: Match] = [:]
-                for m in fetched { map[m.id] = m }
-                displayedMatches = Array(map.values)
-            } else {
-                let existing = Set(displayedMatches.map { $0.id })
-                let deduped = fetched.filter { !existing.contains($0.id) }
-                displayedMatches.append(contentsOf: deduped)
-            }
-
+            let existing = Set(displayedMatches.map { $0.id })
+            let deduped = nextMatches.filter { !existing.contains($0.id) }
+            displayedMatches.append(contentsOf: deduped)
             hasMore = fetchedCount == pageSize
         } catch {
-            print("데이터 로드 실패: \(error)")
+            print("추가 데이터 로드 실패: \(error)")
             hasMore = false
         }
-    }
-
-    @MainActor
-    func pulseEndIndicator() async {
-        guard !isLoading, !isLoadingMore, !hasMore, !showEndPulse else { return }
-        showEndPulse = true
-        defer { showEndPulse = false }
-        try? await Task.sleep(nanoseconds: 600_000_000)
     }
 
     private func updateDisplayedMatches() {

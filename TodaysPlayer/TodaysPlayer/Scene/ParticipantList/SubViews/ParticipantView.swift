@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ParticipantView: View {
-    let participantData: ParticipantEntity
+    let participantData: Apply
     let viewModel: ParticipantListViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10){
             HStack(alignment: .center, spacing: 10) {
@@ -22,18 +22,18 @@ struct ParticipantView: View {
                     
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(participantData.userName)(\(participantData.userNickName))")
+                    Text("(\(participantData.userNickname))")
                         .font(.headline)
 
                     HStack(spacing: 6) {
-                        Text(participantData.userPosition)
+                        Text(participantData.position ?? "무관")
                             .font(.caption)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
                             .background(Color.gray.opacity(0.3))
                             .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                        Text(participantData.userLevel)
+                        Text(participantData.userSkillLevel ?? "초급")
                             .font(.caption)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
@@ -41,7 +41,7 @@ struct ParticipantView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
 
-                    Text("\(participantData.appliedDate) 신청")
+                    Text("\(participantData.appliedAt) 신청")
                         .font(.footnote)
                         .foregroundColor(.gray)
                 }
@@ -52,19 +52,18 @@ struct ParticipantView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("거절사유")
                     .foregroundStyle(Color.gray.opacity(0.5))
-                    .visible(participantData.status == .rejected)
-                
+                    .visible(ApplyStatusConverter.toStatus(from: participantData.status) == .rejected)
                 
                 Text(participantData.rejectionReason ?? "없음")
             }
             .modifier(DescriptionTextStyle())
             .padding(.top, 20)
-            .visible(participantData.status != .accepted)
+            .visible(ApplyStatusConverter.toStatus(from: participantData.status) != .accepted)
             
             
             // 대기중의 경우 버튼 활성화
             Divider()
-                .visible(participantData.status == .standby)
+                .visible(ApplyStatusConverter.toStatus(from: participantData.status) == .standby)
             
             HStack(spacing: 10) {
                 Button("거절") {
@@ -85,7 +84,7 @@ struct ParticipantView: View {
                 .foregroundStyle(Color.green)
                 .frame(maxWidth: .infinity)
             }
-            .visible(participantData.status == .standby)
+            .visible(ApplyStatusConverter.toStatus(from: participantData.status) == .standby)
             
             
         }

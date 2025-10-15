@@ -30,11 +30,8 @@ final class PlayerRatingViewModel {
             position: "공격수",
             skillLevel: "중급",
             preferredRegions: ["서울특별시", "경기도"],
-            isTeamLeader: true,
-            teamId: nil,
             createdAt: Date(),
-            updatedAt: Date(),
-            isActive: true
+            updatedAt: Date(), userRate:      UserRating(totalRatingCount: 10, mannerSum: 48, teamWorkSum: 40, appointmentSum: 44)
         ),
         User(
             id: "player2",
@@ -45,11 +42,8 @@ final class PlayerRatingViewModel {
             position: "미드필더",
             skillLevel: "상급",
             preferredRegions: ["경기도", "인천광역시"],
-            isTeamLeader: false,
-            teamId: nil,
             createdAt: Date(),
-            updatedAt: Date(),
-            isActive: true
+            updatedAt: Date(), userRate:  UserRating(totalRatingCount: 10, mannerSum: 48, teamWorkSum: 40, appointmentSum: 44)
         )
     ]
     

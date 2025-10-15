@@ -327,19 +327,29 @@ struct MatchActionButtonsViewForMatch: View {
     
     var body: some View {
         Group {
-            if isMyMatch {
-                // 본인 매치일 때 - 비활성화된 버튼
-                Text("본인이 작성한 매치입니다")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-            } else {
-                // 다른 사람 매치일 때 - 신청 가능
+
+// 디버깅용하고 릴리즈용하고 어떻게 나누나
+            
+#if DEBUG
+#warning("버튼 타이틀은 사용자의 신청상태, 사용자가 작성한 글 여부에 따라 변경해주세요 - 추후에 machID도 변경!")
+#endif
+            let destinationView: AnyView = isMyMatch
+            ? AnyView(ParticipantListView(viewModel: ParticipantListViewModel(matchID: "376C03B7-36A1-4E25-9775-7A715504ECC6")))
+            : AnyView(ApplyMatchView(match: match))
+//            if isMyMatch {
+//                // 본인 매치일 때 - 비활성화된 버튼
+//                Text("본인이 작성한 매치입니다")
+//                    .font(.headline)
+//                    .frame(maxWidth: .infinity)
+//                    .padding()
+//                    .background(Color.gray)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(12)
+//            } else {
+//                // 다른 사람 매치일 때 - 신청 가능
+            
                 NavigationLink(
-                    destination: ApplyMatchView(match: match)
+                    destination: destinationView
                 ) {
                     Text(actionType.title)
                         .font(.headline)
@@ -349,7 +359,6 @@ struct MatchActionButtonsViewForMatch: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }
-            }
         }
         .padding()
         .background(Color(.systemBackground))

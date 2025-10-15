@@ -52,21 +52,15 @@ struct MatchListView: View {
                                     .cornerRadius(12)
                                 }
                                 .onAppear {
-                                    // 여기에서 마지막 확인해야함------
-                                    let prefetchThreshold = 1 // 마지막 1개 지점에서 프리패치
-                                    let shouldPrefetch = index >= max(0, viewModel.displayedMatches.count - prefetchThreshold)
-                                    if shouldPrefetch && !viewModel.isLoading && !viewModel.isLoadingMore && viewModel.hasMore {
+                                    if index == viewModel.displayedMatches.count - 1 {
                                         Task { await viewModel.loadMoreMatches() }
-                                    } else if index >= max(0, viewModel.displayedMatches.count - 1) && !viewModel.hasMore {
-                                        Task { await viewModel.pulseEndIndicator() }
                                     }
                                 }
                             }
-
-                            if viewModel.isLoadingMore || viewModel.showEndPulse {
+                            if viewModel.isLoading && !viewModel.displayedMatches.isEmpty {
                                 HStack(spacing: 8) {
                                     ProgressView()
-                                    Text(viewModel.hasMore ? "더 불러오는 중..." : "마지막 데이터를 확인 중...")
+                                    Text("불러오는 중...")
                                         .foregroundColor(.gray)
                                 }
                                 .frame(maxWidth: .infinity)

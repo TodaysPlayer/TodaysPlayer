@@ -33,7 +33,7 @@ final class MatchRepository {
             decoder.userInfo[Match.documentIdKey] = doc.documentID
             return try? doc.data(as: Match.self, decoder: decoder)
         }
-        // 다음 페이지 커서 (DocumentSnapshot)
+
         let nextCursor = snapshot.documents.last
         return (matches, nextCursor, snapshot.documents.count)
     }
@@ -55,7 +55,6 @@ final class MatchRepository {
         }
 
         let applySnapshot = try await query.getDocuments()
-        // 동일 matchId에 대한 중복 신청이 있을 수 있어 matchId 기준 유니크 처리
         let appliesAll: [Apply] = applySnapshot.documents.compactMap { doc in
             return try? doc.data(as: Apply.self)
         }

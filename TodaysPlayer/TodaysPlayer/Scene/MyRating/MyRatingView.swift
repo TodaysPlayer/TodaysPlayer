@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MyRatingView: View {
     let userRating: UserRating = UserRating(
-        userId: "",
         totalRatingCount: 12,
         mannerSum: 60,
         teamWorkSum: 49,

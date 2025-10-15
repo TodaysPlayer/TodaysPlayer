@@ -28,7 +28,7 @@ struct MatchInfoView: View {
             // participants에서 유저아이디로 내가 있는지 걸르고 그거에 상태를 확인해야함
             MatchInfoDetailView(matchInfo: matchInfo)
                 .visible(matchInfo.covertApplyStatus(status: matchInfo.status) != .rejected)
-            
+        
             Text("경기 주최자의 거절사유입니다.")
                 .visible(matchInfo.covertApplyStatus(status: matchInfo.status) == .rejected)
             

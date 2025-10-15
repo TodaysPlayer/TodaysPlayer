@@ -27,7 +27,7 @@ class AuthHelper {
         // return Auth.auth().currentUser?.uid ?? "temp_user_id"
         // ========================================
         
-        return "temp_user_id" // 임시 사용자 ID
+        return "bJYjlQZuaqvw2FDB5uNa" // 임시 사용자 ID
     }
     
     /// 사용자가 로그인했는지 확인
