@@ -148,22 +148,29 @@ struct MyPageView: View {
 
     private var statsRow: some View {
         HStack {
-            Stat(icon: "calendar", value: "5", label: "신청한 경기", color: .green)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.gray.opacity(0.15), lineWidth: 1)
-                )
-            Stat(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "평균 평점", color: .purple)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.gray.opacity(0.15), lineWidth: 1)
-                )
-            Stat(icon: "person.3.fill", value: "1", label: "참여한 경기", color: .orange)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.gray.opacity(0.15), lineWidth: 1)
-                )
+            NavigationLink(destination: MatchListView()) {
+                Stat(icon: "calendar", value: "5", label: "신청한 경기", color: .green)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.gray.opacity(0.15), lineWidth: 1)
+                    )
+            }
+            NavigationLink(destination: MyRatingView()) {
+                Stat(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "평균 평점", color: .purple)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.gray.opacity(0.15), lineWidth: 1)
+                    )
+            }
+            NavigationLink(destination: MatchListView()) {
+                Stat(icon: "person.3.fill", value: "1", label: "참여한 경기", color: .orange)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.gray.opacity(0.15), lineWidth: 1)
+                    )
+            }
         }
+        .foregroundStyle(Color(.label))
     }
 
     private var bannerSection: some View {

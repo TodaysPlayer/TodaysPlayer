@@ -109,15 +109,24 @@ struct ProfileEditView: View {
                                 }
                             }
                             .pickerStyle(.menu)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(10)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(5.5)
                             .background(RoundedRectangle(cornerRadius: 8).fill(Color(.white)))
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.gray.opacity(0.15), lineWidth: 1))
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text("성별").font(.caption).foregroundColor(.gray)
-                            TextField("성별", text: .constant(viewModel.authGender.isEmpty ? viewModel.defaultGender : viewModel.authGender))
+                            HStack {
+                                Image(systemName: "Gender")
+                                    .foregroundColor(.black)
+                                TextField("성별", text: .constant(viewModel.authGender.isEmpty ? viewModel.defaultGender : viewModel.authGender))
+                                    .foregroundColor(.black)
+                                    .font(.body)
+                                    .disabled(true)
+                            }
+                            .padding(5.5)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                         }
                     }
                 }
@@ -189,7 +198,7 @@ struct ProfileEditView: View {
         .navigationTitle("프로필 편집")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .bottomBar) {
                 Button(action: {
                     // 입력값을 저장하고 화면을 닫습니다.
                     viewModel.save()

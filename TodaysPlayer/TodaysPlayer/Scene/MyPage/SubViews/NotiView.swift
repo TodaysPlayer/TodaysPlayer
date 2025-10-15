@@ -16,7 +16,7 @@ struct NotiView: View {
             // 내용
             if notifications.isEmpty {
                 VStack(spacing: 12) {
-                    Image(systemName: "bell.slash")
+                    Image(systemName: "bell.fill")
                         .font(.system(size: 40, weight: .semibold))
                         .foregroundColor(.secondary)
                     Text("매칭진행 / 완료 등등 \n알람이 이곳에 표시됩니다!")
@@ -49,7 +49,7 @@ struct NotiView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { notifications.removeAll() }) {
-                    Image(systemName: "xmark")
+                    Image(systemName: "bell.slash")
                 }
                 .accessibilityLabel("모든 알림 삭제")
                 .disabled(notifications.isEmpty)
