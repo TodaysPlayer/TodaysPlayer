@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct UserRating {
-    let userId: String
+struct UserRating: Codable, Equatable, Hashable {
     var totalRatingCount: Int
     var mannerSum: Double
     var teamWorkSum: Double

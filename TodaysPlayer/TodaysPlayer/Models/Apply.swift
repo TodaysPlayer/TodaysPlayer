@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct Apply: Codable, Identifiable {
+struct Apply: Codable, Identifiable, Hashable {
     let id: String
     let matchId: String
-    let applicantId: String
-    let applicantDisplayName: String
-    let applicantSkillLevel: String?
+    let userId: String
+    let userNickname: String
+    let userSkillLevel: String?
     let position: String?
     let participantCount: Int
     let message: String?
@@ -24,9 +24,9 @@ struct Apply: Codable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case id = "applyId"
         case matchId
-        case applicantId
-        case applicantDisplayName
-        case applicantSkillLevel
+        case userId
+        case userNickname
+        case userSkillLevel
         case position
         case participantCount
         case message
