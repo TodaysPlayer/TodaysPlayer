@@ -19,9 +19,9 @@ struct Stat: View {
                 .font(.system(size: 28))
                 .foregroundColor(color)
             Text(value)
-                .font(.system(size: 22, weight: .bold))
+                .font(.system(size: 20, weight: .bold))
             Text(label)
-                .font(.footnote)
+                .font(.caption2)
                 .foregroundColor(.gray)
         }
         .frame(maxWidth: .infinity)
@@ -62,4 +62,8 @@ struct MyPageRow: View {
         // 카드형 배경을 위한 모서리 둥글기
         .cornerRadius(14)
     }
+}
+
+#Preview {
+    MyPageView()
 }
