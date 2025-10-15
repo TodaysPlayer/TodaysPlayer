@@ -66,18 +66,23 @@ enum MatchInfoStatus: String, TagStyle {
     }
 }
 
+
 enum ApplyStatus: String, TagStyle, CaseIterable {
+    case allType = ""
     case standby = "대기중"
     case accepted = "확정"
     case rejected = "거절"
     
+    // MARK: - TagStyle title
     var title: String { rawValue }
-
+    
+    // MARK: - TagStyle 색상
     var backgroundColor: Color {
         switch self {
-        case .standby: .green
-        case .accepted: .blue
-        case .rejected: .red
+        case .standby: return .green
+        case .accepted: return .blue
+        case .rejected: return .red
+        case .allType: return .gray
         }
     }
 
@@ -85,9 +90,10 @@ enum ApplyStatus: String, TagStyle, CaseIterable {
 
     var borderColor: Color {
         switch self {
-        case .standby: .green
-        case .accepted: .blue
-        case .rejected: .red
+        case .standby: return .green
+        case .accepted: return .blue
+        case .rejected: return .red
+        case .allType: return .gray
         }
     }
 }

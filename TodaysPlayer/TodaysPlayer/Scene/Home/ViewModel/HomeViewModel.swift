@@ -12,7 +12,7 @@ import CoreLocation
 @Observable
 class HomeViewModel {
     // 개발용 사용자 ID
-    private static let STATIC_USER_ID = "bJYjlQZuaqvw2FDB5uNa"
+    private static let STATIC_USER_ID = "9uHP3cOHe8T2xwxS9lfx"
     
     // 배너 관련
     var currentBannerIndex = 0
@@ -21,7 +21,6 @@ class HomeViewModel {
     // 데이터 관련
     var matches: [Match] = []
     var user: User?
-    var regions: [RegionData] = []
     var appliedMatchIds: Set<String> = [] // 사용자가 신청한 매치 ID들
     
     // 위치 관련
@@ -37,8 +36,8 @@ class HomeViewModel {
     
     // 배너 데이터
     let bannerData = [
-        BannerItem(discountTag: "30% OFF", imageName: "HomeBanner1"),
-        BannerItem(discountTag: "20% off", imageName: "HomeBanner2")
+        BannerItem(discountTag: "", imageName: "HomeBanner1", link: "https://www.nike.com/kr"),
+        BannerItem(discountTag: "", imageName: "HomeBanner2", link: "https://intro.queenssmile.co.kr/")
     ]
     
     
@@ -53,7 +52,6 @@ class HomeViewModel {
         // 초기화
         self.matches = []
         self.user = nil
-        self.regions = []
         
         do {
             print("Firebase에서 데이터 로딩 시작...")
@@ -64,7 +62,6 @@ class HomeViewModel {
             try await withThrowingTaskGroup(of: Void.self) { group in
                 group.addTask { try await self.loadMatches() }
                 group.addTask { try await self.loadAppliedMatches() }
-                group.addTask { try await self.loadRegions() }
                 
                 // 모든 작업 완료 대기
                 try await group.waitForAll()
@@ -77,7 +74,6 @@ class HomeViewModel {
             // Firebase 로딩 실패 시 빈 데이터 사용
             self.matches = []
             self.user = nil
-            self.regions = []
         }
         
         self.isLoading = false
@@ -174,18 +170,6 @@ class HomeViewModel {
             throw error
         }
     }
-    
-    func loadRegions() async throws {
-        print("지역 데이터 로딩 중...")
-        
-        let loadedRegions = try await firestore.queryDocuments(collection: "regions", where: "parentRegion", isEqualTo: NSNull(), as: RegionData.self)
-        
-        await MainActor.run {
-            self.regions = loadedRegions
-        }
-        
-        print("지역 데이터 로딩 완료: \(loadedRegions.count)개")
-    }
 
     func getNextMatch() -> Match? {
         // 다음 경기 가져오기 (사용자가 참가한 매치 중 가장 가까운 미래 매치)
@@ -273,10 +257,16 @@ class HomeViewModel {
         return earthRadius * c
     }
     
-    func requestLocationPermission() async {
+    func requestLocationPermission(shouldOpenSettings: Bool = false) async {
         // 위치 권한 요청
         await MainActor.run {
-            self.locationManager.requestLocationPermission()
+            self.locationManager.requestLocationPermission(shouldOpenSettings: shouldOpenSettings)
         }
+    }
+    
+    func hasLocationPermission() -> Bool {
+        // 위치 권한이 허용되었는지 확인
+        return locationManager.authorizationStatus == .authorizedWhenInUse || 
+               locationManager.authorizationStatus == .authorizedAlways
     }
 }

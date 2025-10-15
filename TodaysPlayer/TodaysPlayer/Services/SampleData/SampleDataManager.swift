@@ -134,7 +134,7 @@ class SampleDataManager {
     
     // MARK: - 사용자 데이터
     
-    private func createSampleUsers() async throws {
+    func createSampleUsers() async throws {
         let users = [
             User(
                 id: "bJYjlQZuaqvw2FDB5uNa", // 고정된 사용자 ID (스태틱)
@@ -145,11 +145,9 @@ class SampleDataManager {
                 position: "striker",
                 skillLevel: "intermediate",
                 preferredRegions: ["서울특별시", "경기도"],
-                isTeamLeader: true,
-                teamId: nil,
                 createdAt: Date(),
                 updatedAt: Date(),
-                isActive: true
+                userRate: UserRating(totalRatingCount: 10, mannerSum: 40, teamWorkSum: 40, appointmentSum: 44)
             ),
             User(
                 id: "", // 자동 생성
@@ -160,11 +158,9 @@ class SampleDataManager {
                 position: "midfielder",
                 skillLevel: "advanced",
                 preferredRegions: ["경기도", "인천광역시"],
-                isTeamLeader: false,
-                teamId: nil,
                 createdAt: Date(),
                 updatedAt: Date(),
-                isActive: true
+                userRate:  UserRating(totalRatingCount: 10, mannerSum: 48, teamWorkSum: 40, appointmentSum: 44)
             ),
             User(
                 id: "", // 자동 생성
@@ -175,11 +171,9 @@ class SampleDataManager {
                 position: "goalkeeper",
                 skillLevel: "beginner",
                 preferredRegions: ["인천광역시"],
-                isTeamLeader: false,
-                teamId: nil,
                 createdAt: Date(),
                 updatedAt: Date(),
-                isActive: true
+                userRate: UserRating(totalRatingCount: 10, mannerSum: 48, teamWorkSum: 40, appointmentSum: 44)
             )
         ]
         
@@ -238,6 +232,8 @@ class SampleDataManager {
                 title: "주말 축구 매치 - 강남구",
                 description: "주말에 즐기는 축구 매치입니다. 실력 무관 누구나 참여 가능!",
                 organizerId: secondUser.id,
+                organizerName: "test1",
+                organizerProfileURL: "",
                 teamId: nil,
                 matchType: "individual",
                 gender: "mixed",
@@ -266,6 +262,8 @@ class SampleDataManager {
                 title: "실력별 축구 대회 - 분당구",
                 description: "실력별로 나누어 진행하는 축구 대회입니다.",
                 organizerId: secondUser.id,
+                organizerName: "test1",
+                organizerProfileURL: "",
                 teamId: nil,
                 matchType: "individual",
                 gender: "male",
@@ -294,6 +292,8 @@ class SampleDataManager {
                 title: "초보자 축구 교실 - 인천",
                 description: "축구를 처음 배우는 분들을 위한 교실입니다.",
                 organizerId: thirdUser.id,
+                organizerName: "test1",
+                organizerProfileURL: "",
                 teamId: nil,
                 matchType: "individual",
                 gender: "mixed",
@@ -322,6 +322,8 @@ class SampleDataManager {
                 title: "야간 축구 매치 - 송파구",
                 description: "야간에 진행하는 축구 매치입니다. 직장인들 환영!",
                 organizerId: secondUser.id,
+                organizerName: "test1",
+                organizerProfileURL: "",
                 teamId: nil,
                 matchType: "individual",
                 gender: "mixed",
@@ -350,6 +352,8 @@ class SampleDataManager {
                 title: "고수들만의 매치 - 부천시",
                 description: "고수들만 참여하는 고강도 매치입니다.",
                 organizerId: firstUser.id,
+                organizerName: "test1",
+                organizerProfileURL: "",
                 teamId: nil,
                 matchType: "individual",
                 gender: "male",
@@ -458,7 +462,7 @@ class SampleDataManager {
     
     // MARK: - 신청 데이터
     
-    private func createSampleApplications() async throws {
+    func createSampleApplications() async throws {
         // 먼저 사용자들과 매치들을 가져와서 실제 ID 사용
         let users = try await firestore.getDocuments(collection: "users", as: User.self)
         let matches = try await firestore.getDocuments(collection: "matches", as: Match.self)
@@ -474,7 +478,9 @@ class SampleDataManager {
             Apply(
                 id: "", // 자동 생성
                 matchId: matches[0].id,
-                applicantId: users[1].id,
+                userId: users[1].id,
+                userNickname: users[1].displayName,      // 추가!
+                userSkillLevel: users[1].skillLevel,
                 position: "midfielder",
                 participantCount: 1,
                 message: "열심히 참여하겠습니다!",
@@ -486,7 +492,9 @@ class SampleDataManager {
             Apply(
                 id: "", // 자동 생성
                 matchId: matches[1].id,
-                applicantId: users[2].id,
+                userId: users[2].id,
+                userNickname: users.count > 2 ? users[2].displayName : users[1].displayName,  // 추가
+                userSkillLevel: users.count > 2 ? users[2].skillLevel : users[1].skillLevel,      // 추가
                 position: "goalkeeper",
                 participantCount: 1,
                 message: "고수들과 함께 뛰고 싶습니다.",

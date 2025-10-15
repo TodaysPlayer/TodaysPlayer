@@ -29,10 +29,10 @@ enum Region: String, CaseIterable {
 
 // 실력 레벨 enum
 enum SkillLevel: String, CaseIterable {
-    case professional = "상급"
-    case elite = "중급"
-    case amateur = "초급"
-    case beginner = "입문자"
+    case expert = "상급"
+    case advanced = "고급"
+    case intermediate = "중급"
+    case beginner = "초급"
 }
 
 enum Gender: String, CaseIterable {
@@ -52,6 +52,7 @@ struct GameFilter {
     var skillLevels: Set<SkillLevel> = [] // 복수선택: 프로, 아마추어 둘 다 가능
     var gender: Gender? = nil // 단일 선택: 남자만 or 여자만
     var feeType: FeeType? = nil // 단일 선택: 무료 or 유료
+    var region: Region = .seoul
     
     // 서버로 보낼 딕셔너리 형태로 변환
     func toDictionary() -> [String: Any] {
@@ -92,8 +93,14 @@ struct ApplyView: View {
     // 달력 선택된 날짜
     @State private var selectedDate: Date = Date()
     
+    // filterViewModel 추가
+    @StateObject private var filterViewModel = FilterViewModel()
+    
     // 필터 관련 상태
-    @State private var currentFilter = GameFilter() // 현재 적용된 필터(적용하기를 눌렀을때만 업데이트됨)
+    @State private var currentFilter = GameFilter()
+    
+    // FavoriteViewModel 추가
+    @EnvironmentObject var favoriteViewModel: FavoriteViewModel
     
     var body: some View {
         NavigationStack {
@@ -113,18 +120,19 @@ struct ApplyView: View {
                             .foregroundColor(.secondary)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 8)  // 최소한의 상단 여백
-                    .padding(.bottom, 12)
+                    .padding(.top, 8)
+                    .padding(.bottom, 8)
                     
                     // 스크랩, 필터, 지역 버튼 (통일된 스타일)
                     HStack(spacing: 12) {
-                        // 스크랩 버튼
+                        // 스크랩 버튼 (아이콘 변경)
                         NavigationLink(destination: ScrapView()) {
                             HStack(spacing: 6) {
-                                Image(systemName: "bookmark.fill")
+                                // 삼항연산자로 아이콘 변경
+                                Image(systemName: favoriteViewModel.favoritedMatchIds.isEmpty ? "bookmark" : "bookmark.fill")
                                     .font(.system(size: 14))
                                     .foregroundColor(.blue)
-                                Text("스크랩")
+                                Text("찜한 매치")
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(.primary)
                             }
@@ -139,7 +147,7 @@ struct ApplyView: View {
                             isFilterSheetPresented = true
                         }) {
                             HStack(spacing: 6) {
-                                Image(systemName: currentFilter.isEmpty ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                                Image(systemName: filterViewModel.currentFilter.isEmpty ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                                     .font(.system(size: 14))
                                     .foregroundColor(.blue)
                                 Text("필터")
@@ -160,7 +168,7 @@ struct ApplyView: View {
                                 Image(systemName: "location")
                                     .font(.system(size: 14))
                                     .foregroundColor(.blue)
-                                Text(selectedRegion.rawValue)
+                                Text(filterViewModel.currentFilter.region.rawValue)
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(.primary)
                                 Image(systemName: "chevron.down")
@@ -176,22 +184,27 @@ struct ApplyView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
+                    .padding(.bottom, 8)
                     
                     // 주간 달력 추가
                     CalendarView(selectedDate: $selectedDate)
-                        .frame(height: 200)
+                        .frame(height: 150)
                         .clipped()
                         .padding(.horizontal, 16)
-                        .padding(.bottom, -100)
+                        .padding(.top, 8)
+                        .padding(.bottom, 8)
+                        .onChange(of: selectedDate) { oldValue, newValue in
+                            // ✅ 날짜 변경 시 필터 재적용
+                            filterViewModel.selectedDate = newValue
+                            filterViewModel.applyFilter()
+                        }
                     
                     // 게시글 공고 스크롤뷰
                     ScrollView {
                         LazyVStack(spacing: 16) {
                             // 스크롤 감지를 위한 투명한 뷰
                             Rectangle()
-                                .fill(Color.clear
-                                )
+                                .fill(Color.clear)
                                 .frame(height: 1)
                                 .id("top")
                                 .onAppear {
@@ -201,11 +214,12 @@ struct ApplyView: View {
                                     isScrolling = true
                                 }
                             
-                            ApplyMatchListView(filter: currentFilter)
+                            FirebaseMatchListView()
+                                .environmentObject(filterViewModel)
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 0)
-                        .padding(.bottom, 100) // 플로팅 버튼을 위한 여백
+                        .padding(.bottom, 100)
                     }
                 }
                 
@@ -218,21 +232,25 @@ struct ApplyView: View {
                     }
                 }
                 .padding(.trailing, 16)
-                .padding(.bottom, 34) // Safe Area 고려
+                .padding(.bottom, 34)
             }
-            //.navigationTitle("용병 모집")
         }
         .sheet(isPresented: $isRegionSheetPresented) {
             RegionBottomSheet(
-                selectedRegion: $selectedRegion,
+                filterViewModel: filterViewModel,
                 isPresented: $isRegionSheetPresented
             )
         }
         .sheet(isPresented: $isFilterSheetPresented) {
             FilterBottomSheet(
-                currentFilter: $currentFilter,
                 isPresented: $isFilterSheetPresented
             )
+            .environmentObject(filterViewModel)
+        }
+        .onAppear {
+            //  초기 데이터 로드
+            filterViewModel.selectedDate = selectedDate
+            filterViewModel.fetchInitialMatches()
         }
     }
     
@@ -261,32 +279,9 @@ struct ApplyView: View {
     }
 }
 
-//// 샘플 게시글 카드 뷰
-//struct PostCardView: View {
-//    let title: String
-//    let content: String
-//    
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 8) {
-//            Text(title)
-//                .font(.headline)
-//                .foregroundColor(.primary)
-//            
-//            Text(content)
-//                .font(.body)
-//                .foregroundColor(.secondary)
-//                .lineLimit(3)
-//        }
-//        .frame(maxWidth: .infinity, alignment: .leading)
-//        .padding()
-//        .background(Color(.systemBackground))
-//        .cornerRadius(12)
-//        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-//    }
-//}
-
 #Preview {
     NavigationStack {
         ApplyView()
+            .environmentObject(FavoriteViewModel())
     }
 }

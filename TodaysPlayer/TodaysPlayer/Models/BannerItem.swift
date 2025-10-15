@@ -10,4 +10,5 @@ import SwiftUI
 struct BannerItem {
     let discountTag: String
     let imageName: String
+    let link: String
 }

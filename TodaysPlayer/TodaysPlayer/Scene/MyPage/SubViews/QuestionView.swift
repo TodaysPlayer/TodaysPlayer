@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Foundation
 
 private enum InquiryType: String, CaseIterable, Identifiable {
     case account = "계정/로그인"
@@ -40,7 +39,6 @@ struct QuestionView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                header
                 inquiryCard
                 faqSection
                 contactSection
@@ -52,7 +50,9 @@ struct QuestionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("운영자에게 문의하기").font(.headline)
+                Text("운영자에게 문의하기")
+                    .font(.title2)
+                    .bold()
             }
         }
         .alert("알림", isPresented: $showAlert, actions: {
@@ -63,26 +63,6 @@ struct QuestionView: View {
     }
 
     // MARK: - Sections
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("문의하기")
-                .font(.headline)
-                .foregroundColor(.primary)
-            Text("궁금한 사항이나 문제가 있으시면 문의해주세요.")
-                .multilineTextAlignment(.center)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-        .padding(16)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(Color.gray.opacity(0.15), lineWidth: 0)
-        )
-        .frame(maxWidth: .infinity)
-    }
-
     private var inquiryCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             // 문의 유형
@@ -127,8 +107,8 @@ struct QuestionView: View {
                     if bodyText.isEmpty {
                         Text("문의하실 내용을 자세히 작성해주세요. 문제 상황, 발생 시간, 사용 환경 등을 포함해주시면 더 빠른 답변이 가능합니다.")
                             .foregroundColor(.secondary)
-                            .padding(.top, 16)
-                            .padding(.horizontal, 18)
+                            .padding(.top, 15)
+                            .padding(.horizontal, 12)
                             .allowsHitTesting(false)
                     }
                 }

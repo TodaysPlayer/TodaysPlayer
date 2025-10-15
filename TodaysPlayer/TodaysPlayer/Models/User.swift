@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Codable, Identifiable {
+struct User: Codable, Identifiable, Hashable {
     let id: String
     let email: String
     let displayName: String
@@ -16,11 +16,9 @@ struct User: Codable, Identifiable {
     let position: String?
     let skillLevel: String?
     let preferredRegions: [String]
-    let isTeamLeader: Bool
-    let teamId: String?
     let createdAt: Date
     let updatedAt: Date
-    let isActive: Bool
+    let userRate: UserRating
     
     enum CodingKeys: String, CodingKey {
         case id = "userId"
@@ -31,11 +29,9 @@ struct User: Codable, Identifiable {
         case position
         case skillLevel
         case preferredRegions
-        case isTeamLeader
-        case teamId
         case createdAt
         case updatedAt
-        case isActive
+        case userRate
     }
     
     enum DocumentIdKey: CodingKey {
@@ -45,7 +41,7 @@ struct User: Codable, Identifiable {
     static let documentIdKey = CodingUserInfoKey(rawValue: "documentId")!
     
     // 기본 초기화자 (SampleDataManager에서 사용)
-    init(id: String, email: String, displayName: String, profileImageUrl: String?, phoneNumber: String?, position: String?, skillLevel: String?, preferredRegions: [String], isTeamLeader: Bool, teamId: String?, createdAt: Date, updatedAt: Date, isActive: Bool) {
+    init(id: String, email: String, displayName: String, profileImageUrl: String?, phoneNumber: String?, position: String?, skillLevel: String?, preferredRegions: [String], createdAt: Date, updatedAt: Date, userRate: UserRating) {
         self.id = id
         self.email = email
         self.displayName = displayName
@@ -54,11 +50,9 @@ struct User: Codable, Identifiable {
         self.position = position
         self.skillLevel = skillLevel
         self.preferredRegions = preferredRegions
-        self.isTeamLeader = isTeamLeader
-        self.teamId = teamId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.isActive = isActive
+        self.userRate = userRate
     }
     
     // Firebase 문서 ID를 사용자 ID로 설정하는 초기화 (Decodable)
@@ -79,10 +73,8 @@ struct User: Codable, Identifiable {
         self.position = try container.decodeIfPresent(String.self, forKey: .position)
         self.skillLevel = try container.decodeIfPresent(String.self, forKey: .skillLevel)
         self.preferredRegions = try container.decode([String].self, forKey: .preferredRegions)
-        self.isTeamLeader = try container.decode(Bool.self, forKey: .isTeamLeader)
-        self.teamId = try container.decodeIfPresent(String.self, forKey: .teamId)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
-        self.isActive = try container.decode(Bool.self, forKey: .isActive)
+        self.userRate = try container.decode(UserRating.self, forKey: .userRate)
     }
 }

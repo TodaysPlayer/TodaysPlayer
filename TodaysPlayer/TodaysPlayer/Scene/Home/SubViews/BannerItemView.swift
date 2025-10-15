@@ -40,6 +40,6 @@ struct BannerItemView: View {
 }
 
 #Preview {
-    BannerItemView(bannerItem: BannerItem(discountTag: "30% OFF", imageName: "HomeBanner1"))
+    BannerItemView(bannerItem: BannerItem(discountTag: "30% OFF", imageName: "HomeBanner1", link: "www.naver.com"))
         .frame(width: 200, height: 120)
 }

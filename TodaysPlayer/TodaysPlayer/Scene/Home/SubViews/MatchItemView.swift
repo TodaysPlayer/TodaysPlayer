@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct MatchItemView: View {
+    let title: String
     let location: String
-    let address: String
     let distance: String
     let time: String
     let participants: String
     let gender: GenderType
-    let rating: String
+    let rating: String?
     let price: String
     let skillLevel: String
     let tags: [MatchTag]
@@ -22,11 +22,11 @@ struct MatchItemView: View {
     private var genderIcon: String {
         switch gender {
         case .male:
-            return "person"
+            return "icon_male"
         case .female:
-            return "person"
+            return "icon_female"
         case .mixed:
-            return "person.2"
+            return "icon_mixed"
         }
     }
     
@@ -45,21 +45,23 @@ struct MatchItemView: View {
         VStack(alignment: .leading, spacing: 12) {
             // 상단: 제목과 평점
             HStack {
-                Text(location)
+                Text(title)
                     .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundColor(.black)
                 
                 Spacer()
                 
-                HStack(spacing: 4) {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                        .font(.system(size: 12))
-                    
-                    Text(rating)
-                        .font(.caption)
-                        .foregroundColor(.black)
+                if let rating {
+                    HStack(spacing: 4) {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                            .font(.system(size: 12))
+                        
+                        Text(rating)
+                            .font(.caption)
+                            .foregroundColor(.black)
+                    }
                 }
             }
             
@@ -69,7 +71,8 @@ struct MatchItemView: View {
                     .foregroundColor(.gray)
                     .font(.system(size: 12))
                 
-                Text(address)
+                Text(location)
+                    .lineLimit(1)
                     .font(.caption)
                     .foregroundColor(.black)
                 
@@ -100,11 +103,13 @@ struct MatchItemView: View {
                         .foregroundColor(.black)
                 }
                 .padding(.leading, 10)
-                .padding(.trailing, 1)
+                .padding(.trailing, 10)
                 
                 HStack(spacing: 4) {
-                    Image(systemName: genderIcon)
-                        .font(.system(size: 12))
+                    Image(genderIcon)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(genderColor)
                 }
                 
@@ -141,8 +146,8 @@ struct MatchItemView: View {
 
 #Preview {
     MatchItemView(
+        title: "풋살 초보분들 찾아여~",
         location: "강남풋살파크",
-        address: "강남구 테헤란로 152",
         distance: "1.2km",
         time: "오늘 20:00",
         participants: "2/10",
@@ -153,3 +158,5 @@ struct MatchItemView: View {
         tags: []
     )
 }
+
+

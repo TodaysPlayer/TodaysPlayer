@@ -12,6 +12,7 @@ enum MatchActionType {
     case apply          // 참여신청하기
     case waiting        // 수락대기중
     case manage         // 참여인원 관리하기
+    case finished       // 종료된 경기
     
     var title: String {
         switch self {
@@ -21,6 +22,8 @@ enum MatchActionType {
             return "수락대기중"
         case .manage:
             return "참여인원 관리하기"
+        case .finished:
+            return "종료된 경기"
         }
     }
     
@@ -28,7 +31,7 @@ enum MatchActionType {
         switch self {
         case .apply:
             return .green
-        case .waiting:
+        case .waiting, .finished:
             return .gray
         case .manage:
             return .blue
@@ -39,7 +42,7 @@ enum MatchActionType {
         switch self {
         case .apply, .manage:
             return true
-        case .waiting:
+        case .waiting, .finished:
             return false
         }
     }
@@ -58,6 +61,9 @@ extension PostedMatchCase {
             
         case .myRecruitingMatch:
             return .manage         // 인원관리 화면 연결 필요
+            
+        case .finishedMatch:
+            return .finished
         }
     }
 }

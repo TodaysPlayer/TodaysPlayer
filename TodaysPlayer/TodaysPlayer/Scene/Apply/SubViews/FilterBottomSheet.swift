@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct FilterBottomSheet: View {
-    // 부모 뷰에서 받아올 데이터
-    @Binding var currentFilter: GameFilter
     @Binding var isPresented: Bool
+    
+    // ✅ ViewModel 사용
+    @EnvironmentObject var filterViewModel: FilterViewModel
+    
+    // ✅ 임시 필터 (적용하기 전까지는 원본 유지)
     @State private var tempFilter: GameFilter
     
     // 필터 선택 여부를 확인하는 computed property
@@ -21,11 +24,10 @@ struct FilterBottomSheet: View {
         tempFilter.feeType != nil
     }
     
-    // 생성자에서 tempFilter 초기화
-    init(currentFilter: Binding<GameFilter>, isPresented: Binding<Bool>) {
-        self._currentFilter = currentFilter
+    // ✅ 생성자에서 ViewModel의 currentFilter를 tempFilter에 복사
+    init(isPresented: Binding<Bool>) {
         self._isPresented = isPresented
-        self._tempFilter = State(initialValue: currentFilter.wrappedValue)
+        self._tempFilter = State(initialValue: GameFilter())
     }
     
     var body: some View {
@@ -53,7 +55,7 @@ struct FilterBottomSheet: View {
             // 필터 옵션들
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    // 경기 종류 섹션 - MatchType 사용
+                    // 경기 종류 섹션
                     filterSection(title: "경기 종류") {
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
@@ -71,7 +73,7 @@ struct FilterBottomSheet: View {
                         }
                     }
                     
-                    // 실력 레벨 섹션 - SkillLevel enum 사용
+                    // 실력 레벨 섹션
                     filterSection(title: "실력") {
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
@@ -94,7 +96,7 @@ struct FilterBottomSheet: View {
                         }
                     }
                     
-                    // 성별 섹션 - Gender enum 사용
+                    // 성별 섹션
                     filterSection(title: "성별") {
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
@@ -111,12 +113,12 @@ struct FilterBottomSheet: View {
                         }
                     }
                     
-                    // 참가비 섹션 - FeeType enum 사용
+                    // 참가비 섹션
                     filterSection(title: "참가비") {
                         LazyVGrid(columns: [
-                                GridItem(.flexible()),
-                                GridItem(.flexible())
-                            ], spacing: 10) {
+                            GridItem(.flexible()),
+                            GridItem(.flexible())
+                        ], spacing: 10) {
                             ForEach(FeeType.allCases, id: \.self) { feeType in
                                 filterToggleButton(
                                     title: feeType.rawValue,
@@ -130,7 +132,7 @@ struct FilterBottomSheet: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
-                .padding(.bottom, 100) // 하단 버튼 공간 확보
+                .padding(.bottom, 100)
             }
             
             // 하단 버튼들
@@ -138,29 +140,27 @@ struct FilterBottomSheet: View {
                 Divider()
                 
                 HStack(spacing: 12) {
-                    // 조건 초기화 버튼
+                    // ✅ 조건 초기화 버튼
                     Button(action: {
                         tempFilter = GameFilter()
                     }) {
                         Text("조건 초기화")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(hasActiveFilters ? .white : .secondary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(hasActiveFilters ? Color.green : Color(.systemGray5))
-                        .cornerRadius(12)
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(hasActiveFilters ? .white : .secondary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(hasActiveFilters ? Color.green : Color(.systemGray5))
+                            .cornerRadius(12)
                     }
                     
-                    // 적용하기 버튼
+                    // ✅ 적용하기 버튼 (ViewModel 호출)
                     Button(action: {
-                        currentFilter = tempFilter  // 부모의 currentFilter에 적용
+                        // ViewModel에 필터 적용
+                        filterViewModel.currentFilter = tempFilter
+                        filterViewModel.applyFilter()
+                        
+                        // 시트 닫기
                         isPresented = false
-                        
-                        // 필터 적용 로직 (나중에 ViewModel로 이동 예정)
-                        let filterDict = currentFilter.toDictionary()
-                        print("적용된 필터:", filterDict)
-                        
-                        // 여기서 서버에 필터 조건을 보내고 결과를 받아올 수 있습니다
                     }) {
                         Text("적용하기")
                             .font(.system(size: 16, weight: .semibold))
@@ -179,8 +179,8 @@ struct FilterBottomSheet: View {
         .presentationDetents([.height(500)])
         .presentationDragIndicator(.hidden)
         .onAppear {
-            // 시트가 나타날 때마다 현재 필터를 tempFilter에 복사
-            tempFilter = currentFilter
+            // ✅ 시트가 나타날 때 ViewModel의 현재 필터를 tempFilter에 복사
+            tempFilter = filterViewModel.currentFilter
         }
     }
     
@@ -194,7 +194,7 @@ struct FilterBottomSheet: View {
         }
     }
     
-    // 필터 토글 버튼 헬퍼 함수 - color 파라미터 추가
+    // 필터 토글 버튼 헬퍼 함수
     private func filterToggleButton(
         title: String,
         isSelected: Bool,
@@ -215,11 +215,9 @@ struct FilterBottomSheet: View {
 }
 
 #Preview {
-    @Previewable @State var currentFilter = GameFilter()
     @Previewable @State var isPresented = true
+    @Previewable @StateObject var filterViewModel = FilterViewModel()
     
-    return FilterBottomSheet(
-        currentFilter: $currentFilter,
-        isPresented: $isPresented
-    )
+    return FilterBottomSheet(isPresented: $isPresented)
+        .environmentObject(filterViewModel)
 }

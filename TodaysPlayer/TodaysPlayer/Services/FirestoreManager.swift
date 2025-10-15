@@ -35,6 +35,7 @@ class FirestoreManager {
         let decoder = Firestore.Decoder()
         decoder.userInfo[User.documentIdKey] = documentId
         decoder.userInfo[Match.documentIdKey] = documentId
+        decoder.userInfo[Announcement.documentIdKey] = documentId
         
         return try document.data(as: type, decoder: decoder)
     }
@@ -46,6 +47,7 @@ class FirestoreManager {
             let decoder = Firestore.Decoder()
             decoder.userInfo[User.documentIdKey] = document.documentID
             decoder.userInfo[Match.documentIdKey] = document.documentID
+            decoder.userInfo[Announcement.documentIdKey] = document.documentID
             return try? document.data(as: type, decoder: decoder)
         }
     }
@@ -57,6 +59,7 @@ class FirestoreManager {
             let decoder = Firestore.Decoder()
             decoder.userInfo[User.documentIdKey] = document.documentID
             decoder.userInfo[Match.documentIdKey] = document.documentID
+            decoder.userInfo[Announcement.documentIdKey] = document.documentID
             return try? document.data(as: type, decoder: decoder)
         }
     }

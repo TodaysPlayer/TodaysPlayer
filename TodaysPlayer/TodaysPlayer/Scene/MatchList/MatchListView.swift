@@ -11,48 +11,74 @@ struct MatchListView: View {
     @State var viewModel: MatchListViewModel = MatchListViewModel()
     
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             ZStack {
                 Color.gray.opacity(0.1)
                     .ignoresSafeArea()
                 
                 VStack(alignment: .leading, spacing: 15) {
-                    Text("나의 매치 관리")
-                        .font(.title)
-                        .bold()
-                    
-                    MyListSegmentedControl(preselectedIndex: 0) {
-                        viewModel.fetchMatchListDatas(selectedIndex: $0)
+                    CustomSegmentControlView(
+                        categories: viewModel.myMatchSegmentTitles,
+                        initialSelection: viewModel.myMatchSegmentTitles.first ?? "신청한 경기"
+                    ) {
+                        viewModel.fetchFilteringButtonTitle(selectedType: $0)
                     }
                     
-                    MatchDashboardView()
+                    MyMatchFilterButtonView(
+                        filterTypes: viewModel.filteringButtonTypes,
+                        selectedFilter: $viewModel.selectedFilterButton
+                    )
+                    .padding(.horizontal, 10)
                     
                     ScrollView {
                         LazyVStack(spacing: 16) {
-                            ForEach(viewModel.matchListDatas, id: \.self) { match in
-                                VStack(spacing: 20) {
-                                    MatchTagView(
-                                        matchInfo: match,
-                                        postedMatchCase: viewModel.postedMatchCase,
-                                    ) {
-                                        viewModel.deleteAppliedMatch(matchId: $0)
+                            if !viewModel.isLoading && viewModel.displayedMatches.isEmpty {
+                                Text("매치 데이터가 없습니다")
+                                    .foregroundColor(.gray)
+                            }
+
+                            ForEach(Array(viewModel.displayedMatches.enumerated()), id: \.element.id) { index, match in
+                                NavigationLink(destination: MatchDetailView(match: match)) {
+                                    VStack(spacing: 20) {
+                                        MatchTagView(info: match, matchCase: viewModel.postedMatchCase)
+                                        MatchInfoView(
+                                            matchInfo: match,
+                                            postedMatchCase: viewModel.postedMatchCase,
+                                            userName: "용헌"
+                                        )
                                     }
-                                            
-                                    MatchInfoView(
-                                        matchInfo: match,
-                                        postedMatchCase: viewModel.postedMatchCase
-                                    )
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(12)
                                 }
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(12)
+                                .onAppear {
+                                    if index == viewModel.displayedMatches.count - 1 {
+                                        Task { await viewModel.loadMoreMatches() }
+                                    }
+                                }
+                            }
+                            if viewModel.isLoading && !viewModel.displayedMatches.isEmpty {
+                                HStack(spacing: 8) {
+                                    ProgressView()
+                                    Text("불러오는 중...")
+                                        .foregroundColor(.gray)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
                             }
                         }
                         .padding(.vertical)
                     }
+                    .scrollIndicators(.hidden)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
             }
+            .navigationTitle("나의 매치 관리")
+
         }
     }
+}
+
+#Preview {
+    MatchListView()
 }

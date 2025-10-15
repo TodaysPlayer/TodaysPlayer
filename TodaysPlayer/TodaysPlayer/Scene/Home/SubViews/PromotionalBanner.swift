@@ -9,6 +9,8 @@ import SwiftUI
 import Combine
 
 struct PromotionalBanner: View {
+    @Environment(\.openURL) var openURL
+    
     @State var viewModel: HomeViewModel
     @State private var currentIndex = 0
     @State private var isDragging = false
@@ -24,6 +26,9 @@ struct PromotionalBanner: View {
                     
                     BannerItemView(bannerItem: item)
                         .tag(i)
+                        .onTapGesture {
+                            openURL(URL(string: item.link)!)
+                        }
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -56,9 +61,6 @@ struct PromotionalBanner: View {
                 withAnimation(.easeInOut(duration: 0.5)) {
                     currentIndex += 1
                 }
-            }
-            .onTapGesture {
-                // 배너 클릭 시 상세 페이지로 이동
             }
             
             // 페이지 인디케이터

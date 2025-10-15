@@ -12,4 +12,11 @@ extension View {
     func matchTagStyle(tagType: TagStyle) -> some View {
         self.modifier(MatchTagStyle(tag: tagType))
     }
+    
+    @ViewBuilder
+    func visible(_ condition: Bool) -> some View {
+        if condition {
+            self
+        }
+    }
 }

@@ -16,7 +16,6 @@ class LocationManager: NSObject {
     var currentLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus = .notDetermined
     var isLocationEnabled = false
-    var errorMessage: String?
     
     // 위치 정확도 설정
     private let desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
@@ -35,28 +34,28 @@ class LocationManager: NSObject {
         authorizationStatus = locationManager.authorizationStatus
     }
     
-    func requestLocationPermission() {
+    func requestLocationPermission(shouldOpenSettings: Bool = false) {
         // 위치 권한 요청
         switch authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
             
         case .denied, .restricted:
-            errorMessage = "위치 권한이 필요합니다. 설정에서 위치 권한을 허용해주세요."
+            if shouldOpenSettings {
+                openAppSettings()
+            }
             
         case .authorizedWhenInUse, .authorizedAlways:
             startLocationUpdates()
             
         @unknown default:
-            errorMessage = "알 수 없는 위치 권한 상태입니다."
+            break
         }
     }
     
     func startLocationUpdates() {
         // 위치 업데이트 시작
         guard authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways else {
-            errorMessage = "위치 권한이 허용되지 않았습니다."
-            
             return
         }
         
@@ -72,13 +71,11 @@ class LocationManager: NSObject {
             
             await MainActor.run {
                 guard isLocationServicesEnabled else {
-                    self.errorMessage = "위치 서비스가 비활성화되어 있습니다."
                     return
                 }
                 
                 self.locationManager.startUpdatingLocation()
                 self.isLocationEnabled = true
-                self.errorMessage = nil
             }
         }
     }
@@ -133,6 +130,19 @@ class LocationManager: NSObject {
             return "알 수 없는 상태"
         }
     }
+    
+    func openAppSettings() {
+        // 앱 설정 화면으로 이동
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl)
+            
+            // 설정 앱으로 이동 완료
+        }
+    }
 }
 
 extension LocationManager: CLLocationManagerDelegate {
@@ -140,13 +150,10 @@ extension LocationManager: CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         
         currentLocation = location
-        errorMessage = nil
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("위치 업데이트 실패: \(error.localizedDescription)")
-        
-        errorMessage = "위치를 가져올 수 없습니다: \(error.localizedDescription)"
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -155,17 +162,15 @@ extension LocationManager: CLLocationManagerDelegate {
         switch status {
         case .authorizedWhenInUse, .authorizedAlways:
             startLocationUpdates()
-            errorMessage = nil
             
         case .denied, .restricted:
             stopLocationUpdates()
-            errorMessage = "위치 권한이 거부되었습니다. 설정에서 권한을 허용해주세요."
             
         case .notDetermined:
-            errorMessage = nil
+            break
             
         @unknown default:
-            errorMessage = "알 수 없는 위치 권한 상태입니다."
+            break
         }
     }
 }
