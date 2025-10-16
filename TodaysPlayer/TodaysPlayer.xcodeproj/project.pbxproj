@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3DAD9EE42EA08460007334F8 /* AlanAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3DAD9EE32EA08460007334F8 /* AlanAI */; };
 		EEEF08A02E862B6A0018112B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF089F2E862B6A0018112B /* FirebaseAuth */; };
 		EEEF08A22E862B6A0018112B /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF08A12E862B6A0018112B /* FirebaseCore */; };
 		EEEF08A42E862B6A0018112B /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF08A32E862B6A0018112B /* FirebaseDatabase */; };
@@ -48,6 +49,7 @@
 				EEEF08A42E862B6A0018112B /* FirebaseDatabase in Frameworks */,
 				EEEF08A62E862B6A0018112B /* FirebaseFirestore in Frameworks */,
 				EEEF08A82E862B6A0018112B /* FirebaseMessaging in Frameworks */,
+				3DAD9EE42EA08460007334F8 /* AlanAI in Frameworks */,
 				EEEF08A22E862B6A0018112B /* FirebaseCore in Frameworks */,
 				EEEF08A02E862B6A0018112B /* FirebaseAuth in Frameworks */,
 				EEEF08AA2E862B6A0018112B /* FirebaseStorage in Frameworks */,
@@ -99,6 +101,7 @@
 				EEEF08A52E862B6A0018112B /* FirebaseFirestore */,
 				EEEF08A72E862B6A0018112B /* FirebaseMessaging */,
 				EEEF08A92E862B6A0018112B /* FirebaseStorage */,
+				3DAD9EE32EA08460007334F8 /* AlanAI */,
 			);
 			productName = TodaysPlayer;
 			productReference = 89C7EE522E8370CE0062B03C /* TodaysPlayer.app */;
@@ -130,6 +133,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				EEEF089E2E862B6A0018112B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				3DAD9EE22EA08460007334F8 /* XCRemoteSwiftPackageReference "alan-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 89C7EE532E8370CE0062B03C /* Products */;
@@ -389,6 +393,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3DAD9EE22EA08460007334F8 /* XCRemoteSwiftPackageReference "alan-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/estcamp-ios3/alan-ios-sdk";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		EEEF089E2E862B6A0018112B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -400,6 +412,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3DAD9EE32EA08460007334F8 /* AlanAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DAD9EE22EA08460007334F8 /* XCRemoteSwiftPackageReference "alan-ios-sdk" */;
+			productName = AlanAI;
+		};
 		EEEF089F2E862B6A0018112B /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EEEF089E2E862B6A0018112B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

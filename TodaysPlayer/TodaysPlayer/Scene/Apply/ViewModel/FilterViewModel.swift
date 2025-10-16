@@ -52,52 +52,52 @@ class FilterViewModel: ObservableObject {
     
     /// 주소 문자열에서 Region enum 추출
     private func extractRegion(from address: String) -> Region? {
-        if address.hasPrefix("서울") || address.hasPrefix("서울특별시") {
+        if address.contains("서울") {
             return .seoul
         }
-        if address.hasPrefix("경기") || address.hasPrefix("경기도") {
+        if address.contains("경기") {
             return .gyeonggi
         }
-        if address.hasPrefix("인천") || address.hasPrefix("인천광역시") {
+        if address.contains("인천") {
             return .incheon
         }
-        if address.hasPrefix("강원") || address.hasPrefix("강원도") || address.hasPrefix("강원특별자치도") {
+        if address.contains("강원") {
             return .gangwon
         }
-        if address.hasPrefix("대전") || address.hasPrefix("대전광역시") || address.hasPrefix("세종") || address.hasPrefix("세종특별자치시") {
+        if address.contains("대전") || address.contains("세종") {
             return .daejeonSejong
         }
-        if address.hasPrefix("충북") || address.hasPrefix("충청북도") {
+        if address.contains("충북") || address.contains("충청북도") {
             return .chungbuk
         }
-        if address.hasPrefix("충남") || address.hasPrefix("충청남도") {
+        if address.contains("충남") || address.contains("충청남도") {
             return .chungnam
         }
-        if address.hasPrefix("대구") || address.hasPrefix("대구광역시") {
+        if address.contains("대구") {
             return .daegu
         }
-        if address.hasPrefix("부산") || address.hasPrefix("부산광역시") {
+        if address.contains("부산") {
             return .busan
         }
-        if address.hasPrefix("울산") || address.hasPrefix("울산광역시") {
+        if address.contains("울산") {
             return .ulsan
         }
-        if address.hasPrefix("경북") || address.hasPrefix("경상북도") {
+        if address.contains("경북") || address.contains("경상북도") {
             return .gyeongbuk
         }
-        if address.hasPrefix("경남") || address.hasPrefix("경상남도") {
+        if address.contains("경남") || address.contains("경상남도") {
             return .gyeongnam
         }
-        if address.hasPrefix("광주") || address.hasPrefix("광주광역시") {
+        if address.contains("광주") {
             return .gwangju
         }
-        if address.hasPrefix("전북") || address.hasPrefix("전라북도") || address.hasPrefix("전북특별자치도") {
+        if address.contains("전북") || address.contains("전라북도") {
             return .jeonbuk
         }
-        if address.hasPrefix("전남") || address.hasPrefix("전라남도") {
+        if address.contains("전남") || address.contains("전라남도") {
             return .jeonnam
         }
-        if address.hasPrefix("제주") || address.hasPrefix("제주특별자치도") {
+        if address.contains("제주") {
             return .jeju
         }
         
