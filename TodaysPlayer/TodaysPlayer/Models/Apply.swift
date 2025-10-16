@@ -20,6 +20,8 @@ struct Apply: Codable, Identifiable, Hashable {
     let rejectionReason: String?
     let appliedAt: Date
     let processedAt: Date?
+    let userRate: UserRating
+
     
     enum CodingKeys: String, CodingKey {
         case id = "applyId"
@@ -34,5 +36,6 @@ struct Apply: Codable, Identifiable, Hashable {
         case rejectionReason
         case appliedAt
         case processedAt
+        case userRate
     }
 }

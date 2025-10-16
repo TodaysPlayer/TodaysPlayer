@@ -248,7 +248,13 @@ struct ApplyMatchView: View {
                     status: "pending",
                     rejectionReason: nil,
                     appliedAt: Date(),
-                    processedAt: nil
+                    processedAt: nil,
+                    userRate: UserRating(
+                        totalRatingCount: 10,
+                        mannerSum: 40,
+                        teamWorkSum: 40,
+                        appointmentSum: 44
+                    )
                 )
                 
                 // Firebase에 저장

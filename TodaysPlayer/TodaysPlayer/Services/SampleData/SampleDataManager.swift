@@ -472,10 +472,12 @@ class SampleDataManager {
         
         let applications = [
             Apply(
-                id: "", // 자동 생성
+                id: "",
+                // 자동 생성
                 matchId: matches[0].id,
                 userId: users[1].id,
-                userNickname: users[1].displayName,      // 추가!
+                userNickname: users[1].displayName,
+                // 추가!
                 userSkillLevel: users[1].skillLevel,
                 position: "midfielder",
                 participantCount: 1,
@@ -483,7 +485,13 @@ class SampleDataManager {
                 status: "pending",
                 rejectionReason: nil,
                 appliedAt: Date(),
-                processedAt: nil
+                processedAt: nil,
+                userRate: UserRating(
+                    totalRatingCount: 10,
+                    mannerSum: 40,
+                    teamWorkSum: 40,
+                    appointmentSum: 44
+                )
             ),
             Apply(
                 id: "", // 자동 생성
@@ -497,7 +505,13 @@ class SampleDataManager {
                 status: "accepted",
                 rejectionReason: nil,
                 appliedAt: Date(),
-                processedAt: Date()
+                processedAt: Date(),
+                userRate: UserRating(
+                    totalRatingCount: 10,
+                    mannerSum: 40,
+                    teamWorkSum: 40,
+                    appointmentSum: 44
+                )
             )
         ]
         
