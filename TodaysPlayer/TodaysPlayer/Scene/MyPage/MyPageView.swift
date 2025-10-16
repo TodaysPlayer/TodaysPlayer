@@ -155,7 +155,14 @@ struct MyPageView: View {
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
             }
-            NavigationLink(destination: MyRatingView()) {
+#if DEBUG
+#warning("종혁님")
+            // TODO: 나의 평점화면내의 데이터는 마이페이지에서 User데이터를 사용하는게 맞는거 같아요. 마이페이지에서 User데이터를 받아서 넘겨주시면 될 거 같습니다. 네트워킹관련 코드는 MyRatingViewModel에 있습니다.
+#endif
+
+            NavigationLink(
+                destination: MyRatingView(viewModel: MyRatingViewModel(userId: "9uHP3cOHe8T2xwxS9lx"))
+            ) {
                 Stat(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "평균 평점", color: .purple)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
