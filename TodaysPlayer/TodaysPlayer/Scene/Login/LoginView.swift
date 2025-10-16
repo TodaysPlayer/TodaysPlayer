@@ -11,17 +11,16 @@ struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isLoggedIn: Bool = false
-    @State private var showSignUp = false
     
     // 알림창 상태
     @State private var showAlert = false
     @State private var alertMessage = ""
     
-    // 입력칸 밑 에러 메시지
+    // 입력칸 하단 에러 메시지
     @State private var emailErrorMessage = ""
     @State private var passwordErrorMessage = ""
     
-    // 임시 가입된 이메일 리스트 (테스트용)
+    // 테스트용 가입된 이메일
     private let registeredEmails = ["test@example.com", "user1@naver.com", "hello@gmail.com"]
     
     enum Field { case email, password }
@@ -32,10 +31,9 @@ struct LoginView: View {
             ZStack {
                 Color.gray.opacity(0.1)
                     .ignoresSafeArea()
-                    .onTapGesture { focusedField = nil } // 배경 터치 시 키보드 닫기
+                    .onTapGesture { focusedField = nil }
                 
                 VStack(spacing: 30) {
-                    
                     // 로고 및 타이틀
                     VStack(spacing: 16) {
                         ZStack {
@@ -75,6 +73,9 @@ struct LoginView: View {
                                     .focused($focusedField, equals: .email)
                                     .submitLabel(.next)
                                     .onSubmit { focusedField = .password }
+                                    .onChange(of: email) { _ in
+                                        emailErrorMessage = ""
+                                    }
                             }
                             .padding()
                             .background(Color.gray.opacity(0.1))
@@ -98,6 +99,9 @@ struct LoginView: View {
                                     .focused($focusedField, equals: .password)
                                     .submitLabel(.done)
                                     .onSubmit { login() }
+                                    .onChange(of: password) { _ in
+                                        passwordErrorMessage = ""
+                                    }
                             }
                             .padding()
                             .background(Color.gray.opacity(0.1))
@@ -112,7 +116,7 @@ struct LoginView: View {
                         }
                         
                         // 로그인 버튼
-                        Button { login() } label: {
+                        Button(action: login) {
                             Text("로그인")
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -120,6 +124,7 @@ struct LoginView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(8)
                         }
+                        
                         NavigationLink(destination: PasswordResetView()) {
                             Text("비밀번호를 잊으셨나요?")
                                 .foregroundColor(.gray)
@@ -127,26 +132,25 @@ struct LoginView: View {
                         
                         NavigationLink(destination: SignUpView()) {
                             Text("이메일로 회원가입")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.3))
-                            )
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.gray.opacity(0.3))
+                                )
                         }
                     }
                     .padding()
                     .background(Color.white)
                     .cornerRadius(16)
-                    .shadow(radius: 5)
                     .padding(.horizontal)
                     
                     Spacer()
                 }
             }
         }
-        // Alert 표시
+        // ✅ Alert도 유지
         .alert(isPresented: $showAlert) {
             Alert(
                 title: Text("로그인 오류"),
@@ -159,11 +163,12 @@ struct LoginView: View {
         }
     }
     
-    // 로그인 처리 함수
+    // 로그인 검증 함수
     private func login() {
         // 에러 초기화
         emailErrorMessage = ""
         passwordErrorMessage = ""
+        alertMessage = ""
         
         // 이메일 검증
         if email.isEmpty {
@@ -192,7 +197,7 @@ struct LoginView: View {
         if password.isEmpty {
             focusedField = .password
             alertMessage = "비밀번호를 입력하세요"
-            passwordErrorMessage = alertMessage  // ⬅️ Alert 닫은 후에도 필드 밑에 표시
+            passwordErrorMessage = alertMessage
             showAlert = true
             return
         }
