@@ -47,5 +47,3 @@ extension Date {
         return formatter.localizedString(for: self, relativeTo: Date())
     }
 }
-
-
