@@ -30,7 +30,7 @@ final class MatchListViewModel {
         didSet { updateDisplayedMatches() }
     }
 
-    private let userId: String = "bJYjlQZuaqvw2FDB5uNa"
+    private let userId: String = "9uHP3cOHe8T2xwxS9lfx"
     private var lastAppliedSnapshot: DocumentSnapshot?
     private var lastRecruitingSnapshot: DocumentSnapshot?
     private let pageSize = 5
