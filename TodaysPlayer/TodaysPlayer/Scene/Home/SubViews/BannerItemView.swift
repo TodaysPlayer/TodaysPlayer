@@ -1,3 +1,10 @@
+//
+//  MatchItemView.swift
+//  TodaysPlayer
+//
+//  Created by J on 9/24/25.
+//
+
 import SwiftUI
 
 struct BannerItemView: View {
