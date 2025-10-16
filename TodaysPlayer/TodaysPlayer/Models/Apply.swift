@@ -97,3 +97,9 @@ struct Apply: Codable, Identifiable, Hashable {
         self.userRate = try container.decode(UserRating.self, forKey: .userRate)
     }
 }
+
+extension Apply {
+    var applyStatusEnum: ApplyStatus {
+        ApplyStatusConverter.toStatus(from: status)
+    }
+}

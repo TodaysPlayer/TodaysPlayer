@@ -30,7 +30,7 @@ struct ParticipantListView: View {
                 
                 ScrollView {
                     LazyVStack(spacing: 12) {
-                        ForEach(viewModel.participantDatas, id: \.self) { participant in
+                        ForEach(viewModel.displayedApplies, id: \.self) { participant in
                             ParticipantView(participantData: participant, viewModel: viewModel)
                                 .padding(10)
                                 .background(Color.white)
@@ -49,10 +49,11 @@ struct ParticipantListView: View {
         .sheet(isPresented: $viewModel.isShowRejectSheet) {
             RejectionReasonPickerView(onRejectButtonTapped: { rejectCase, otherReason  in
                 viewModel.managementAppliedStatus(
-                    status: .rejected,
-                    rejectCase: rejectCase,
-                    otherReason
-                )
+                        status: .rejected,
+                        rejectCase: rejectCase,
+                        otherReason
+                    )
+                
                 
                 viewModel.toastManager.show(.participantRejected)
             })

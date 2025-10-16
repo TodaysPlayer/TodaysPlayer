@@ -10,8 +10,9 @@ import SwiftUI
 struct ParticipantView: View {
     let participantData: Apply
     let viewModel: ParticipantListViewModel
-
+    
     var body: some View {
+
         VStack(alignment: .leading, spacing: 10){
             HStack(alignment: .center, spacing: 10) {
                 Image(systemName: "person.circle.fill")
@@ -22,9 +23,18 @@ struct ParticipantView: View {
                     
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("(\(participantData.userNickname))")
-                        .font(.headline)
-
+                    HStack {
+                        Text("(\(participantData.userNickname))")
+                            .font(.headline)
+                     
+                        Spacer()
+ 
+                        HStack {
+                            Image(systemName: "star.fill")
+                            Text(String(format: "%.1f", viewModel.avgRating(for: participantData)))
+                        }
+                    }
+                    
                     HStack(spacing: 6) {
                         Text(participantData.position ?? "무관")
                             .font(.caption)
@@ -40,21 +50,23 @@ struct ParticipantView: View {
                             .background(Color.gray.opacity(0.2))
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
-
-                    Text("\(participantData.appliedAt) 신청")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
+            Text("\(participantData.appliedAt.relativeTimeString()) 신청")
+                .font(.footnote)
+                .foregroundColor(.gray)
+                .padding(.leading, 50)
+            
             
             VStack(alignment: .leading, spacing: 4) {
-                Text("거절사유")
+                Text(ApplyStatusConverter.toStatus(from: participantData.status) == .rejected ? "거절사유" : "신청내용")
                     .foregroundStyle(Color.gray.opacity(0.5))
-                    .visible(ApplyStatusConverter.toStatus(from: participantData.status) == .rejected)
                 
-                Text(participantData.rejectionReason ?? "없음")
+                Text((ApplyStatusConverter.toStatus(from: participantData.status) == .rejected
+                      ? participantData.rejectionReason ?? "내용없음"
+                      : participantData.message) ?? "내용없음")
             }
             .modifier(DescriptionTextStyle())
             .padding(.top, 20)

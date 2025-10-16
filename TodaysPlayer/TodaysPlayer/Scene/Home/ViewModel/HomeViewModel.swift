@@ -58,14 +58,8 @@ class HomeViewModel {
             // 사용자를 먼저 로드
             try await self.loadCurrentUser()
             
-            // 나머지 데이터를 병렬로 로드
-            try await withThrowingTaskGroup(of: Void.self) { group in
-                group.addTask { try await self.loadMatches() }
-                group.addTask { try await self.loadAppliedMatches() }
-                
-                // 모든 작업 완료 대기
-                try await group.waitForAll()
-            }
+            async let _ = self.loadMatches()
+            async let _ = self.loadAppliedMatches()
             
             print("Firebase 데이터 로딩 완료!")
         } catch {
