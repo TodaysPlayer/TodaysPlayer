@@ -13,7 +13,6 @@ struct HomeView: View {
     @State private var isAddingRating = false
     @State private var showSampleDataAlert = false
     @State private var sampleDataMessage = ""
-    @State private var hasAppeared = false  // 중복 로딩 방지
     
     var body: some View {
         ScrollView {
@@ -28,15 +27,20 @@ struct HomeView: View {
                 // 내 주변 가까운 매치
                 NearbyMatchesCard(
                     matches: viewModel.getNearbyMatches(),
-                    viewModel: viewModel
+                    hasLocationPermission: viewModel.hasLocationPermission(),
+                    formatDistance: { coordinates in
+                        viewModel.formatDistance(to: coordinates)
+                    },
+                    onRequestLocationPermission: {
+                        Task {
+                            await viewModel.requestLocationPermission(shouldOpenSettings: true)
+                        }
+                    }
                 )
                 
                 // 프로모션 배너
-                PromotionalBanner(viewModel: viewModel)
-                
-                // 하단 여백
-                Color.clear
-                    .frame(height: 20)
+                PromotionalBanner(bannerData: viewModel.bannerData)
+                    .padding(.bottom, 20)   // 하단 여백
             }
             .padding(.horizontal, 24)
         }
@@ -44,17 +48,9 @@ struct HomeView: View {
         .refreshable {
             await viewModel.loadInitialData()
         }
-        .onAppear {
-            // 중복 호출 방지
-            if hasAppeared == false {
-                hasAppeared = true
-                
-                Task {
-                    await viewModel.loadInitialData()
-                    // 홈 화면 진입 시 위치 권한 요청
-                    await viewModel.requestLocationPermission()
-                }
-            }
+        .task {
+            await viewModel.loadInitialData()
+            await viewModel.requestLocationPermission() // 홈 화면 진입 시 위치 권한 요청
         }
         .alert("샘플 데이터 생성", isPresented: $showSampleDataAlert) {
             Button("확인") { }

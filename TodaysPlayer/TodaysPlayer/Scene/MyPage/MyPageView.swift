@@ -182,7 +182,7 @@ struct MyPageView: View {
 
     private var bannerSection: some View {
         VStack {
-            PromotionalBanner(viewModel: homeViewModel)
+            PromotionalBanner(bannerData: homeViewModel.bannerData)
                 .frame(maxWidth: .infinity)
         }
         .overlay(

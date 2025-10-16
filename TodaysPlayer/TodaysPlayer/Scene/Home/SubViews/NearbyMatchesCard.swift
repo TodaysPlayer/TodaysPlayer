@@ -11,7 +11,9 @@ struct NearbyMatchesCard: View {
     @Environment(TabSelection.self) var tabSelection
 
     let matches: [Match]
-    let viewModel: HomeViewModel
+    let hasLocationPermission: Bool
+    let formatDistance: (Coordinates) -> String
+    let onRequestLocationPermission: () -> Void
     
     
     var body: some View {
@@ -25,7 +27,7 @@ struct NearbyMatchesCard: View {
     
     private func renderContent() -> some View {
         Group {
-            if viewModel.hasLocationPermission() {
+            if hasLocationPermission {
                 showMatchesList()
             } else {
                 showPermissionRequest()
@@ -67,7 +69,7 @@ struct NearbyMatchesCard: View {
                         MatchItemView(
                             title: match.title,
                             location: match.location.name,
-                            distance: viewModel.formatDistance(to: match.location.coordinates),
+                            distance: formatDistance(match.location.coordinates),
                             time: match.dateTime.formatForDisplay(),
                             participants: "\(match.participants.count)/\(match.maxParticipants)",
                             gender: GenderType(rawValue: match.gender) ?? .mixed,
@@ -138,9 +140,7 @@ struct NearbyMatchesCard: View {
             
             // 권한 허용 버튼
             Button(action: {
-                Task {
-                    await viewModel.requestLocationPermission(shouldOpenSettings: true)
-                }
+                onRequestLocationPermission()
             }) {
                 Text("위치 권한 허용하기")
                     .font(.headline)
@@ -172,6 +172,11 @@ struct NearbyMatchesCard: View {
 }
 
 #Preview {
-    NearbyMatchesCard(matches: [], viewModel: HomeViewModel())
-        .environment(TabSelection())
+    NearbyMatchesCard(
+        matches: [],
+        hasLocationPermission: true,
+        formatDistance: { _ in "1.2km" },
+        onRequestLocationPermission: { }
+    )
+    .environment(TabSelection())
 }
