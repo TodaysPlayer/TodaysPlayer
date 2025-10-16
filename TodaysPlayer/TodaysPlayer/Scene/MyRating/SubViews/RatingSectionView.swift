@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct RatingSectionView: View {
-    let userInfo: UserRating
-    var ratingList: [(String, String, score: Double)]
+    private var userInfo: UserRating? = nil
+    private var ratingList: [(String, String, score: Double)]
 
-    init(userInfo: UserRating) {
+    init(userInfo: UserRating? = nil) {
         self.userInfo = userInfo
         
-        let count = Double(userInfo.totalRatingCount)
+        let count = Double(userInfo?.totalRatingCount ?? 0)
         
         self.ratingList = [
-            ("heart", "매너", userInfo.mannerSum / count),
-            ("person.2", "팀워크", userInfo.teamWorkSum / count),
-            ("timer", "시간약속", userInfo.appointmentSum / count)
+            ("heart", "매너", (userInfo?.mannerSum ?? 0) / count),
+            ("person.2", "팀워크", (userInfo?.teamWorkSum ?? 0) / count),
+            ("timer", "시간약속", (userInfo?.appointmentSum ?? 0) / count)
         ]
     }
 

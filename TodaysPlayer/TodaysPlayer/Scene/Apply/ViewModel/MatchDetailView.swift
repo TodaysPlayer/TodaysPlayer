@@ -328,10 +328,10 @@ struct MatchActionButtonsViewForMatch: View {
     var body: some View {
         Group {
 
-// 디버깅용하고 릴리즈용하고 어떻게 나누나
             
 #if DEBUG
-#warning("버튼 타이틀은 사용자의 신청상태, 사용자가 작성한 글 여부에 따라 변경해주세요 - 추후에 machID도 변경!")
+#warning("소정님")
+// TODO: 버튼 타이틀은 사용자의 신청상태, 사용자가 작성한 글 여부에 따라 변경해주세요 - 추후에 machID도 변경!
 #endif
             let destinationView: AnyView = isMyMatch
             ? AnyView(ParticipantListView(viewModel: ParticipantListViewModel(matchID: "qMRjJMLlVo5N8lgZeLOA")))

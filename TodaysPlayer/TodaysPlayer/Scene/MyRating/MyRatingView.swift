@@ -8,19 +8,18 @@
 import SwiftUI
 
 struct MyRatingView: View {
-    let userRating: UserRating = UserRating(
-        totalRatingCount: 12,
-        mannerSum: 60,
-        teamWorkSum: 49,
-        appointmentSum: 50
-    )
+    
+    let viewModel: MyRatingViewModel
     
     var body: some View {
         VStack(spacing: 20) {
-            TotalAvgRatingView(userInfo: userRating)
+            TotalAvgRatingView(
+                userInfo: viewModel.userData?.userRate,
+                avgRating: viewModel.avgRating()
+            )
                 .padding(.bottom)
             
-            RatingSectionView(userInfo: userRating)
+            RatingSectionView(userInfo: viewModel.userData?.userRate)
                 .padding(.bottom)
             
             MyRatingPageDescriptionView()
@@ -31,8 +30,4 @@ struct MyRatingView: View {
         .ignoresSafeArea()
 
     }
-}
-
-#Preview {
-    MyRatingView()
 }
