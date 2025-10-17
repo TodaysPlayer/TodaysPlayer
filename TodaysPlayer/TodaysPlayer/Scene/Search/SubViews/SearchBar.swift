@@ -20,7 +20,7 @@ struct SearchBar: View {
             // 검색 입력 필드
             HStack {
                 Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                 
                 TextField("구장, 주소 검색", text: $searchText)
                     .textFieldStyle(PlainTextFieldStyle())
@@ -33,7 +33,7 @@ struct SearchBar: View {
                         selectedLocation = nil
                     }) {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                 }
             }
@@ -57,7 +57,7 @@ struct SearchBar: View {
                 }
             }
             .disabled(searchText.isEmpty || isSearching)
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(searchText.isEmpty ? Color.gray : Color.blue)

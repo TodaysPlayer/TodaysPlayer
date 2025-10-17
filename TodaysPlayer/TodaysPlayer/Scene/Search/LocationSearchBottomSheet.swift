@@ -54,7 +54,7 @@ struct LocationSearchBottomSheet: View {
                     viewModel.reset()
                 }) {
                     Image(systemName: "xmark")
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                 }
             }
         }

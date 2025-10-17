@@ -29,7 +29,7 @@ struct BannerItemView: View {
                             Text(bannerItem.discountTag)
                                 .font(.caption)
                                 .fontWeight(.bold)
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 4)
                                 .background(Color.red)

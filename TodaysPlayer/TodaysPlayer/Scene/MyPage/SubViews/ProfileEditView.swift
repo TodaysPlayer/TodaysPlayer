@@ -139,7 +139,7 @@ struct ProfileEditView: View {
                 Text("축구/풋살 정보")
                     .font(.headline)
                 HStack(spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 7) {
                         Text("주 포지션").font(.caption).foregroundColor(.gray)
                         Picker("주 포지션", selection: $viewModel.position) {
                             ForEach(viewModel.positions, id: \.self) { pos in
@@ -191,27 +191,30 @@ struct ProfileEditView: View {
             }
             .padding()
             .background(RoundedRectangle(cornerRadius: 16).fill(Color(.white)))
+            HStack {
+                Spacer()
+                Button(action: {
+                    // 입력값을 저장하고 화면을 닫습니다.
+                    viewModel.save()
+                    dismiss()
+                })
+                {
+                    Text("저장")
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(Color.green.opacity(0.5)))
+                }
+                Spacer()
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .background(Color.gray.opacity(0.1).ignoresSafeArea())
         .navigationTitle("프로필 편집")
         .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Button(action: {
-                    // 입력값을 저장하고 화면을 닫습니다.
-                    viewModel.save()
-                    dismiss()
-                }) {
-                    Text("저장")
-                        .fontWeight(.bold)
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 8)
-                }
-            }
-        }
+
         // 화면 최초 진입 시, 저장된 값을 편집용 상태로 로드 (한 번만 실행)
         .onAppear {
             viewModel.loadIfNeeded()

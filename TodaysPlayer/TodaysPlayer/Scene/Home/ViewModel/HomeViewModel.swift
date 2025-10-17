@@ -8,6 +8,7 @@
 import SwiftUI
 import Observation
 import CoreLocation
+import WeatherKit
 
 @Observable
 class HomeViewModel {
@@ -40,6 +41,9 @@ class HomeViewModel {
         BannerItem(discountTag: "", imageName: "HomeBanner2", link: "https://intro.queenssmile.co.kr/")
     ]
     
+    // 날씨 데이터
+    var weatherData: Weather?
+    
     
     init() { }
     
@@ -60,6 +64,7 @@ class HomeViewModel {
             
             async let _ = self.loadMatches()
             async let _ = self.loadAppliedMatches()
+            async let _ = self.loadWeatherData()
             
             print("Firebase 데이터 로딩 완료!")
         } catch {
@@ -87,12 +92,7 @@ class HomeViewModel {
         
         print("유효한 매치 수: \(validMatches.count)개")
         print("중복 제거 후 매치 수: \(uniqueMatches.count)개")
-        
-        // 매치 정보 출력
-        for (index, match) in uniqueMatches.enumerated() {
-            print("매치 \(index + 1): \(match.title) - \(match.location.name)")
-        }
-        
+
         await MainActor.run {
             self.matches = uniqueMatches
         }
@@ -162,6 +162,30 @@ class HomeViewModel {
             print("사용자 데이터 로딩 실패: \(error)")
             
             throw error
+        }
+    }
+    
+    func loadWeatherData() async throws {
+        guard let location = locationManager.currentLocation else {
+            print("위치 정보를 가져올 수 없습니다.")
+            return
+        }
+        
+        do {
+            let data = try await WeatherService().weather(for: location)
+            
+            await MainActor.run {
+                self.weatherData = data
+            }
+            
+            print("날씨 데이터 로딩 완료")
+        } catch {
+            print("날씨 데이터 로딩 실패: \(error)")
+            
+            await MainActor.run {
+                self.weatherData = nil
+                self.errorMessage = "날씨 정보를 불러올 수 없습니다."
+            }
         }
     }
 

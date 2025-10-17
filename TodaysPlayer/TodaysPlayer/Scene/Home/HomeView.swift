@@ -24,6 +24,9 @@ struct HomeView: View {
                 )
                 .padding(.top, 24)
                 
+                // 오늘의 날씨
+                TodaysWeatherCard(weatherData: viewModel.weatherData)
+                
                 // 내 주변 가까운 매치
                 NearbyMatchesCard(
                     matches: viewModel.getNearbyMatches(),
@@ -49,17 +52,8 @@ struct HomeView: View {
             await viewModel.loadInitialData()
         }
         .task {
-            await viewModel.loadInitialData()
-            await viewModel.requestLocationPermission() // 홈 화면 진입 시 위치 권한 요청
-        }
-        .alert("샘플 데이터 생성", isPresented: $showSampleDataAlert) {
-            Button("확인") { }
-        } message: {
-            Text(sampleDataMessage)
+            await viewModel.requestLocationPermission()     // 홈 화면 진입 시, 위치 권한 요청
+            await viewModel.loadInitialData()               // 홈 화면 진입 시, 초기 데이터 로드
         }
     }
-}
-
-#Preview {
-    HomeView()
 }
