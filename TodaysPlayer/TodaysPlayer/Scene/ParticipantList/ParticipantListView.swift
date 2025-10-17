@@ -30,7 +30,7 @@ struct ParticipantListView: View {
                 
                 ScrollView {
                     LazyVStack(spacing: 12) {
-                        ForEach(viewModel.displayedApplies, id: \.self) { participant in
+                        ForEach(viewModel.displayedApplies) { participant in
                             ParticipantView(participantData: participant, viewModel: viewModel)
                                 .padding(10)
                                 .background(Color.white)

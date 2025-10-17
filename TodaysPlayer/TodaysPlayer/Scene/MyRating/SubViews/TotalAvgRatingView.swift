@@ -22,7 +22,7 @@ struct TotalAvgRatingView: View {
                 .font(.largeTitle)
                 .foregroundColor(.black)
             
-            Text("나의 평군 점수")
+            Text("나의 평균 점수")
                 .padding(.top, 10)
             
             HStack(alignment: .center, spacing: 10) {

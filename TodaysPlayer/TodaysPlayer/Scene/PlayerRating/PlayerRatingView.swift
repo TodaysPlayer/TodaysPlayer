@@ -26,6 +26,8 @@ struct PlayerRatingView: View {
                     .font(.headline)
                     .padding(.leading, 12)
                 
+
+                
                 List(viewModel.participatedUsers, id: \.self) { user in
                     VStack(alignment: .leading, spacing: 12) {
                         ParticipatedPlayerInfoView(userInfo: user, viewModel: viewModel)
@@ -45,8 +47,16 @@ struct PlayerRatingView: View {
                 .padding()
                 .scrollContentBackground(.hidden)
                 
+                Text("- 평가하지 않은 참여자 및 항목은 평균점수(4점)으로 간주됩니다.")
+                    .font(.footnote)
+                    .foregroundStyle(Color.gray)
+                    .padding(.leading, 12)
+                    .padding(.bottom, 12)
+               
                 Button(action: {
-                    print("평가완료 탭")
+                    Task {
+                       await viewModel.updateUserRate()
+                    }
                 }) {
                     Text("평가 완료")
                         .frame(maxWidth: .infinity)

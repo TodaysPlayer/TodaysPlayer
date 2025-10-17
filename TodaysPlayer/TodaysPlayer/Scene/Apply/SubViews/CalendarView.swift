@@ -14,6 +14,10 @@ struct CalendarView: View {
     private let calendar = Calendar.current
     private let weekDays = ["일", "월", "화", "수", "목", "금", "토"]
     
+    private var todayWeekStart: Date {
+        Date().startOfWeek
+    }
+    
     var body: some View {
         VStack(spacing: 12) {
             // 월/년도 헤더
@@ -41,9 +45,10 @@ struct CalendarView: View {
         HStack {
             Button(action: moveToPreviousWeek) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(canMoveToPreviousWeek ? .blue : .secondary)
                     .padding(8)
             }
+            .disabled(!canMoveToPreviousWeek)
             
             Spacer()
             
@@ -83,10 +88,10 @@ struct CalendarView: View {
                     date: date,
                     isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
                     isToday: calendar.isDateInToday(date),
-                    isPast: isPastDate(date) // ✅ 추가
+                    isPast: isPastDate(date)
                 )
                 .onTapGesture {
-                    // ✅ 과거 날짜는 선택 불가
+                    // 과거 날짜는 선택 불가
                     if !isPastDate(date) {
                         selectedDate = date
                     }
@@ -114,30 +119,33 @@ struct CalendarView: View {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "yyyy년 M월"
-        return formatter.string(from: selectedDate)
+        return formatter.string(from: currentWeekStart)
     }
     
-    // ✅ 추가: 과거 날짜인지 확인
+    // 과거 날짜인지 확인
     private func isPastDate(_ date: Date) -> Bool {
         let today = calendar.startOfDay(for: Date())
         let compareDate = calendar.startOfDay(for: date)
         return compareDate < today
     }
     
+    private var canMoveToPreviousWeek: Bool {
+        return currentWeekStart > todayWeekStart
+    }
+    
     // MARK: - Actions
     
     /// 이전 주로 이동
     private func moveToPreviousWeek() {
-        if let newWeekStart = calendar.date(byAdding: .weekOfYear, value: -1, to: currentWeekStart) {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                currentWeekStart = newWeekStart
-                // ✅ 이전 주로 이동할 때 과거가 아닌 날짜로 선택
-                if isPastDate(newWeekStart) {
-                    selectedDate = Date() // 오늘로 설정
-                } else {
-                    selectedDate = newWeekStart
-                }
-            }
+        // 오늘이 속한 주보다 이전으로는 못 가게 제한
+        guard let newWeekStart = calendar.date(byAdding: .weekOfYear, value: -1, to: currentWeekStart),
+              newWeekStart >= todayWeekStart else {
+            return
+        }
+        
+        withAnimation(.easeInOut(duration: 0.3)) {
+            currentWeekStart = newWeekStart
+            selectedDate = newWeekStart
         }
     }
     
@@ -187,7 +195,7 @@ struct DateCell: View {
                 .frame(width: 40, height: 40)
                 .background(backgroundColor)
                 .clipShape(Circle())
-                .opacity(isPast ? 0.3 : 1.0) // ✅ 과거 날짜는 반투명
+                .opacity(isPast ? 0.3 : 1.0) // 과거 날짜는 반투명
             
             // 오늘 날짜 인디케이터
             if isToday && !isSelected {
@@ -204,7 +212,7 @@ struct DateCell: View {
     }
     
     private var textColor: Color {
-        // ✅ 과거 날짜는 회색으로
+        // 과거 날짜는 회색으로
         if isPast {
             return .gray
         } else if isSelected {
@@ -217,7 +225,7 @@ struct DateCell: View {
     }
     
     private var backgroundColor: Color {
-        // ✅ 과거 날짜는 선택되어도 배경색 없음
+        // 과거 날짜는 선택되어도 배경색 없음
         if isPast {
             return .clear
         } else if isSelected {
