@@ -41,7 +41,7 @@ struct NextMatchCard: View {
                     Text(calculateDaysUntilMatch())
                         .font(.system(size: 12))
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(calculateDaysUntilMatch() == "경기없음" ? .gray : .red)
@@ -51,13 +51,13 @@ struct NextMatchCard: View {
                 
                 HStack {
                     Image(systemName: "calendar")
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                         .font(.system(size: 16))
                     
                     Text("다음 경기")
                         .font(.headline)
                         .fontWeight(.bold)
-                        .foregroundColor(.black)
+                        .foregroundStyle(.black)
                     
                     Spacer()
                 }
@@ -72,28 +72,28 @@ struct NextMatchCard: View {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
                                 Image(systemName: "clock")
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                                     .font(.system(size: 14))
                                 
                                 Text(match.dateTime.formatForDisplay())
                                     .font(.subheadline)
-                                    .foregroundColor(.black)
+                                    .foregroundStyle(.black)
                             }
                             
                             HStack(alignment: .center) {
                                 Image(systemName: "location")
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                                     .font(.system(size: 14))
                                 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(match.location.name)
                                         .font(.subheadline)
                                         .fontWeight(.bold)
-                                        .foregroundColor(.black)
+                                        .foregroundStyle(.black)
                                     
                                     Text(match.location.address)
                                         .font(.caption)
-                                        .foregroundColor(.gray)
+                                        .foregroundStyle(.gray)
                                 }
                             }
                         }
@@ -104,12 +104,12 @@ struct NextMatchCard: View {
                         }) {
                             HStack {
                                 Image(systemName: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
-                                    .foregroundColor(.white)
+                                    .foregroundStyle(.white)
                                     .font(.system(size: 14))
                                 
                                 Text("길찾기")
                                     .font(.headline)
-                                    .foregroundColor(.white)
+                                    .foregroundStyle(.white)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
@@ -136,15 +136,15 @@ struct NextMatchCard: View {
                     VStack(spacing: 16) {
                         Image(systemName: "calendar.badge.plus")
                             .font(.system(size: 40))
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                         
                         Text("다음 경기가 없습니다")
                             .font(.headline)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                         
                         Text("새로운 매치에 참여해보세요!")
                             .font(.subheadline)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                     .padding(.vertical, 40)
                     .frame(maxWidth: .infinity)

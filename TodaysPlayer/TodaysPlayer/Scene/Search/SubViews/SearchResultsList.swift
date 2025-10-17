@@ -22,11 +22,11 @@ struct SearchResultsList: View {
                     
                     Image(systemName: "magnifyingglass")
                         .font(.system(size: 48))
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                     
                     Text(searchText.isEmpty ? "장소를 검색해주세요" : "검색 결과가 없습니다")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     
                     Spacer()
                 }
@@ -60,7 +60,7 @@ struct SearchResultsList: View {
                                         Text("선택한 위치")
                                             .font(.subheadline)
                                             .fontWeight(.bold)
-                                            .foregroundColor(.primary)
+                                            .foregroundStyle(.primary)
                                             .padding(.horizontal, 16)
                                         
                                         // 작은 지도
