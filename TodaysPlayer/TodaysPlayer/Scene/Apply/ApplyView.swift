@@ -258,11 +258,11 @@ struct ApplyView: View {
     private var floatingActionButton: some View {
         NavigationLink(destination: WritePostView()) {
             HStack(spacing: 8) {
-                Image(systemName: "plus")
+                Image(systemName: "person.fill.badge.plus")
                     .font(.system(size: 18, weight: .semibold))
                 
                 if !isScrolling {
-                    Text("글쓰기")
+                    Text("모집하기")
                         .font(.system(size: 16, weight: .semibold))
                 }
             }

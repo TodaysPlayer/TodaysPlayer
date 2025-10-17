@@ -18,7 +18,7 @@ struct ContentView: View {
                 }
             }
             
-            Tab("용병 신청", systemImage: "soccerball", value: 1) {
+            Tab("용병 모집", systemImage: "soccerball", value: 1) {
                 ApplyView()
             }
             

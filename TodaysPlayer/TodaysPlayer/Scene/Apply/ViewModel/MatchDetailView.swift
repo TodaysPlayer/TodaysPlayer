@@ -13,12 +13,15 @@ struct MatchDetailView: View {
     let match: Match
     let postedMatchCase: PostedMatchCase = .allMatches // 기본값
     
-    // ✅ FavoriteViewModel 추가
+    // ViewModel 추가
+    @State private var viewModel: MatchDetailViewModel
+    
+    // FavoriteViewModel 추가
     @EnvironmentObject var favoriteViewModel: FavoriteViewModel
     
-    // 본인이 작성한 매치인지 확인
-    private var isMyMatch: Bool {
-        match.organizerId == AuthHelper.currentUserId
+    init(match: Match) {
+        self.match = match
+        _viewModel = State(initialValue: MatchDetailViewModel(match: match))
     }
     
     var body: some View {
@@ -63,10 +66,10 @@ struct MatchDetailView: View {
                     .font(.headline)
             }
             
-            // ✅ 북마크 버튼 추가
+            // 북마크 버튼 추가
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    if !isMyMatch {
+                    if !viewModel.isMyMatch {
                         favoriteViewModel.toggleFavorite(
                             matchId: match.id,
                             organizerId: match.organizerId
@@ -75,16 +78,20 @@ struct MatchDetailView: View {
                 }) {
                     Image(systemName: favoriteViewModel.isFavorited(matchId: match.id) ? "bookmark.fill" : "bookmark")
                         .font(.system(size: 20))
-                        .foregroundColor(isMyMatch ? .gray : (favoriteViewModel.isFavorited(matchId: match.id) ? .blue : .primary))
+                        .foregroundColor(viewModel.isMyMatch ? .gray : (favoriteViewModel.isFavorited(matchId: match.id) ? .blue : .primary))
                 }
-                .disabled(isMyMatch) // 본인 매치는 비활성화
+                .disabled(viewModel.isMyMatch) // 본인 매치는 비활성화
             }
         }
         .safeAreaInset(edge: .bottom) {
-            MatchActionButtonsViewForMatch(
-                match: match,
-                postedMatchCase: postedMatchCase
-            )
+            // 새로운 버튼으로 교체
+            DynamicMatchActionButton(viewModel: viewModel)
+        }
+        .task {
+            // 필요시 상세 정보 로드
+            if viewModel.userApplyStatus == .rejected {
+                await viewModel.fetchDetailedApply()
+            }
         }
     }
 }
