@@ -69,6 +69,7 @@ struct MatchDetailView: View {
                 .disabled(viewModel.isMyMatch)
             }
         }
+        .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
             DynamicMatchActionButton(viewModel: viewModel)
         }

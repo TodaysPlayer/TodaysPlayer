@@ -64,7 +64,7 @@ struct NearbyMatchesCard: View {
             } else {
                 ForEach(Array(matches.enumerated()), id: \.element.id) { index, match in
                     NavigationLink {
-                        Text("MatchTitle: \(match.title)")
+                        MatchDetailView(match: match)
                     } label: {
                         MatchItemView(
                             title: match.title,
