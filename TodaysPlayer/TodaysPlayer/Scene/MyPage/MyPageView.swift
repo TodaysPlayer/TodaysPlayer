@@ -22,6 +22,8 @@ struct MyPageView: View {
     @AppStorage("profile_level") private var profileLevel: String = ""
     // 아바타 이미지 Data (선택)
     @AppStorage("profile_avatar") private var avatarData: Data?
+    // 사용자 고유 ID (평점 조회용)
+    @AppStorage("user_id") private var userId: String = ""
     
     // MARK: - State / ViewModel
     // 홈에서 재사용하는 프로모션 배너 뷰모델
@@ -155,15 +157,17 @@ struct MyPageView: View {
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
             }
-#if DEBUG
-#warning("종혁님")
-            // TODO: 나의 평점화면내의 데이터는 마이페이지에서 User데이터를 사용하는게 맞는거 같아요. 마이페이지에서 User데이터를 받아서 넘겨주시면 될 거 같습니다. 네트워킹관련 코드는 MyRatingViewModel에 있습니다.
-#endif
-
+            
             NavigationLink(
-                destination: MyRatingView(viewModel: MyRatingViewModel(userId: "9uHP3cOHe8T2xwxS9lx"))
+                destination: {
+                    // AppStorage에서 사용자 ID를 읽어와서 MyRatingViewModel에 전달합니다.
+                    // 사용자 ID가 비어있는 경우를 대비해 안전하게 처리합니다.
+                    let uid = userId.trimmingCharacters(in: .whitespacesAndNewlines)
+                    let resolvedId = uid.isEmpty ? "" : uid
+                    return MyRatingView(viewModel: MyRatingViewModel(userId: resolvedId))
+                }()
             ) {
-                Stat(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "평균 평점", color: .purple)
+                Stat(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "나의 평점", color: .purple)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
