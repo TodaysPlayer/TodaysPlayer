@@ -252,6 +252,7 @@ struct WritePostView: View {
             }
             .navigationTitle("용병 모집하기")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .tabBar)
             .sheet(isPresented: $showCalendar) {
                 MonthCalendarSheet(selectedDate: $viewModel.selectedDate, showCalendar: $showCalendar)
             }
