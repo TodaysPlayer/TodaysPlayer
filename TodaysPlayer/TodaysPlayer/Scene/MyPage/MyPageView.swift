@@ -6,51 +6,28 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 // 마이페이지 메인 화면
 // - 사용자 프로필 카드, 통계, 배너, 설정/공지 등 메뉴 진입점을 제공합니다.
 // - 프로필 편집 화면으로 이동하여 AppStorage에 저장된 정보를 수정할 수 있습니다.
 struct MyPageView: View {
-    // MARK: - AppStorage (프로필 표시용 데이터)
-    // 사용자 이름 (실명)
-    @AppStorage("profile_name") private var profileName: String = ""
-    // 사용자 닉네임 (별명)
-    @AppStorage("profile_nickname") private var profileNickname: String = ""
-    // 주 포지션
-    @AppStorage("profile_position") private var profilePosition: String = ""
-    // 실력 레벨
-    @AppStorage("profile_level") private var profileLevel: String = ""
-    // 아바타 이미지 Data (선택)
-    @AppStorage("profile_avatar") private var avatarData: Data?
-    
     // MARK: - State / ViewModel
     // 홈에서 재사용하는 프로모션 배너 뷰모델
     @State private var homeViewModel = HomeViewModel()
     @State private var notifications: [String] = []
-    
-    // MARK: - Defaults (ProfileEditView와 동일한 기본값)
-    private let defaultName: String = "홍길동"
-    private let defaultPosition: String = "포지션 선택"
-    private let defaultLevel: String = "실력 선택"
-
-    // MARK: - Display (빈 값일 경우 기본값으로 대체)
-    private var displayName: String {
-        let trimmed = profileName.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? defaultName : trimmed
-    }
-    private var displayPosition: String {
-        let trimmed = profilePosition.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? defaultPosition : trimmed
-    }
-    private var displayLevel: String {
-        let trimmed = profileLevel.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? defaultLevel : trimmed
-    }
+    @State private var viewModel = MyPageViewModel()
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    if viewModel.isLoading {
+                        ProgressView().padding(.bottom, 8)
+                    }
+                    if let error = viewModel.errorMessage {
+                        Text(error).font(.caption).foregroundStyle(.red)
+                    }
                     header
                     profileCard
                     statsRow
@@ -61,6 +38,9 @@ struct MyPageView: View {
                 .padding(.horizontal, 16)
             }
             .background(Color.gray.opacity(0.1))
+            .task {
+                await viewModel.load()
+            }
         }
     }
     
@@ -90,10 +70,19 @@ struct MyPageView: View {
         VStack {
             HStack(alignment: .center, spacing: 10) {
                 Group {
-                    if let data = avatarData, let uiImage = UIImage(data: data) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
+                    if let urlString = viewModel.profile.avatarURL, let url = URL(string: urlString) {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                            case .success(let image):
+                                image.resizable().scaledToFill()
+                            case .failure:
+                                Image(systemName: "person.crop.circle.fill").resizable().scaledToFill().foregroundStyle(Color.green)
+                            @unknown default:
+                                Image(systemName: "person.crop.circle.fill").resizable().scaledToFill().foregroundStyle(Color.green)
+                            }
+                        }
                     } else {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
@@ -106,19 +95,19 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        Text(displayName)
+                        Text(viewModel.profile.displayName)
                             .font(.system(size: 20, weight: .bold))
-                        Text(profileNickname.isEmpty ? "별명 미설정" : profileNickname)
+                        Text((viewModel.profile.nickname ?? "").isEmpty ? "별명 미설정" : (viewModel.profile.nickname ?? ""))
                             .font(.system(size: 12, weight: .regular))
                     }
                     HStack(spacing: 11.5) {
-                        Text(displayPosition)
+                        Text(viewModel.profile.displayPosition)
                             .font(.caption)
                             .padding(.horizontal, 2)
                             .padding(.vertical, 2)
                             .background(Color(.systemGray5))
                             .cornerRadius(3)
-                        Text(displayLevel)
+                        Text(viewModel.profile.displayLevel)
                             .font(.caption)
                             .padding(.horizontal, 2)
                             .padding(.vertical, 2)
@@ -149,28 +138,25 @@ struct MyPageView: View {
     private var statsRow: some View {
         HStack {
             NavigationLink(destination: MatchListView()) {
-                Stat(icon: "calendar", label: "\n신청한 경기", color: .green)
+                Stat(icon: "calendar", label: "신청한 경기", color: .cyan)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
             }
-#if DEBUG
-#warning("종혁님")
-            // TODO: 나의 평점화면내의 데이터는 마이페이지에서 User데이터를 사용하는게 맞는거 같아요. 마이페이지에서 User데이터를 받아서 넘겨주시면 될 거 같습니다. 네트워킹관련 코드는 MyRatingViewModel에 있습니다.
-#endif
 
             NavigationLink(
-                destination: MyRatingView(viewModel: MyRatingViewModel(userId: "9uHP3cOHe8T2xwxS9lx"))
+                destination: MyRatingView(viewModel: MyRatingViewModel(userId: ""))
             ) {
-                Stat(icon: "chart.line.uptrend.xyaxis", label: "\n평균 평점", color: .purple)
+                Stat(icon: "chart.line.uptrend.xyaxis", label: "나의 평점", color: .purple)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
             }
-            NavigationLink(destination: MatchListView()) {
-                Stat(icon: "person.3.fill", label: "\n참여한 경기", color: .orange)
+            
+            NavigationLink(destination: ScrapView()) {
+                Stat(icon: "bookmark.fill", label: "스크랩한 경기", color: .orange)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
