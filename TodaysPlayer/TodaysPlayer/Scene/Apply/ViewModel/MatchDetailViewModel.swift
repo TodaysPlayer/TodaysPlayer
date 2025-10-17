@@ -59,7 +59,7 @@ final class MatchDetailViewModel {
         
         switch status {
         case .standby:
-            return "대기중"
+            return "수락 대기중"
         case .accepted:
             return "참여 확정"
         case .rejected:
