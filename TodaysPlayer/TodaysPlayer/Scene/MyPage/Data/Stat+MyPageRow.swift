@@ -10,19 +10,19 @@ import SwiftUI
 // 통계 뷰
 struct Stat: View {
     let icon: String
-    let value: String
+//    let value: String
     let label: String
     let color: Color
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.system(size: 28))
                 .foregroundColor(color)
-            Text(value)
-                .font(.system(size: 20, weight: .bold))
+//            Text(value)
+//                .font(.system(size: 20, weight: .bold))
             Text(label)
-                .font(.caption2)
-                .foregroundColor(.gray)
+                .font(.system(size: 11, weight: .bold))
+                .foregroundColor(.black)
         }
         .frame(maxWidth: .infinity)
         .padding(25)

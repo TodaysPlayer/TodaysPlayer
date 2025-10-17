@@ -149,7 +149,7 @@ struct MyPageView: View {
     private var statsRow: some View {
         HStack {
             NavigationLink(destination: MatchListView()) {
-                Stat(icon: "calendar", value: "5", label: "신청한 경기", color: .green)
+                Stat(icon: "calendar", label: "\n신청한 경기", color: .green)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -163,14 +163,14 @@ struct MyPageView: View {
             NavigationLink(
                 destination: MyRatingView(viewModel: MyRatingViewModel(userId: "9uHP3cOHe8T2xwxS9lx"))
             ) {
-                Stat(icon: "chart.line.uptrend.xyaxis", value: "4.8", label: "평균 평점", color: .purple)
+                Stat(icon: "chart.line.uptrend.xyaxis", label: "\n평균 평점", color: .purple)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
             }
             NavigationLink(destination: MatchListView()) {
-                Stat(icon: "person.3.fill", value: "1", label: "참여한 경기", color: .orange)
+                Stat(icon: "person.3.fill", label: "\n참여한 경기", color: .orange)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
