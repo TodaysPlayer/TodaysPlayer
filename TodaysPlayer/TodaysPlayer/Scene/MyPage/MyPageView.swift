@@ -95,10 +95,10 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        Text(viewModel.profile.displayName)
-                            .font(.system(size: 20, weight: .bold))
+//                        Text(viewModel.profile.displayName)
+//                            .font(.system(size: 20, weight: .bold))
                         Text((viewModel.profile.nickname ?? "").isEmpty ? "별명 미설정" : (viewModel.profile.nickname ?? ""))
-                            .font(.system(size: 12, weight: .regular))
+                            .font(.system(size: 20, weight: .bold))
                     }
                     HStack(spacing: 11.5) {
                         Text(viewModel.profile.displayPosition)
@@ -156,7 +156,7 @@ struct MyPageView: View {
             }
             
             NavigationLink(destination: ScrapView()) {
-                Stat(icon: "bookmark.fill", label: "스크랩한 경기", color: .orange)
+                Stat(icon: "bookmark.fill", label: "경기 스크랩", color: .orange)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)

@@ -202,8 +202,9 @@ struct ProfileEditView: View {
                     Text("저장")
                         .fontWeight(.bold)
                         .foregroundColor(.black)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 8)
+//                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .frame(maxWidth: .infinity)
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color.green.opacity(0.5)))
                 }
                 Spacer()
