@@ -97,6 +97,7 @@ final class WritePostViewModel {
         // Firebase에 저장
         _ = try await FirestoreManager.shared.createDocument(
             collection: "matches",
+            documentId: match.id,
             data: match
         )
         
