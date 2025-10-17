@@ -63,7 +63,3 @@ struct MyPageRow: View {
         .cornerRadius(14)
     }
 }
-
-#Preview {
-    MyPageView()
-}
