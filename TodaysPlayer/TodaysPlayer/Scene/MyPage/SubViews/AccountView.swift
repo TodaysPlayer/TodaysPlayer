@@ -10,14 +10,45 @@ import FirebaseAuth
 import FirebaseFirestore
 
 struct AccountView: View {
-    @State private var showDeleteAlert = false
     @State private var isDeleting = false
     @State private var deleteError: String?
+    @State private var showDeleteAlert = false
     @State private var showDeleteResult = false
+    @State private var showLogoutAlert = false
+    @State private var showLogoutResult = false
+    @State private var goToLogin = false
+    @Environment(\.dismiss) private var dismiss
     
     private var pwEdit: some View {
         NavigationLink(destination: PwEditView()) {
             MyPageRow(icon: "key.viewfinder", iconColor: .blue, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
+        }
+        .padding(.horizontal)
+    }
+    
+    private var logOut: some View {
+        Button {
+            showLogoutAlert = true
+        } label: {
+            MyPageRow(icon: "rectangle.portrait.and.arrow.right", iconColor: .orange, title: "로그아웃", subtitle: "현재 계정에서 로그아웃 합니다.")
+        }
+        .alert("로그아웃 하시겠습니까?", isPresented: $showLogoutAlert) {
+            Button("취소", role: .cancel) {
+            }
+            Button("확인", role: .destructive) {
+                performLogout()
+            }
+        } message: {
+            Text("현재 계정에서 로그아웃합니다.")
+        }
+        .alert("로그아웃", isPresented: $showLogoutResult) {
+            Button("확인") {
+                // 로그인 화면으로 이동
+                showLogoutResult = false
+                goToLogin = true
+            }
+        } message: {
+            Text("로그아웃 되었습니다.")
         }
         .padding(.horizontal)
     }
@@ -38,7 +69,11 @@ struct AccountView: View {
         }
         // 계정 삭제 완료
         .alert("계정 삭제 완료", isPresented: $showDeleteResult) {
-            Button("확인") { }
+            Button("확인") {
+                // 로그인 화면으로 이동
+                showDeleteResult = false
+                goToLogin = true
+            }
         } message: {
             Text("그동안 이용해주셔서 감사합니다.")
         }
@@ -67,6 +102,7 @@ struct AccountView: View {
         NavigationStack {
             ScrollView {
                 pwEdit
+                logOut
                 checkOut
             }
             .toolbar {
@@ -75,6 +111,10 @@ struct AccountView: View {
                         .font(.title2)
                         .bold()
                 }
+            }
+            .fullScreenCover(isPresented: $goToLogin) {
+                LoginView()
+                    .toolbar(.hidden, for: .navigationBar)
             }
             .background(Color.gray.opacity(0.1))
         }
@@ -121,6 +161,17 @@ struct AccountView: View {
                     }
                 }
             }
+        }
+    }
+    private func performLogout() {
+        do {
+            try Auth.auth().signOut()
+            // 확인 알림 표시
+            self.showLogoutAlert = false
+            self.showLogoutResult = true
+        } catch {
+            print("Sign out failed: \(error.localizedDescription)")
+            self.showLogoutAlert = false
         }
     }
 }
