@@ -28,6 +28,8 @@ struct SignUpView: View {
     
     var genders = ["남성", "여성"]
     
+    private let authManager = AuthManager()
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -133,6 +135,12 @@ struct SignUpView: View {
                     Button(action: {
                         // 회원가입 완료 → 다음 단계
                         navigateToComplete = true
+                        
+                        Task {
+                            try await authManager.signUpWithEmail(
+                                userData: SignupData(email: email, password: password)
+                            )
+                        }
                     }) {
                         Text("다음")
                             .font(.headline)

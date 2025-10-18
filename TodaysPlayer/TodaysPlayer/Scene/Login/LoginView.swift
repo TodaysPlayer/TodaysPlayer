@@ -19,12 +19,11 @@ struct LoginView: View {
     // 입력칸 하단 에러 메시지
     @State private var emailErrorMessage = ""
     @State private var passwordErrorMessage = ""
-    
-    // 테스트용 가입된 이메일
-    private let registeredEmails = ["test@example.com", "user1@naver.com", "hello@gmail.com"]
-    
+        
     enum Field { case email, password }
     @FocusState private var focusedField: Field?
+    
+    private let authManager = AuthManager()
     
     var body: some View {
         NavigationView {
@@ -98,7 +97,7 @@ struct LoginView: View {
                                 SecureField("비밀번호를 입력하세요", text: $password)
                                     .focused($focusedField, equals: .password)
                                     .submitLabel(.done)
-                                    .onSubmit { login() }
+//                                    .onSubmit { login() }
                                     .onChange(of: password) { _ in
                                         passwordErrorMessage = ""
                                     }
@@ -115,15 +114,17 @@ struct LoginView: View {
                             }
                         }
                         
-                        // 로그인 버튼
-                        Button(action: login) {
-                            Text("로그인")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                        Button("로그인") {
+                            Task {
+                              await login()
+                            }
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        
                         
                         NavigationLink(destination: PasswordResetView()) {
                             Text("비밀번호를 잊으셨나요?")
@@ -164,7 +165,7 @@ struct LoginView: View {
     }
     
     // 로그인 검증 함수
-    private func login() {
+    private func login() async {
         // 에러 초기화
         emailErrorMessage = ""
         passwordErrorMessage = ""
@@ -185,14 +186,7 @@ struct LoginView: View {
             showAlert = true
             return
         }
-        if !registeredEmails.contains(email) {
-            focusedField = .email
-            alertMessage = "가입되지 않은 이메일입니다"
-            emailErrorMessage = alertMessage
-            showAlert = true
-            return
-        }
-        
+
         // 비밀번호 검증
         if password.isEmpty {
             focusedField = .password
@@ -208,7 +202,9 @@ struct LoginView: View {
             showAlert = true
             return
         }
-        
+        Task {
+           try await authManager.loginWithEmail(email: email, password: password)
+        }
         // 로그인 성공
         focusedField = nil
         isLoggedIn = true
