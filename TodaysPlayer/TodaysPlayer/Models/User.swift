@@ -11,6 +11,7 @@ struct User: Codable, Identifiable, Hashable {
     let id: String
     let email: String
     let displayName: String
+    let gender: String
     let profileImageUrl: String?
     let phoneNumber: String?
     let position: String?
@@ -24,6 +25,7 @@ struct User: Codable, Identifiable, Hashable {
         case id = "userId"
         case email
         case displayName
+        case gender
         case profileImageUrl
         case phoneNumber
         case position
@@ -41,10 +43,11 @@ struct User: Codable, Identifiable, Hashable {
     static let documentIdKey = CodingUserInfoKey(rawValue: "documentId")!
     
     // 기본 초기화자 (SampleDataManager에서 사용)
-    init(id: String, email: String, displayName: String, profileImageUrl: String?, phoneNumber: String?, position: String?, skillLevel: String?, preferredRegions: [String], createdAt: Date, updatedAt: Date, userRate: UserRating) {
+    init(id: String, email: String, displayName: String, gender: String, profileImageUrl: String?, phoneNumber: String?, position: String?, skillLevel: String?, preferredRegions: [String], createdAt: Date, updatedAt: Date, userRate: UserRating) {
         self.id = id
         self.email = email
         self.displayName = displayName
+        self.gender = gender
         self.profileImageUrl = profileImageUrl
         self.phoneNumber = phoneNumber
         self.position = position
@@ -68,6 +71,7 @@ struct User: Codable, Identifiable, Hashable {
         
         self.email = try container.decode(String.self, forKey: .email)
         self.displayName = try container.decode(String.self, forKey: .displayName)
+        self.gender = try container.decode(String.self, forKey: .gender)
         self.profileImageUrl = try container.decodeIfPresent(String.self, forKey: .profileImageUrl)
         self.phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
         self.position = try container.decodeIfPresent(String.self, forKey: .position)

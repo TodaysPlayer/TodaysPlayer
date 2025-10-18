@@ -136,6 +136,7 @@ class SampleDataManager {
                 id: "bJYjlQZuaqvw2FDB5uNa", // 고정된 사용자 ID (스태틱)
                 email: "player1@example.com",
                 displayName: "축구왕김철수",
+                gender: "남자",
                 profileImageUrl: nil,
                 phoneNumber: "010-1234-5678",
                 position: "striker",
@@ -149,6 +150,7 @@ class SampleDataManager {
                 id: "", // 자동 생성
                 email: "player2@example.com",
                 displayName: "미드필더박영희",
+                gender: "여자",
                 profileImageUrl: nil,
                 phoneNumber: "010-2345-6789",
                 position: "midfielder",
@@ -162,6 +164,7 @@ class SampleDataManager {
                 id: "", // 자동 생성
                 email: "player3@example.com",
                 displayName: "골키퍼이민수",
+                gender: "남자",
                 profileImageUrl: nil,
                 phoneNumber: "010-3456-7890",
                 position: "goalkeeper",

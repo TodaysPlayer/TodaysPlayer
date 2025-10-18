@@ -138,7 +138,12 @@ struct SignUpView: View {
                         
                         Task {
                             try await authManager.signUpWithEmail(
-                                userData: SignupData(email: email, password: password)
+                                userData: SignupData(
+                                    email: email,
+                                    password: password,
+                                    displayName: nickname,
+                                    gender: gender
+                                )
                             )
                         }
                     }) {
