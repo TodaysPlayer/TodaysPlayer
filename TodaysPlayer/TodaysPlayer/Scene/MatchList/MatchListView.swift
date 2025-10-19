@@ -49,7 +49,7 @@ struct MatchListView: View {
                                         MatchInfoView(
                                             matchInfo: match,
                                             postedMatchCase: viewModel.postedMatchCase,
-                                            applyStatus: viewModel.getUserApplyStatus(appliedMatch: match)
+                                            apply: viewModel.getUserApplyStatus(appliedMatch: match)
                                         )
                                     }
                                     .padding()

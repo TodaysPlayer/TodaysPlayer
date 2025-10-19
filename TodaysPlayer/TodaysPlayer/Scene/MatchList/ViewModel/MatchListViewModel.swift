@@ -44,7 +44,9 @@ final class MatchListViewModel {
         Task { await loadMoreMatches() }
     }
     
-    
+    // MARK: 세그먼트에 따라 경기 필터링
+    // - 신청한 경기, 내가 모집중인 경기, 종료된 경기
+
     /// 필터링 버튼 설정
     func fetchFilteringButtonTitle(selectedType: String) {
         guard let type = PostedMatchCase(rawValue: selectedType) else { return }
@@ -55,15 +57,40 @@ final class MatchListViewModel {
         displayedMatches = []
 
         switch type {
-        case .appliedMatch: filteringButtonTypes = MatchFilter.appliedCases
-        case .myRecruitingMatch: filteringButtonTypes = []
-        case .finishedMatch: filteringButtonTypes = MatchFilter.finishedCases
+        case .appliedMatch:
+            filteringButtonTypes = MatchFilter.appliedCases
+            selectedFilterButton = .applied(.all)
+        case .myRecruitingMatch:
+            filteringButtonTypes = []
+        case .finishedMatch:
+            filteringButtonTypes = MatchFilter.finishedCases
+            selectedFilterButton = .finished(.all)
         default: filteringButtonTypes = []
         }
 
         // 버튼에 맞는 매치 가져오기
         Task { await loadMoreMatches() }
     }
+    
+    
+    /// 경기 종류에 따라 보여지는 경기 변경
+    /// - 신청한 경기, 내가 모집중인 경기, 종료된 경기
+    private func updateDisplayedMatches() {
+        switch postedMatchCase {
+        case .appliedMatch:         displayedMatches = appliedMatches
+        case .myRecruitingMatch:    displayedMatches = recruitingMatches
+        case .finishedMatch:        displayedMatches = finishedMatches
+        default:                    displayedMatches = []
+        }
+    }
+    
+    // MARK: 필터링 버튼에 따른 경기 보여주기
+    // 신청한 경기 - 전체, 확정된 경기, 대기중인 경기, 거절된 경기
+    // 내가 모집중인 경기
+    // 종료된 경기 - 전체, 참여한 경기, 내가 모집한 경기
+
+
+    // MARK: 경기 데이터 가져오기
 
     @MainActor
     func loadMoreMatches() async {
@@ -113,34 +140,38 @@ final class MatchListViewModel {
         }
     }
 
-    private func updateDisplayedMatches() {
-        switch postedMatchCase {
-        case .appliedMatch:         displayedMatches = appliedMatches
-        case .myRecruitingMatch:    displayedMatches = recruitingMatches
-        case .finishedMatch:        displayedMatches = finishedMatches
-        default:                    displayedMatches = []
-        }
+
+    // MARK: UI 표시를 위한 함수
+    
+    private func filteringRejectReason(status: String) -> String {
+        return status
+            .replacingOccurrences(of: "rejected", with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
-    func getUserApplyStatus(appliedMatch: Match) -> (String, String) {
+    func getUserApplyStatus(appliedMatch: Match) -> (String, String, ApplyStatus) {
         // 내가 신청한 경기에 대한 정보를 받음
         guard let status = appliedMatch.participants[userId] else {
-            return (userId, "")
+            return (userId, "", .standby)
         }
-
+        
+        let convertedStatus = ApplyStatusConverter.toStatus(from: status)
+        // oncvertedStatus가 .standby 거나 .accepted 면 거절사유가 없음 .rejected면 거절사유가 잇음
+        let rejectReason = convertedStatus == .rejected ? filteringRejectReason(status: status) : ""
         print("매치아이디:\(appliedMatch.id)")
         print("\(userId), 거절사유 혹은 상태 \(status)")
-        return (userId, status)
+        return (userId, rejectReason, convertedStatus)
     }
     
-    func getTagInfomation(with match: Match) -> (String, String, Int) {
+    func getTagInfomation(with match: Match) -> (String, ApplyStatus, Int) {
+        
         let matchType = match.convertMatchType(type: match.matchType).rawValue
-        let (_, appliedStatus) = getUserApplyStatus(appliedMatch: match)
+        let (_, _, applyStatus) = getUserApplyStatus(appliedMatch: match)
         let participants = match.participants.map { (_, value: String) in
             value != "rejected"
         }.count
         let leftPersonCount = match.maxParticipants - participants
 
-        return (matchType, appliedStatus, leftPersonCount)
+        return (matchType, applyStatus, leftPersonCount)
     }
 }

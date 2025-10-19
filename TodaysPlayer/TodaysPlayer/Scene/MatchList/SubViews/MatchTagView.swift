@@ -9,14 +9,12 @@ import SwiftUI
 
 
 struct MatchTagView: View {
-    let matchInfo: (matchType: String, appliedStatus: String, leftPersonCount: Int)
+    let matchInfo: (matchType: String, appliedStatus: ApplyStatus, leftPersonCount: Int)
     let postedMatchCase: PostedMatchCase
-    let convertedStatus: ApplyStatus
     
-    init(info: (String, String, Int), matchCase: PostedMatchCase) {
+    init(info: (String, ApplyStatus, Int), matchCase: PostedMatchCase) {
         self.matchInfo = info
         self.postedMatchCase = matchCase
-        self.convertedStatus = ApplyStatusConverter.toStatus(from: matchInfo.appliedStatus)
     }
     
     var body: some View {
@@ -29,17 +27,17 @@ struct MatchTagView: View {
                 
                 // 조건부 : 신청상태( 확정/대기중/거절 )
                 
-                Text(matchInfo.appliedStatus)
-                    .matchTagStyle(tagType: convertedStatus)
+                Text(matchInfo.appliedStatus.rawValue)
+                    .matchTagStyle(tagType: matchInfo.appliedStatus)
                     .visible(postedMatchCase == .appliedMatch)
                 
                 Text(MatchInfoStatus.lastOne.rawValue)
                     .matchTagStyle(tagType: MatchInfoStatus.lastOne)
-                    .visible(matchInfo.leftPersonCount == 1 && convertedStatus != .rejected)
+                    .visible(matchInfo.leftPersonCount == 1 && matchInfo.appliedStatus != .rejected)
                 
                 Text(MatchInfoStatus.deadline.rawValue)
                     .matchTagStyle(tagType: MatchInfoStatus.deadline)
-                    .visible(matchInfo.leftPersonCount != 1 && convertedStatus != .rejected)
+                    .visible(matchInfo.leftPersonCount != 1 && matchInfo.appliedStatus != .rejected)
                 
             }
             .font(.system(size: 14))

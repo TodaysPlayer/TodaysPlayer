@@ -14,7 +14,7 @@ import SwiftUI
 struct MatchInfoView: View {
     let matchInfo: Match
     let postedMatchCase: PostedMatchCase
-    let applyStatus: (userId: String, status: String)   // 신청자Id: 참여상태
+    let apply: (userId: String, rejectReason: String, status: ApplyStatus)   // 신청자Id: 참여상태
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -27,15 +27,15 @@ struct MatchInfoView: View {
             // participants에서 유저아이디로 내가 있는지 걸르고 그거에 상태를 확인해야함
             // 거절된 경기의 경우 이름을 빈칸으로 확인하고 있는데 이걸 고쳐야할듯
             MatchInfoDetailView(matchInfo: matchInfo)
-                .visible(applyStatus.status.isEmpty)
+                .visible(apply.status != .rejected)
         
             Text("경기 주최자의 거절사유입니다.")
-                .visible(applyStatus.status.isEmpty && postedMatchCase != .myRecruitingMatch)
+                .visible(apply.status == .rejected && postedMatchCase != .myRecruitingMatch)
             
             // 매치상태가 거절이 아니라 applystatus가 거절이면
-            Text(applyStatus.status)
+            Text(apply.rejectReason)
                 .modifier(DescriptionTextStyle())
-                .visible(applyStatus.status.isEmpty && postedMatchCase != .myRecruitingMatch)
+                .visible(apply.status == .rejected && postedMatchCase != .myRecruitingMatch)
             
             Divider()
                 .visible(postedMatchCase != .myRecruitingMatch)
@@ -56,7 +56,7 @@ struct MatchInfoView: View {
             } label: {
                 Text("참여자 평가하기")
             }
-            .visible(postedMatchCase == .finishedMatch && matchInfo.organizerId == applyStatus.userId)
+            .visible(postedMatchCase == .finishedMatch && matchInfo.organizerId == apply.userId)
         }
         .foregroundStyle(Color.black)
         
