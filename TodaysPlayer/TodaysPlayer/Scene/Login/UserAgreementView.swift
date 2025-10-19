@@ -30,7 +30,7 @@ struct CheckboxView: View {
                 
                 Spacer()
                 
-                Image(systemName: "eye") // 약관 보기 아이콘
+                Image(systemName: "eye")
                     .foregroundColor(.gray)
             }
         }
@@ -38,25 +38,25 @@ struct CheckboxView: View {
 }
 
 
-// 약관 동의 메인뷰
 struct UserAgreementView: View {
     @State private var agreeAll = false
     @State private var agreeService = false
     @State private var agreePrivacy = false
     @State private var agreeAge = false
     @State private var agreeMarketing = false
+
+    // ✅ 회원가입 이동 상태
+    @State private var goToSignUp = false
     
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 20) {
                 
-                // 안내 문구
                 Text("서비스 이용을 위한 약관에 동의해주세요")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .padding(.horizontal)
                 
-                // 전체 동의 박스
                 VStack(alignment: .leading) {
                     Button(action: {
                         agreeAll.toggle()
@@ -87,7 +87,6 @@ struct UserAgreementView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
                 
-                // 개별 항목 체크박스
                 Group {
                     CheckboxView(isChecked: $agreeService, title: "서비스 이용약관 동의", required: true)
                     CheckboxView(isChecked: $agreePrivacy, title: "개인정보 수집 및 이용 동의", required: true)
@@ -96,7 +95,6 @@ struct UserAgreementView: View {
                 }
                 .padding(.horizontal)
                 
-                // 약관 주요 내용 안내 박스
                 VStack(alignment: .leading, spacing: 8) {
                     Text("서비스 이용약관 주요 내용:")
                         .font(.subheadline)
@@ -115,11 +113,17 @@ struct UserAgreementView: View {
                 
                 Spacer()
                 
-                // 하단 버튼
+                // ✅ 숨겨진 NavigationLink
+                NavigationLink(destination: SignUpView(), isActive: $goToSignUp) {
+                    EmptyView()
+                }
+                
                 Button(action: {
-                    print("약관 동의 완료")
+                    if allRequiredAgreed {
+                        goToSignUp = true // ✅ 회원가입 이동
+                    }
                 }) {
-                    Text("필수 약관에 동의해주세요")
+                    Text(allRequiredAgreed ? "다음으로" : "필수 약관에 동의해주세요")
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(allRequiredAgreed ? Color.blue : Color.gray)
@@ -133,7 +137,6 @@ struct UserAgreementView: View {
         }
     }
     
-    // 필수 항목 모두 체크됐는지 확인
     private var allRequiredAgreed: Bool {
         agreeService && agreePrivacy && agreeAge
     }
