@@ -228,7 +228,13 @@ struct WritePostView: View {
                     Button {
                         Task {
                             do {
-                                let userId = "bJYjlQZuaqvw2FDB5uNa" // 임시 사용자 ID
+                                // let userId = "bJYjlQZuaqvw2FDB5uNa" // 임시 사용자 ID
+                                guard AuthHelper.isLoggedIn else {
+                                    viewModel.errorMessage = "로그인이 필요합니다."
+                                    return
+                                }
+                                
+                                let userId = AuthHelper.currentUserId
                                 _ = try await viewModel.createMatch(organizerId: userId)
                                 dismiss()
                             } catch {

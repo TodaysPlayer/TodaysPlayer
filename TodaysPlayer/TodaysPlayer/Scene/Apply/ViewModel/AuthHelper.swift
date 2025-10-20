@@ -6,39 +6,42 @@
 //
 
 import Foundation
-// import FirebaseAuth // ⭐️ TODO: 로그인 완성 후 주석 해제
+import FirebaseAuth
 
 /// 앱 전체에서 사용하는 인증 관련 헬퍼 클래스
-/// 로그인 완성 전까지는 임시 사용자 ID를 반환하고,
-/// 로그인 완성 후에는 Firebase Auth의 실제 사용자 ID를 반환합니다.
+/// UserSessionManager와 Firebase Auth를 통해 현재 로그인한 사용자 정보를 제공합니다.
 class AuthHelper {
     
     /// 현재 로그인한 사용자의 ID를 반환
-    /// - Returns: 사용자 ID (로그인 전: "temp_user_id", 로그인 후: Firebase UID)
+    /// - Returns: 사용자 ID (로그인 상태: Firebase UID, 미로그인: nil 또는 빈 문자열)
     static var currentUserId: String {
-        // ⭐️ TODO: 로그인 완성 후 수정 필요!
-        // ========================================
-        // [방법 1] AuthManager 사용하는 경우:
-        // if let authManager = // AuthManager 인스턴스 가져오기 {
-        //     return authManager.currentUserId ?? "temp_user_id"
-        // }
-        //
-        // [방법 2] Firebase Auth 직접 사용하는 경우:
-        // return Auth.auth().currentUser?.uid ?? "temp_user_id"
-        // ========================================
+        // 방법 1: UserSessionManager 사용 (권장)
+        // AuthManager의 로그인 로직에서 currentUser를 설정하므로 이를 우선 사용
+        if let userId = UserSessionManager.shared.currentUser?.id {
+            return userId
+        }
         
-        // 참여자 모집 공고 올릴때 post 임시 Id: bJYjlQZuaqvw2FDB5uNa
-        // 신청할 때 users에있는 documentid 박영희: 5bOGRmFYuV33r59uCKa4
-        // 복사 붙여넣기 하여 테스트 가능
-        return "5bOGRmFYuV33r59uCKa4" // 임시 사용자 ID
+        // 방법 2: Firebase Auth 직접 사용 (fallback)
+        // UserSessionManager에 데이터가 없을 경우를 대비한 백업
+        if let firebaseUserId = Auth.auth().currentUser?.uid {
+            return firebaseUserId
+        }
+        
+        // 로그인되지 않은 경우
+        // 빈 문자열 반환 (또는 필요에 따라 nil을 반환하도록 Optional String으로 변경 가능)
+        return ""
     }
     
     /// 사용자가 로그인했는지 확인
     /// - Returns: 로그인 여부 (true: 로그인됨, false: 로그인 안됨)
     static var isLoggedIn: Bool {
-        // ⭐️ TODO: 로그인 완성 후 수정 필요!
-        // return Auth.auth().currentUser != nil
-        
-        return true // 임시로 true 반환 (개발 편의상)
+        // UserSessionManager의 isLoggedIn 상태 확인 (AuthManager에서 관리)
+        return UserSessionManager.shared.isLoggedIn
+    }
+    
+    /// Optional: 현재 로그인한 사용자의 전체 정보를 반환
+    /// - Returns: User 객체 (로그인 상태일 때만)
+    static var currentUser: User? {
+        return UserSessionManager.shared.currentUser
     }
 }

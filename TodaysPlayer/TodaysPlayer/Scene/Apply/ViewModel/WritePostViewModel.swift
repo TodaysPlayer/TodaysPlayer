@@ -64,6 +64,16 @@ final class WritePostViewModel {
         isLoading = true
         defer { isLoading = false }
         
+        let user = try await FirestoreManager.shared.getDocument(
+            collection: "users",
+            documentId: organizerId,
+            as: User.self
+        )
+        
+        guard let user = user else {
+            throw ValidationError.userNotFound
+        }
+        
         // 시간 계산 (duration)
         let durationInMinutes = Int(endTime.timeIntervalSince(startTime) / 60)
         
@@ -143,6 +153,7 @@ enum ValidationError: LocalizedError {
     case invalidForm
     case noLocation
     case invalidTime
+    case userNotFound
     
     var errorDescription: String? {
         switch self {
@@ -152,6 +163,8 @@ enum ValidationError: LocalizedError {
             return "장소를 선택해주세요"
         case .invalidTime:
             return "시간을 올바르게 입력해주세요"
+        case .userNotFound:
+            return "사용자 정보를 찾을 수 없습니다"
         }
     }
 }
