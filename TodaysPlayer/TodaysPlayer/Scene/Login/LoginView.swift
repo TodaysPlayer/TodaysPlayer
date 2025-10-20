@@ -27,6 +27,8 @@ struct LoginView: View {
     
     @State private var keyboardHeight: CGFloat = 0
     
+    private let authManager: AuthManager = AuthManager()
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -214,6 +216,15 @@ struct LoginView: View {
             if let user = result?.user {
                 print("✅ 로그인 성공: \(user.email ?? "")")
                 isLoggedIn = true
+                
+                Task {
+                    let userData = await UserDataRepository().fetchUserData(with: user.uid)
+                    await MainActor.run {
+                        UserSessionManager.shared.currentUser = userData
+                        UserSessionManager.shared.isLoggedIn = true
+                        isLoggedIn = true
+                    }
+                }
             }
         }
     }

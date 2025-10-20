@@ -5,7 +5,6 @@
 //  Created by jonghyuck on 10/17/25.
 //
 
-
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -16,6 +15,9 @@ private struct FirestoreProfile {
     let position: String
     let level: String
     let avatarURL: String
+    let region: String
+    let preferredTimes: [String]
+    let intro: String
 
     init(data: [String: Any]) {
         self.name = data["name"] as? String ?? ""
@@ -23,6 +25,9 @@ private struct FirestoreProfile {
         self.position = data["position"] as? String ?? ""
         self.level = data["level"] as? String ?? ""
         self.avatarURL = data["avatarURL"] as? String ?? ""
+        self.region = data["region"] as? String ?? ""
+        self.preferredTimes = data["preferredTimes"] as? [String] ?? []
+        self.intro = data["intro"] as? String ?? ""
     }
 }
 

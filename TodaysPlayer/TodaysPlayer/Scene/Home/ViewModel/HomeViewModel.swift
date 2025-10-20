@@ -12,9 +12,6 @@ import WeatherKit
 
 @Observable
 class HomeViewModel {
-    // 개발용 사용자 ID
-    private static let STATIC_USER_ID = "9uHP3cOHe8T2xwxS9lfx"
-    
     // 배너 관련
     var currentBannerIndex = 0
     private var bannerTimer: Timer?
@@ -139,24 +136,13 @@ class HomeViewModel {
         print("사용자 데이터 로딩 중...")
         
         do {
-            // 개발용 사용자 ID로 사용자 가져오기
-            if let user = try await firestore.getDocument(collection: "users", documentId: Self.STATIC_USER_ID, as: User.self) {
+            if let user = UserSessionManager.shared.currentUser,
+               try await firestore.getDocument(collection: "users", documentId: user.id, as: User.self) != nil {
                 await MainActor.run {
                     self.user = user
                 }
                 
                 print("사용자 데이터 로딩 완료: \(user.displayName) (ID: \(user.id))")
-            } else {
-                print("사용자 ID \(Self.STATIC_USER_ID)를 찾을 수 없음")
-                
-                // 개발용 사용자가 없으면 첫 번째 사용자 사용
-                let users = try await firestore.getDocuments(collection: "users", as: User.self)
-                
-                await MainActor.run {
-                    self.user = users.first
-                }
-                
-                print("첫 번째 사용자 데이터 로딩 완료: \(users.first?.displayName ?? "없음")")
             }
         } catch {
             print("사용자 데이터 로딩 실패: \(error)")

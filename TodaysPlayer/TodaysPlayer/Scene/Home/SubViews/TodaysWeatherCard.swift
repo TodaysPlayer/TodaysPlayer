@@ -74,7 +74,7 @@ struct TodaysWeatherCard: View {
             .padding(.leading, 10)
             
             // (강수, 바람, 습도) 정보
-            HStack(alignment: .center, spacing: 15) {
+            HStack(alignment: .center, spacing: 10) {
                 Spacer()
                 
                 HStack {
@@ -377,8 +377,4 @@ extension TodaysWeatherCard {
         // 기본 메시지
         return "날씨를 확인하고 경기하세요 🌤️"
     }
-}
-
-#Preview {
-    TodaysWeatherCard(weatherData: nil)
 }

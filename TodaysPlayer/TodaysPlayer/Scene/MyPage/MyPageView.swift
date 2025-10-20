@@ -95,8 +95,6 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-//                        Text(viewModel.profile.displayName)
-//                            .font(.system(size: 20, weight: .bold))
                         Text((viewModel.profile.nickname ?? "").isEmpty ? "별명 미설정" : (viewModel.profile.nickname ?? ""))
                             .font(.system(size: 20, weight: .bold))
                     }
@@ -118,6 +116,7 @@ struct MyPageView: View {
                 Spacer()
                 NavigationLink(destination: ProfileEditView()) {
                     Text("프로필 편집")
+                        .foregroundStyle(Color(.green))
                         .font(.system(size: 11.5, weight: .medium))
                         .padding(.horizontal, 5)
                         .padding(.vertical, 5)
@@ -138,7 +137,7 @@ struct MyPageView: View {
     private var statsRow: some View {
         HStack {
             NavigationLink(destination: MatchListView()) {
-                Stat(icon: "calendar", label: "신청한 경기", color: .cyan)
+                Stat(icon: "calendar", label: "신청한 경기", color: .green)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -148,7 +147,7 @@ struct MyPageView: View {
             NavigationLink(
                 destination: MyRatingView(viewModel: MyRatingViewModel())
             ) {
-                Stat(icon: "chart.line.uptrend.xyaxis", label: "나의 평점", color: .purple)
+                Stat(icon: "chart.line.uptrend.xyaxis", label: "나의 평점", color: .green.opacity(0.7))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -156,7 +155,7 @@ struct MyPageView: View {
             }
             
             NavigationLink(destination: ScrapView()) {
-                Stat(icon: "bookmark.fill", label: "경기 스크랩", color: .orange)
+                Stat(icon: "bookmark.fill", label: "경기 스크랩", color: .cyan.opacity(0.4))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -203,4 +202,3 @@ struct MyPageView: View {
 #Preview {
     MyPageView()
 }
-
