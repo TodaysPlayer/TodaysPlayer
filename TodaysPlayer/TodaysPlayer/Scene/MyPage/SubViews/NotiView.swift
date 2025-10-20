@@ -41,6 +41,7 @@ struct NotiView: View {
         }
         .padding(.top, 12)
         .padding(.bottom, 16)
+        .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("알림")

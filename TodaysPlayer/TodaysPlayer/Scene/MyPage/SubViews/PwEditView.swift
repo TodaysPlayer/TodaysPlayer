@@ -83,6 +83,7 @@ struct PwEditView: View {
                 .padding(16)
             }
             .background(Color.gray.opacity(0.1).ignoresSafeArea())
+            .toolbar(.hidden, for: .tabBar)
             .navigationTitle("비밀번호 변경")
             .alert("비밀번호가 변경되었습니다", isPresented: $viewModel.showSuccessAlert) {
                 Button("확인") {
