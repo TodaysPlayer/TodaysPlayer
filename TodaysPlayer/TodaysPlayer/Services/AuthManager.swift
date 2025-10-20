@@ -29,7 +29,7 @@ enum AuthError: LocalizedError {
     case missingUID
     case unknown(Error)
     
-    var errorDescription: String? {
+    var errorDescription: String {
         switch self {
         case .emailAlreadyInUse:
             return "이미 사용 중인 이메일입니다."
@@ -136,7 +136,6 @@ final class AuthManager {
             let result = try await Auth.auth()
                 .signIn(withEmail: email, password: password)
             
-            
             UserSessionManager.shared.currentUser = await UserDataRepository()
                 .fetchUserData(with: result.user.uid)
             
@@ -172,16 +171,16 @@ final class AuthManager {
     }
     
     private func mapFirebaseError(_ error: NSError) -> AuthError {
-        switch error.code {
-        case AuthErrorCode.emailAlreadyInUse.rawValue:
+        switch AuthErrorCode(rawValue: error.code){
+        case .emailAlreadyInUse:
             return .emailAlreadyInUse
-        case AuthErrorCode.invalidEmail.rawValue:
+        case .invalidEmail:
             return .invalidEmail
-        case AuthErrorCode.weakPassword.rawValue:
+        case .weakPassword:
             return .weakPassword
-        case AuthErrorCode.wrongPassword.rawValue:
+        case .wrongPassword:
             return .wrongPassword
-        case AuthErrorCode.userNotFound.rawValue:
+        case .userNotFound:
             return .userNotFound
         default:
             return .unknown(error)

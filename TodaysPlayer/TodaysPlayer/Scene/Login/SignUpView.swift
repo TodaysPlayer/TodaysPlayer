@@ -186,7 +186,19 @@ struct SignUpView: View {
                     }
                     
                     // 다음 버튼
-                    Button(action: { navigateToComplete = true }) {
+                    Button(action: {
+                        Task {
+                            try await AuthManager().signUpWithEmail(
+                                userData: SignupData(
+                                    email: email,
+                                    password: password,
+                                    displayName: nickname,
+                                    gender: gender
+                                )
+                            )
+                            navigateToComplete = true
+                        }
+                    }) {
                         Text("다음")
                             .font(.headline)
                             .foregroundColor(.white)
