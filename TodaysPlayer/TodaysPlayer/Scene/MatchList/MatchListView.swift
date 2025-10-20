@@ -40,7 +40,6 @@ struct MatchListView: View {
                             ForEach(Array(viewModel.displayedMatches.enumerated()), id: \.element.id) { index, match in
                                 NavigationLink(destination: MatchDetailView(match: match)) {
                                     VStack(spacing: 20) {
-                                        // 상태에 따라 ui 구분이 안된다.
                                         MatchTagView(
                                             info: viewModel.getTagInfomation(with: match),
                                             matchCase: viewModel.postedMatchCase
@@ -79,6 +78,9 @@ struct MatchListView: View {
                 }
             }
             .navigationTitle("나의 매치 관리")
+            .task {
+                viewModel.fetchMyMatchData(forceReload: true)
+            }
 
         }
     }
