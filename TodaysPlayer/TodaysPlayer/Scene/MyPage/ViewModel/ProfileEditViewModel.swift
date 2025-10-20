@@ -18,7 +18,7 @@ class ProfileEditViewModel: ObservableObject {
     
     // MARK: - Auth Info (로그인 계정에서 제공)
     /// 로그인 계정 이름 (읽기 전용, 로그인 과정에서 설정)
-    @AppStorage("auth_name") var authName: String = ""
+    @AppStorage("auth_nickname") var authNickname: String = ""
     /// 로그인 계정 연락처 (읽기 전용, 로그인 과정에서 설정)
     @AppStorage("auth_phone") var authPhone: String = ""
     /// 로그인 계정 이메일 (읽기 전용, 로그인 과정에서 설정)
@@ -26,8 +26,6 @@ class ProfileEditViewModel: ObservableObject {
     /// 로그인 계정 성별 (읽기 전용, 로그인 과정에서 설정)
     @AppStorage("auth_gender") var authGender: String = ""
     
-    /// 닉네임 (표시용 별명)
-    @AppStorage("profile_nickname") private var storedNickname: String = ""
     /// 거주 지역 (자유 입력)
     @AppStorage("profile_region") private var storedRegion: String = ""
     /// 주 포지션 (선택 항목)
@@ -42,7 +40,6 @@ class ProfileEditViewModel: ObservableObject {
     @AppStorage("profile_avatar") private var storedAvatarData: Data?
     
     // MARK: - Editing State (화면에서 편집 중인 값)
-    @Published var editNickname: String = ""
     @Published var editIntro: String = ""
     @Published var editAvatarData: Data?
     @Published var selectedPhotoItem: PhotosPickerItem?
@@ -60,7 +57,7 @@ class ProfileEditViewModel: ObservableObject {
     let regions: [String] = ["서울","부산","대구","인천","광주","대전","울산","세종","경기도","강원도","충북","충남도","전북","전남","경북","경남","제주"]
     
     // MARK: - Defaults (입력값이 없을 때 사용되는 기본값)
-    let defaultName: String = "홍길동"
+    let defaultNickname: String = "축신 홍길동"
     let defaultPhone: String = "010-1234-5678"
     let defaultEmail: String = "sample@sample.com"
     let defaultGender: String = "남성"
@@ -72,7 +69,6 @@ class ProfileEditViewModel: ObservableObject {
         guard !didLoad else { return }
         didLoad = true
         // 편집용 상태로 복사
-        editNickname = storedNickname
         editIntro = storedIntro
         editAvatarData = storedAvatarData
         region = storedRegion
@@ -85,7 +81,6 @@ class ProfileEditViewModel: ObservableObject {
     
     func save() {
         // 편집 내용을 AppStorage로 반영
-        storedNickname = editNickname
         storedIntro = editIntro
         storedAvatarData = editAvatarData
         storedRegion = region
