@@ -73,6 +73,11 @@ struct MatchDetailView: View {
         .safeAreaInset(edge: .bottom) {
             DynamicMatchActionButton(viewModel: viewModel)
         }
+        .onAppear {
+            Task {
+                await viewModel.refreshUserApplyStatus()
+            }
+        }
         .task {
             if viewModel.userApplyStatus == .rejected {
                 await viewModel.fetchDetailedApply()

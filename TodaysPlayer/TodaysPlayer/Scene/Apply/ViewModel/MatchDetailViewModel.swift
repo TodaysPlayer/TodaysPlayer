@@ -122,4 +122,14 @@ final class MatchDetailViewModel {
         
         print("✅ Apply 상세 조회 완료: \(userApply?.status ?? "없음")")
     }
+    
+    func refreshUserApplyStatus() async {
+        let userId = AuthHelper.currentUserId
+        
+        // Apply 문서 재조회
+        let allApplies = await repository.fetchParticipants(matchId: match.id)
+        userApply = allApplies.first { $0.userId == userId }
+        
+        print("✅ 신청 상태 새로고침: \(userApply?.status ?? "없음")")
+    }
 }
