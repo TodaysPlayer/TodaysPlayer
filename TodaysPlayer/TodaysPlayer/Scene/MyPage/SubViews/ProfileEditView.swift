@@ -58,21 +58,18 @@ struct ProfileEditView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("기본 정보")
                         .font(.headline)
-                    HStack(spacing: 12) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("이름").font(.caption).foregroundColor(.gray)
-                            TextField("이름", text: .constant(viewModel.authName.isEmpty ? viewModel.defaultName : viewModel.authName))
-                                .padding(5.5)
-                                .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("닉네임").font(.caption).foregroundColor(.gray)
+                        HStack {
+                            Image(systemName: "person")
+                                .foregroundColor(.black)
+                            TextField("닉네임", text: .constant(viewModel.authNickname.isEmpty ? viewModel.defaultNickname : viewModel.authNickname))
+                                .foregroundColor(.black)
                                 .font(.body)
                                 .disabled(true)
                         }
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("닉네임").font(.caption).foregroundColor(.gray)
-                            TextField("닉네임", text: $viewModel.editNickname)
-                                .textFieldStyle(.roundedBorder)
-                                .font(.body)
-                        }
+                        .padding(10)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text("연락처").font(.caption).foregroundColor(.gray)
