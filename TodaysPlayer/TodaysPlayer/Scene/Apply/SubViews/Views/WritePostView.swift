@@ -251,16 +251,29 @@ struct WritePostView: View {
                                 
                                 if viewModel.hasFee {
                                     HStack {
-                                        TextField("금액을 입력하세요", value: $viewModel.price, format: .number)
-                                            .keyboardType(.numberPad)
+                                        TextField("최대 20,000원까지 입력", text: Binding(
+                                            get: {
+                                                viewModel.price == 0 ? "" : "\(viewModel.price)"
+                                            },
+                                            set: { newValue in
+                                                viewModel.price = Int(newValue) ?? 0
+                                            }
+                                        ))
+                                        .keyboardType(.numberPad)
+                                        .onChange(of: viewModel.price) { oldValue, newValue in
+                                            if newValue > 20000 {
+                                                viewModel.price = 20000
+                                            } else if newValue < 0 {
+                                                viewModel.price = 0
+                                            }
+                                        }
                                         Text("원")
                                             .foregroundColor(.primary)
                                     }
                                     .padding()
                                     .background(Color.white)
                                     .cornerRadius(12)
-                                }
-                            }
+                                }                            }
                         }
                     }
                     .padding()
