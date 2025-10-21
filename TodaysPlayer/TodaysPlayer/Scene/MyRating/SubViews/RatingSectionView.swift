@@ -10,17 +10,23 @@ import SwiftUI
 struct RatingSectionView: View {
     private var userInfo: UserRating? = nil
     private var ratingList: [(String, String, score: Double)]
+    private var average: (Double, Double) -> Double = { sum, count in
+        guard count > 0 else { return 0 }
+        return sum / count
+    }
 
     init(userInfo: UserRating? = nil) {
         self.userInfo = userInfo
         
         let count = Double(userInfo?.totalRatingCount ?? 0)
         
+
         self.ratingList = [
-            ("heart", "매너", (userInfo?.mannerSum ?? 0) / count),
-            ("person.2", "팀워크", (userInfo?.teamWorkSum ?? 0) / count),
-            ("timer", "시간약속", (userInfo?.appointmentSum ?? 0) / count)
+            ("heart", "매너", average(userInfo?.mannerSum ?? 0, Double(count))),
+            ("person.2", "팀워크", average(userInfo?.teamWorkSum ?? 0, Double(count))),
+            ("timer", "시간약속", average(userInfo?.appointmentSum ?? 0, Double(count)))
         ]
+
     }
 
     

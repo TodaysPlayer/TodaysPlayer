@@ -151,13 +151,13 @@ final class MatchListViewModel {
     @MainActor
     func fetchMyMatchData(forceReload: Bool = false) {
         if forceReload {
-            
             lastAppliedSnapshot = nil
             lastRecruitingSnapshot = nil
             hasMore = true
             isLoading = false
+            postedMatchCase = .appliedMatch
         }
-
+        
         Task {
             async let fetchAppliedMatches: Void = loadMoreMatches(for: .appliedMatch)
             async let fetchMyRecruitingMatches: Void = loadMoreMatches(for: .myRecruitingMatch)

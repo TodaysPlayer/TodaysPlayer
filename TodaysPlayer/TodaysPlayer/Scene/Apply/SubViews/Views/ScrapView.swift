@@ -76,6 +76,7 @@ struct ScrapView: View {
         }
         .navigationTitle("찜한 매치")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             loadScrapedMatches()
         }
