@@ -39,16 +39,43 @@ class ProfileEditViewModel: ObservableObject {
     
     // MARK: - Options
     enum TimeOption: String, CaseIterable {
-        case 평일, 주말, 오전, 오후, 저녁
+        case 평일
+        case 주말
+        case 오전
+        case 오후
+        case 저녁
     }
     enum Position: String, CaseIterable {
-        case 공격수, 미드필더, 수비수, 골키퍼
+        case 공격수
+        case 미드필더
+        case 수비수
+        case 골키퍼
     }
     enum SkillLevel: String, CaseIterable {
-        case 입문자, 초보, 중수, 고수, 쌉고수
+        case 입문자
+        case 초보
+        case 중수
+        case 고수
+        case 쌉고수
     }
     enum Region: String, CaseIterable {
-        case 서울, 부산, 대구, 인천, 광주, 대전, 울산, 세종, 경기, 강원, 충북, 충남, 전북, 전남, 경북, 경남, 제주
+        case 서울
+        case 부산
+        case 대구
+        case 인천
+        case 광주
+        case 대전
+        case 울산
+        case 세종
+        case 경기
+        case 강원
+        case 충북
+        case 충남
+        case 전북
+        case 전남
+        case 경북
+        case 경남
+        case 제주
     }
     
     // MARK: - Load / Save
