@@ -46,12 +46,12 @@ struct MatchInfoDetailView: View {
         
         // 참여비 성별 실력
         HStack {
-            Image(systemName: "person.fill")
+            Image(systemName: "wonsign.circle")
             Text("\(matchInfo.price)원")
             
             Spacer()
             
-            Image(systemName: "person.fill")
+            Image(systemName: "figure.2.arms.open")
             Text(matchInfo.gender)
             
             Spacer()

@@ -79,8 +79,9 @@ struct SignUpView: View {
     
     let genders = ["남성", "여성"]
     
+    @Binding var path: NavigationPath
+    
     var body: some View {
-        NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
                     Text("회원가입")
@@ -210,12 +211,12 @@ struct SignUpView: View {
                     .padding(.top, 20)
                     .disabled(!canProceed())
                     
-                    NavigationLink(destination: SignUpCompleteView(), isActive: $navigateToComplete) {
+                    NavigationLink(destination: SignUpCompleteView(path: $path), isActive: $navigateToComplete) {
                         EmptyView()
                     }
                 }
                 .padding(20)
-            }
+            
         }
     }
     
@@ -346,7 +347,7 @@ struct InputWithDuplicationCheck: View {
         }
     }
 }
-
-#Preview {
-    SignUpView()
-}
+//
+//#Preview {
+//    SignUpView()
+//}

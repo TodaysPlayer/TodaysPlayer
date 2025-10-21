@@ -22,7 +22,7 @@ struct ContentView: View {
                 ApplyView()
             }
             
-            Tab("나의 매치", systemImage: "checklist", value: 2) {
+            Tab("나의 경기", systemImage: "checklist", value: 2) {
                 MatchListView()
             }
             

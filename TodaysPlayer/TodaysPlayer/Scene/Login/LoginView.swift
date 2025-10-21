@@ -28,9 +28,10 @@ struct LoginView: View {
     @State private var keyboardHeight: CGFloat = 0
     
     private let authManager: AuthManager = AuthManager()
+    @State var path = NavigationPath()
     
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             ZStack {
                 Color.gray.opacity(0.1)
                     .ignoresSafeArea()
@@ -126,7 +127,20 @@ struct LoginView: View {
                             }
                             
                             // 회원가입으로 이동 (약관동의 -> 회원가입)
-                            NavigationLink(destination: UserAgreementView()) {
+                            //                            NavigationLink(destination: UserAgreementView()) {
+                            //                                Text("이메일로 회원가입")
+                            //                                    .frame(maxWidth: .infinity)
+                            //                                    .padding()
+                            //                                    .background(Color.white)
+                            //                                    .overlay(
+                            //                                        RoundedRectangle(cornerRadius: 8)
+                            //                                            .stroke(Color.gray.opacity(0.3))
+                            //                                    )
+                            //                            }
+                            
+                            Button {
+                                path.append("UserAgreement")
+                            } label: {
                                 Text("이메일로 회원가입")
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -135,6 +149,12 @@ struct LoginView: View {
                                         RoundedRectangle(cornerRadius: 8)
                                             .stroke(Color.gray.opacity(0.3))
                                     )
+                            }
+                            
+                            .navigationDestination(for: String.self) { value in
+                                if value == "UserAgreement" {
+                                    UserAgreementView(path: $path)
+                                }
                             }
                         }
                         .padding()

@@ -17,6 +17,11 @@ struct MatchListView: View {
                     .ignoresSafeArea()
                 
                 VStack(alignment: .leading, spacing: 15) {
+                    Text("나의 경기관리")
+                        .font(.system(size: 26, weight: .bold))
+                        .padding(.leading, 20)
+                        .padding(.top, 15)
+                    
                     CustomSegmentControlView(
                         categories: viewModel.myMatchSegmentTitles,
                         initialSelection: viewModel.myMatchSegmentTitles.first ?? "신청한 경기"
@@ -77,7 +82,6 @@ struct MatchListView: View {
                     .padding(.horizontal, 20)
                 }
             }
-            .navigationTitle("나의 매치 관리")
             .task {
                 viewModel.fetchMyMatchData(forceReload: true)
             }

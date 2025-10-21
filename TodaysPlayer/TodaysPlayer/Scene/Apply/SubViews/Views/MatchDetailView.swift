@@ -37,8 +37,8 @@ struct MatchDetailView: View {
                 WarningNoticeView()
                 
                 OrganizerInfoView(
-                    name: "주최자",
-                    imageURL: ""
+                    name: match.organizerName,
+                    imageURL: match.organizerProfileURL ?? ""
                 )
                 
                 Spacer()

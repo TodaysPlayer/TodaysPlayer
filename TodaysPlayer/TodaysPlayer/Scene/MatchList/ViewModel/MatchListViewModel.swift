@@ -124,7 +124,7 @@ final class MatchListViewModel {
         
         // 내가 모집중인 경기
         case .myRecruting:
-            displayedMatches = recruitingMatches
+            displayedMatches = recruitingMatches.filter({ $0.status != "finished" })
         
         // 종료된 경기
         case .finished(let subFilter):
