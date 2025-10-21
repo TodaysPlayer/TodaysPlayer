@@ -8,7 +8,7 @@
 import Foundation
 
 final class MyRatingViewModel {
-    var userData: User? = nil
+    var userData: User? = UserSessionManager.shared.currentUser
     
     private let repository: UserDataRepository = UserDataRepository()
 

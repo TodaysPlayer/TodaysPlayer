@@ -145,6 +145,7 @@ struct QuestionView: View {
         }
         .padding(16)
         .background(Color.white)
+        .toolbar(.hidden, for: .tabBar)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)

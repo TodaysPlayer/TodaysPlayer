@@ -28,9 +28,5 @@ struct MyRatingView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gray.opacity(0.1))
         .ignoresSafeArea()
-        .task {
-            viewModel.fetchUserRate(userId: "eBYBQAFdR2GQOJlE9zG0")
-        }
-
     }
 }

@@ -17,6 +17,7 @@ struct MyPageView: View {
     @State private var homeViewModel = HomeViewModel()
     @State private var notifications: [String] = []
     @State private var viewModel = MyPageViewModel()
+    @EnvironmentObject var session: UserSessionManager
     
     var body: some View {
         NavigationStack {
@@ -38,9 +39,6 @@ struct MyPageView: View {
                 .padding(.horizontal, 16)
             }
             .background(Color.gray.opacity(0.1))
-            .task {
-                await viewModel.load()
-            }
         }
     }
     
@@ -70,7 +68,7 @@ struct MyPageView: View {
         VStack {
             HStack(alignment: .center, spacing: 10) {
                 Group {
-                    if let urlString = viewModel.profile.avatarURL, let url = URL(string: urlString) {
+                    if let urlString = session.currentUser?.profileImageUrl, let url = URL(string: urlString) {
                         AsyncImage(url: url) { phase in
                             switch phase {
                             case .empty:
@@ -94,18 +92,16 @@ struct MyPageView: View {
                 .clipShape(Circle())
 
                 VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text((viewModel.profile.nickname ?? "").isEmpty ? "별명 미설정" : (viewModel.profile.nickname ?? ""))
+                    Text(session.currentUser?.displayName ?? "여백의 미")
                             .font(.system(size: 20, weight: .bold))
-                    }
                     HStack(spacing: 11.5) {
-                        Text(viewModel.profile.displayPosition)
+                        Text(((session.currentUser?.position?.isEmpty == false) ? session.currentUser?.position : nil) ?? "포지션 미설정")
                             .font(.caption)
                             .padding(.horizontal, 2)
                             .padding(.vertical, 2)
                             .background(Color(.systemGray5))
                             .cornerRadius(3)
-                        Text(viewModel.profile.displayLevel)
+                        Text(((session.currentUser?.skillLevel?.isEmpty == false) ? session.currentUser?.skillLevel : nil) ?? "레벨 미설정")
                             .font(.caption)
                             .padding(.horizontal, 2)
                             .padding(.vertical, 2)

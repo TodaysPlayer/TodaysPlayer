@@ -38,7 +38,7 @@ struct MatchInfoView: View {
                 .visible(apply.status == .rejected && postedMatchCase != .myRecruitingMatch)
             
             Divider()
-                .visible(postedMatchCase != .myRecruitingMatch)
+                .visible(postedMatchCase == .appliedMatch && matchInfo.organizerId != apply.userId)
             
             HStack {
                 Image(systemName: "person.fill")
@@ -48,13 +48,19 @@ struct MatchInfoView: View {
                 
                 Spacer()
             }
-            .visible(postedMatchCase != .myRecruitingMatch)
+            .visible(postedMatchCase == .appliedMatch && matchInfo.organizerId != apply.userId)
             
             
             NavigationLink {
                 PlayerRatingView(viewModel: PlayerRatingViewModel(matchInfo: matchInfo))
             } label: {
                 Text("참여자 평가하기")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color.green)
+                    .cornerRadius(12)
             }
             .visible(postedMatchCase == .finishedMatch && matchInfo.organizerId == apply.userId)
         }

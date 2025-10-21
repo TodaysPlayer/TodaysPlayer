@@ -24,7 +24,7 @@ struct ParticipantView: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text("(\(participantData.userNickname))")
+                        Text("\(participantData.userNickname)")
                             .font(.headline)
                      
                         Spacer()

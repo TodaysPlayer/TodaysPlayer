@@ -63,10 +63,11 @@ struct ProfileEditView: View {
                         HStack {
                             Image(systemName: "person")
                                 .foregroundColor(.black)
-                            TextField("닉네임", text: .constant(viewModel.authNickname.isEmpty ? viewModel.defaultNickname : viewModel.authNickname))
+                            Text(UserSessionManager.shared.currentUser?.displayName ?? "")
                                 .foregroundColor(.black)
                                 .font(.body)
                                 .disabled(true)
+                            Spacer()
                         }
                         .padding(10)
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
@@ -76,10 +77,11 @@ struct ProfileEditView: View {
                         HStack {
                             Image(systemName: "phone")
                                 .foregroundColor(.black)
-                            TextField("연락처", text: .constant(viewModel.authPhone.isEmpty ? viewModel.defaultPhone : viewModel.authPhone))
+                            Text(UserSessionManager.shared.currentUser?.phoneNumber ?? "")
                                 .foregroundColor(.black)
                                 .font(.body)
                                 .disabled(true)
+                            Spacer()
                         }
                         .padding(10)
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
@@ -89,10 +91,11 @@ struct ProfileEditView: View {
                         HStack {
                             Image(systemName: "envelope")
                                 .foregroundColor(.black)
-                            TextField("이메일", text: .constant(viewModel.authEmail.isEmpty ? viewModel.defaultEmail : viewModel.authEmail))
+                            Text(UserSessionManager.shared.currentUser?.email ?? "")
                                 .foregroundColor(.black)
                                 .font(.body)
                                 .disabled(true)
+                            Spacer()
                         }
                         .padding(10)
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
@@ -101,13 +104,13 @@ struct ProfileEditView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("거주 지역").font(.caption).foregroundColor(.gray)
                             Picker("거주 지역", selection: $viewModel.region) {
-                                ForEach(viewModel.regions, id: \.self) { r in
-                                    Text(r).tag(r)
+                                ForEach(ProfileEditViewModel.Region.allCases, id: \.self) { r in
+                                    Text(r.rawValue).tag(r)
                                 }
                             }
                             .pickerStyle(.menu)
                             .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(5.5)
+                            .padding(6)
                             .background(RoundedRectangle(cornerRadius: 8).fill(Color(.white)))
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.gray.opacity(0.15), lineWidth: 1))
                         }
@@ -115,14 +118,15 @@ struct ProfileEditView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("성별").font(.caption).foregroundColor(.gray)
                             HStack {
-                                Image(systemName: "Gender")
+                                Image(systemName: "faceid")
                                     .foregroundColor(.black)
-                                TextField("성별", text: .constant(viewModel.authGender.isEmpty ? viewModel.defaultGender : viewModel.authGender))
+                                Text(UserSessionManager.shared.currentUser?.gender ?? "")
                                     .foregroundColor(.black)
                                     .font(.body)
                                     .disabled(true)
+                                Spacer()
                             }
-                            .padding(5.5)
+                            .padding(10)
                             .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                         }
                     }
@@ -139,8 +143,8 @@ struct ProfileEditView: View {
                     VStack(alignment: .leading, spacing: 7) {
                         Text("주 포지션").font(.caption).foregroundColor(.gray)
                         Picker("주 포지션", selection: $viewModel.position) {
-                            ForEach(viewModel.positions, id: \.self) { pos in
-                                Text(pos)
+                            ForEach(ProfileEditViewModel.Position.allCases, id: \.self) { pos in
+                                Text(pos.rawValue).tag(pos)
                             }
                         }
                         .pickerStyle(.menu)
@@ -150,8 +154,8 @@ struct ProfileEditView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("실력 레벨").font(.caption).foregroundColor(.gray)
                         Picker("실력 레벨", selection: $viewModel.level) {
-                            ForEach(viewModel.levels, id: \.self) { lv in
-                                Text(lv)
+                            ForEach(ProfileEditViewModel.SkillLevel.allCases, id: \.self) { lv in
+                                Text(lv.rawValue).tag(lv)
                             }
                         }
                         .pickerStyle(.menu)
@@ -161,23 +165,25 @@ struct ProfileEditView: View {
                 }
                 VStack(alignment: .leading, spacing: 4) {
                     Text("선호 시간대").font(.caption).foregroundColor(.gray)
-                    HStack(spacing: 5) {
-                        ForEach(viewModel.timeOptions, id: \.self) { t in
+                    HStack(spacing: 6) {
+                        ForEach(ProfileEditViewModel.TimeOption.allCases, id: \.self) { t in
                             Button(action: {
                                 viewModel.togglePreferredTime(t)
                             }) {
-                                Text(t)
+                                Text(t.rawValue)
                                     .foregroundColor(viewModel.preferredTimes.contains(t) ? .white : .black)
                                     .padding(.vertical, 8)
                                     .padding(.horizontal, 12)
                                     .background(viewModel.preferredTimes.contains(t) ? Color(.green) : Color(.systemGray5))
                                     .cornerRadius(8)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("자기소개 (플레이 스타일 / 축구 경력 / 각오 등)").font(.caption).foregroundColor(.gray)
+                    Text("자기소개 (플레이 스타일 / 축구 경력 / 각오 등)")
+                        .font(.caption).foregroundColor(.gray)
                     TextEditor(text: $viewModel.editIntro)
                         .font(.body)
                         .foregroundColor(.black)
@@ -199,7 +205,6 @@ struct ProfileEditView: View {
                     Text("저장")
                         .fontWeight(.bold)
                         .foregroundColor(.black)
-//                        .padding(.horizontal, 20)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color.green.opacity(0.5)))
@@ -209,6 +214,7 @@ struct ProfileEditView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .toolbar(.hidden, for: .tabBar)
         .background(Color.gray.opacity(0.1).ignoresSafeArea())
         .navigationTitle("프로필 편집")
         .navigationBarTitleDisplayMode(.large)
@@ -227,3 +233,4 @@ struct ProfileEditView: View {
 #Preview {
     ProfileEditView(viewModel: .init())
 }
+
