@@ -138,6 +138,7 @@ struct MyPageView: View {
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
+                    .toolbar(.hidden, for: .tabBar)
             }
 
             NavigationLink(
@@ -151,7 +152,7 @@ struct MyPageView: View {
             }
             
             NavigationLink(destination: ScrapView()) {
-                Stat(icon: "bookmark.fill", label: "경기 스크랩", color: .cyan.opacity(0.4))
+                Stat(icon: "bookmark.fill", label: "찜한 매치", color: .cyan.opacity(0.4))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)

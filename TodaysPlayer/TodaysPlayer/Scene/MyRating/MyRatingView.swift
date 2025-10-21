@@ -28,5 +28,6 @@ struct MyRatingView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gray.opacity(0.1))
         .ignoresSafeArea()
+        .toolbar(.hidden, for: .tabBar)
     }
 }
