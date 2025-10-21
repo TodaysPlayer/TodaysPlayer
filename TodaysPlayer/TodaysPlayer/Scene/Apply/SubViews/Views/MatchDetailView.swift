@@ -297,4 +297,4 @@ struct MatchLocationSectionForMatch: View {
     }
 }
 
-// ❌ MatchActionButtonsViewForMatch 삭제됨 (DynamicMatchActionButton으로 대체)
+// MatchActionButtonsViewForMatch 삭제됨 (DynamicMatchActionButton으로 대체)

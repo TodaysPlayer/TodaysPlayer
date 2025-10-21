@@ -67,7 +67,6 @@ struct MatchDescriptionSection: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color(.systemBackground))
                 .cornerRadius(12)
-                .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
     }
 }
@@ -102,10 +101,6 @@ struct WarningNoticeView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.yellow.opacity(0.1))
             .cornerRadius(8)
-            .padding()
-            .background(Color(.systemBackground))
-            .cornerRadius(12)
-            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
     }
 }
@@ -147,7 +142,6 @@ struct OrganizerInfoView: View {
             .padding()
             .background(Color(.systemBackground))
             .cornerRadius(12)
-            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
     }
 }
