@@ -15,8 +15,7 @@ class FilterViewModel: ObservableObject {
     @Published var matches: [Match] = []
     @Published var isLoading = false
     
-    // 선택된 날짜 (ApplyView에서 전달받음)
-    var selectedDate: Date = Date()
+    @Published var selectedDate: Date = Date()
     
     private let db = Firestore.firestore()
     

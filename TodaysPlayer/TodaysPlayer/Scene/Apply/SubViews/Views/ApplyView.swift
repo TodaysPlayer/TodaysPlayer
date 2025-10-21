@@ -91,8 +91,6 @@ struct ApplyView: View {
     @State private var isFilterSheetPresented: Bool = false
     @State private var isScrolling: Bool = false
     
-    // 달력 선택된 날짜
-    @State private var selectedDate: Date = Date()
     
     // filterViewModel 추가
     @StateObject private var filterViewModel = FilterViewModel()
@@ -188,13 +186,13 @@ struct ApplyView: View {
                     .padding(.bottom, 8)
                     
                     // 주간 달력 추가
-                    CalendarView(selectedDate: $selectedDate)
+                    CalendarView(selectedDate: $filterViewModel.selectedDate)
                         .frame(height: 150)
                         .clipped()
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
                         .padding(.bottom, 8)
-                        .onChange(of: selectedDate) { oldValue, newValue in
+                        .onChange(of: filterViewModel.selectedDate) { oldValue, newValue in
                             // ✅ 날짜 변경 시 필터 재적용
                             filterViewModel.selectedDate = newValue
                             filterViewModel.applyFilter()
@@ -250,7 +248,6 @@ struct ApplyView: View {
         }
         .onAppear {
             //  초기 데이터 로드
-            filterViewModel.selectedDate = selectedDate
             filterViewModel.fetchInitialMatches()
         }
     }

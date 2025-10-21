@@ -273,7 +273,8 @@ struct WritePostView: View {
                                     .padding()
                                     .background(Color.white)
                                     .cornerRadius(12)
-                                }                            }
+                                }
+                            }
                         }
                     }
                     .padding()
@@ -287,7 +288,6 @@ struct WritePostView: View {
                     Button {
                         Task {
                             do {
-                                // let userId = "bJYjlQZuaqvw2FDB5uNa" // 임시 사용자 ID
                                 guard AuthHelper.isLoggedIn else {
                                     viewModel.errorMessage = "로그인이 필요합니다."
                                     return
@@ -298,8 +298,14 @@ struct WritePostView: View {
                                 // 생성된 match 객체 받기
                                 let newMatch = try await viewModel.createMatch(organizerId: userId)
                                 
-                                // filterViewModel 앞단에 추가
+                                // 새 매치 추가
                                 filterViewModel.addNewMatch(newMatch)
+                                
+                                // 캘린더 날짜를 경기 날짜로 변경
+                                filterViewModel.selectedDate = newMatch.dateTime
+                                
+                                // 해당 날짜의 매치들로 필터 재적용
+                                filterViewModel.applyFilter()
                                 
                                 dismiss()
                             } catch {
