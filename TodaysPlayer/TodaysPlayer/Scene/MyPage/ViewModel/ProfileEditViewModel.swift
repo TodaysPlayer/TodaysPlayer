@@ -48,7 +48,7 @@ class ProfileEditViewModel: ObservableObject {
         case 입문자, 초보, 중수, 고수, 쌉고수
     }
     enum Region: String, CaseIterable {
-        case 서울, 부산, 대구, 인천, 광주, 대전, 울산, 세종, 경기도, 강원도, 충북, 충남, 전북, 전남, 경북, 경남, 제주
+        case 서울, 부산, 대구, 인천, 광주, 대전, 울산, 세종, 경기, 강원, 충북, 충남, 전북, 전남, 경북, 경남, 제주
     }
     
     // MARK: - Load / Save
