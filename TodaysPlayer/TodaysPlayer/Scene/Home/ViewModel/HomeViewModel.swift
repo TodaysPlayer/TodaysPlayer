@@ -197,8 +197,10 @@ class HomeViewModel {
         
         let now = Date()
         let availableMatches = matches.filter { match in
-            // 이미 신청한 매치 제외 && 미래 매치
-            !appliedMatchIds.contains(match.id) && match.dateTime > now
+            // 이미 신청한 매치 제외 && 본인이 모집한 매치 제외 && 미래 매치
+            !appliedMatchIds.contains(match.id) &&
+            match.organizerId != user?.id &&
+            match.dateTime > now
         }
         
         // 거리순으로 정렬 (가까운 순)
