@@ -214,6 +214,7 @@ struct ProfileEditView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .toolbar(.hidden, for: .tabBar)
         .background(Color.gray.opacity(0.1).ignoresSafeArea())
         .navigationTitle("프로필 편집")
         .navigationBarTitleDisplayMode(.large)

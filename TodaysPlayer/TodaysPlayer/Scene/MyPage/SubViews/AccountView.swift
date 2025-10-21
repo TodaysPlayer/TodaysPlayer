@@ -105,6 +105,7 @@ struct AccountView: View {
                 logOut
                 checkOut
             }
+            .toolbar(.hidden, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("계정 관리")

@@ -169,6 +169,7 @@ private struct AnnouncementCard: View {
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .strokeBorder(Color(.separator), lineWidth: 0.5)
         )
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

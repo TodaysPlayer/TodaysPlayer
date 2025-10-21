@@ -44,7 +44,7 @@ struct TodaysWeatherCard: View {
                         Spacer()
                     }
                     
-                    Text("매칭 전 날씨를 확인해보세요")
+                    Text("경기 전 날씨를 확인해보세요")
                         .font(.system(size: 14))
                         .fontWeight(.medium)
                         .foregroundStyle(.gray)

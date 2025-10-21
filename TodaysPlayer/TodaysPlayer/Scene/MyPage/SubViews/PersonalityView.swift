@@ -138,6 +138,7 @@ struct PersonalityView: View {
             .padding(.vertical, 12)
         }
         .navigationTitle("개인정보 처리방침")
+        .toolbar(.hidden, for: .tabBar)
         .background(Color.gray.opacity(0.1))
     }
 }
