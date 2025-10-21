@@ -463,7 +463,7 @@ struct GenderPicker: View {
     @Binding var selectedGender: String
     
     let genders = [
-        ("mixed", "무관"),
+        ("mixed", "혼성"),
         ("male", "남성"),
         ("female", "여성")
     ]
