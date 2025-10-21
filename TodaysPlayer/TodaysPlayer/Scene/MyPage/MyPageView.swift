@@ -92,7 +92,7 @@ struct MyPageView: View {
                 .clipShape(Circle())
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(session.currentUser?.displayName ?? "여백의 미")
+                    Text(session.currentUser?.displayName ?? "")
                             .font(.system(size: 20, weight: .bold))
                     HStack(spacing: 11.5) {
                         Text(((session.currentUser?.position?.isEmpty == false) ? session.currentUser?.position : nil) ?? "포지션 미설정")
@@ -138,7 +138,7 @@ struct MyPageView: View {
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
-                    .toolbar(.hidden, for: .tabBar)
+//                    .toolbar(.hidden, for: .tabBar)
             }
 
             NavigationLink(
@@ -196,6 +196,6 @@ struct MyPageView: View {
     }
 }
 
-#Preview {
-    MyPageView()
-}
+//#Preview {
+//    MyPageView()
+//}
