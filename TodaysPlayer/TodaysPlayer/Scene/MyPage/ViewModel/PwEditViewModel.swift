@@ -84,12 +84,12 @@ class PwEditViewModel {
                     switch AuthErrorCode(rawValue: authError.code) {
                     case .wrongPassword, .invalidCredential, .userMismatch, .requiresRecentLogin:
                         // 사용자에게는 일반화된 메시지만 노출
-                        self.generalError = "입력된 현재 비밀번호가 다릅니다. \n현재 비밀번호를 확인하고 다시 시도해주세요."
+                        self.generalError = ""
                     default:
-                        self.generalError = "인증 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+                        self.generalError = ""
                     }
                 } else {
-                    self.generalError = "인증 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+                    self.generalError = ""
                 }
                 return
             }
