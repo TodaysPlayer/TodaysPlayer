@@ -20,6 +20,7 @@ struct MyPageView: View {
     @EnvironmentObject var session: UserSessionManager
     @AppStorage("profile_position") private var storedPosition: String = ""
     @AppStorage("profile_level") private var storedLevel: String = ""
+    @AppStorage("profile_name") private var storedName: String = ""
 
     var body: some View {
         NavigationStack {
@@ -94,34 +95,36 @@ struct MyPageView: View {
                 .clipShape(Circle())
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(session.currentUser?.displayName ?? "")
-                            .font(.system(size: 23, weight: .bold))
-                            .padding(7)
+                    HStack {
+                        Text(storedName.isEmpty ? "이름 없음" : storedName)
+                                .font(.system(size: 23, weight: .bold))
+                                .padding(7)
+                        Spacer()
+                        NavigationLink(destination: ProfileEditView()) {
+                            Image(systemName: "square.and.pencil")
+                                .foregroundStyle(Color(.green))
+                                .font(.system(size: 15, weight: .medium))
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 5)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(15)
+                        }
+                    }
                     HStack(spacing: 11.5) {
-                        Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
+                            Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
                             .font(.system(size: 13))
                             .padding(.horizontal, 7)
                             .padding(.vertical, 5)
                             .background(Color(.systemGray5))
-                            .cornerRadius(3)
+                            .cornerRadius(6)
                         Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
                             .font(.system(size: 13))
                             .padding(.horizontal, 7)
                             .padding(.vertical, 5)
                             .background(Color(.systemGray5))
-                            .cornerRadius(3)
+                            .cornerRadius(6)
                         Spacer()
                     }
-                }
-                Spacer()
-                NavigationLink(destination: ProfileEditView()) {
-                    Text("프로필 편집")
-                        .foregroundStyle(Color(.green))
-                        .font(.system(size: 13, weight: .medium))
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 5)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(3)
                 }
             }
         }

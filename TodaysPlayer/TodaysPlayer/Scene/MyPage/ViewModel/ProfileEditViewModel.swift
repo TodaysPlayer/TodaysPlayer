@@ -26,6 +26,8 @@ class ProfileEditViewModel: ObservableObject {
     
     @AppStorage("profile_level") private var storedLevel: String = ""
     
+    @AppStorage("profile_name") private var storedName: String = ""
+    
     // MARK: - Editing State (화면에서 편집 중인 값)
     @Published var editIntro: String = ""
     @Published var editAvatarData: Data?
@@ -98,6 +100,7 @@ class ProfileEditViewModel: ObservableObject {
     
     func save() {
         // 편집 내용을 AppStorage로 반영
+        storedName = UserSessionManager.shared.currentUser?.displayName ?? ""
         storedPosition = position.rawValue
         storedLevel = level.rawValue
         storedIntro = editIntro
