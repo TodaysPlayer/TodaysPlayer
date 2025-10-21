@@ -34,11 +34,11 @@ struct MatchTagView: View {
                 Text(MatchInfoStatus.lastOne.rawValue)
                     .matchTagStyle(tagType: MatchInfoStatus.lastOne)
                     .visible(matchInfo.leftPersonCount == 1 && matchInfo.appliedStatus != .rejected)
-                
-                Text(MatchInfoStatus.deadline.rawValue)
-                    .matchTagStyle(tagType: MatchInfoStatus.deadline)
-                    .visible(matchInfo.leftPersonCount != 1 && matchInfo.appliedStatus != .rejected)
-                
+//                
+//                Text(MatchInfoStatus.deadline.rawValue)
+//                    .matchTagStyle(tagType: MatchInfoStatus.deadline)
+//                    .visible(matchInfo.leftPersonCount != 1 && matchInfo.appliedStatus != .rejected)
+//                
             }
             .font(.system(size: 14))
             

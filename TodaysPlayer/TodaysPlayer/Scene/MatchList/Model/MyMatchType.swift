@@ -13,11 +13,13 @@ protocol MatchFilterType: Equatable, Hashable {
 
 enum MatchFilter: MatchFilterType {
     case applied(AppliedMatch)
+    case myRecruting
     case finished(FinishedMatch)
     
     var title: String {
         switch self {
         case .applied(let filter): return filter.title
+        case .myRecruting: return ""
         case .finished(let filter): return filter.title
         }
     }
