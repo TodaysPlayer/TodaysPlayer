@@ -15,7 +15,7 @@ final class WritePostViewModel {
     var description: String = ""
     var matchType: String = "futsal" // "futsal", "soccer"
     var gender: String = "mixed" // "male", "female", "mixed"
-    var selectedDate: Date = Date()
+    var selectedDate: Date = Calendar.current.startOfDay(for: Date())
     var startTime: Date = Date()
     var endTime: Date = Calendar.current.date(byAdding: .hour, value: 2, to: Date()) ?? Date()
     var duration: Int = 120 // 기본 120분
