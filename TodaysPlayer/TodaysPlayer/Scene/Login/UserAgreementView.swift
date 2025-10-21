@@ -48,8 +48,9 @@ struct UserAgreementView: View {
     // ✅ 회원가입 이동 상태
     @State private var goToSignUp = false
     
+    @Binding var path: NavigationPath
+    
     var body: some View {
-        NavigationView {
             VStack(alignment: .leading, spacing: 20) {
                 
                 Text("서비스 이용을 위한 약관에 동의해주세요")
@@ -114,7 +115,8 @@ struct UserAgreementView: View {
                 Spacer()
                 
                 // ✅ 숨겨진 NavigationLink
-                NavigationLink(destination: SignUpView(), isActive: $goToSignUp) {
+                NavigationLink(destination: SignUpView(path: $path),
+                               isActive: $goToSignUp) {
                     EmptyView()
                 }
                 
@@ -134,7 +136,7 @@ struct UserAgreementView: View {
                 .disabled(!allRequiredAgreed)
             }
             .navigationTitle("약관 동의")
-        }
+        
     }
     
     private var allRequiredAgreed: Bool {
@@ -142,9 +144,9 @@ struct UserAgreementView: View {
     }
 }
 
-// 미리보기
-struct UserAgreementView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserAgreementView()
-    }
-}
+//// 미리보기
+//struct UserAgreementView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UserAgreementView()
+//    }
+//}
