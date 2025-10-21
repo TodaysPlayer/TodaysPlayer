@@ -91,8 +91,6 @@ struct ApplyView: View {
     @State private var isFilterSheetPresented: Bool = false
     @State private var isScrolling: Bool = false
     
-    
-    // filterViewModel 추가
     @StateObject private var filterViewModel = FilterViewModel()
     
     // 필터 관련 상태
@@ -104,9 +102,8 @@ struct ApplyView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                
                 Color(.systemGroupedBackground)
-                                .ignoresSafeArea()
+                    .ignoresSafeArea()
                 
                 VStack(alignment: .leading, spacing: 0) {
                     // 커스텀 타이틀 (네비게이션 타이틀 대신)
@@ -185,7 +182,7 @@ struct ApplyView: View {
                     .padding(.horizontal, 16)
                     .padding(.bottom, 8)
                     
-                    // 주간 달력 추가
+                    // 주간 달력 - filterViewModel.selectedDate 사용
                     CalendarView(selectedDate: $filterViewModel.selectedDate)
                         .frame(height: 150)
                         .clipped()
@@ -193,8 +190,7 @@ struct ApplyView: View {
                         .padding(.top, 8)
                         .padding(.bottom, 8)
                         .onChange(of: filterViewModel.selectedDate) { oldValue, newValue in
-                            // ✅ 날짜 변경 시 필터 재적용
-                            filterViewModel.selectedDate = newValue
+                            // 날짜 변경 시 필터 재적용
                             filterViewModel.applyFilter()
                         }
                     
@@ -247,7 +243,7 @@ struct ApplyView: View {
             .environmentObject(filterViewModel)
         }
         .onAppear {
-            //  초기 데이터 로드
+            // 초기 데이터 로드 (selectedDate는 filterViewModel이 관리)
             filterViewModel.fetchInitialMatches()
         }
     }
