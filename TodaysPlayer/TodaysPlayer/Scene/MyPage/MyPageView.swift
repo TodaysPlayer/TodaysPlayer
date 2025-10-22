@@ -104,13 +104,14 @@ struct MyPageView: View {
                             Image(systemName: "square.and.pencil")
                                 .foregroundStyle(Color(.green))
                                 .font(.system(size: 15, weight: .medium))
-                                .padding(.horizontal, 5)
-                                .padding(.vertical, 5)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 6)
                                 .background(Color(.systemGray6))
                                 .cornerRadius(15)
                         }
                     }
                     HStack(spacing: 11.5) {
+                        // 추후 추가될 종목에 따른 포지션 변경 요청
                             Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
                             .font(.system(size: 13))
                             .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
@@ -118,8 +119,8 @@ struct MyPageView: View {
                             .cornerRadius(6)
                         Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
                             .font(.system(size: 13))
-                            .padding(.horizontal, 30)
-                            .padding(.vertical, 5)
+                            .padding(.horizontal, 37)
+                            .padding(.vertical, 6)
                             .background(Color(.systemGray5))
                             .cornerRadius(6)
                         Spacer()
@@ -139,6 +140,7 @@ struct MyPageView: View {
     private var statsRow: some View {
         HStack {
             NavigationLink(destination: MatchListView()) {
+                // 나의 경기랑 탭이 겹치니 다른기능으로 바꾸기
                 Stat(icon: "calendar", label: "신청한 경기", color: .green)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
