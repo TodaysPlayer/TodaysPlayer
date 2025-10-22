@@ -44,6 +44,7 @@ struct SearchResultsList: View {
                                     // 애니메이션 없이 즉시 변경
                                     var transaction = Transaction()
                                     transaction.disablesAnimations = true
+                                    
                                     withTransaction(transaction) {
                                         selectedLocation = mapItem
                                     }

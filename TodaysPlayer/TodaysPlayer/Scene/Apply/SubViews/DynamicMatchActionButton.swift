@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DynamicMatchActionButton: View {
     @Bindable var viewModel: MatchDetailViewModel
+    @State private var navigateToApply = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -25,12 +26,24 @@ struct DynamicMatchActionButton: View {
                         buttonLabel
                     }
                 } else if viewModel.userApplyStatus == nil {
-                    // 신청 안함 - 신청하기
-                    NavigationLink(
-                        destination: ApplyMatchView(match: viewModel.match)
-                    ) {
+                    // 신청 안함 - 신청하기 (Button으로 변경)
+                    Button {
+                        viewModel.handleApplyButtonTap()
+                        if viewModel.canUserApply() {
+                            navigateToApply = true
+                        }
+                    } label: {
                         buttonLabel
                     }
+                    .background(
+                        NavigationLink(
+                            destination: ApplyMatchView(match: viewModel.match),
+                            isActive: $navigateToApply
+                        ) {
+                            EmptyView()
+                        }
+                        .hidden()
+                    )
                 } else {
                     // 신청 완료 상태 - 비활성화된 버튼만 표시
                     buttonLabel
