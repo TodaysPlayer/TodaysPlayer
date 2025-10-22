@@ -53,16 +53,16 @@ struct ScrapView: View {
                                     match: match,
                                     isFavorited: favoriteViewModel.isFavorited(matchId: match.id),
                                     action: {
+                                        // 먼저 로컬에서 즉시 제거
+                                        withAnimation {
+                                            scrapedMatches.removeAll { $0.id == match.id }
+                                        }
+                                        
+                                        // 그 다음 Firebase 삭제 (백그라운드)
                                         favoriteViewModel.toggleFavorite(
                                             matchId: match.id,
                                             organizerId: match.organizerId
                                         )
-                                        // 스크랩 해제 시 목록에서 제거
-                                        if !favoriteViewModel.isFavorited(matchId: match.id) {
-                                            withAnimation {
-                                                scrapedMatches.removeAll { $0.id == match.id }
-                                            }
-                                        }
                                     }
                                 )
                                 .padding(8)
