@@ -28,9 +28,10 @@ struct MatchInfoDetailView: View {
         HStack {
             Image(systemName: "person.fill")
             
-            let participants = matchInfo.participants.map { (_, value: String) in
+            let participants = matchInfo.participants.filter { (_, value: String) in
                 value == "accepted"
             }.count
+
             let personCount = "\(participants) / \(matchInfo.maxParticipants)"
             
             Text(personCount.highlighted(part: String(participants), color: .green))
