@@ -35,6 +35,11 @@ struct FirebaseMatchListView: View {
                             match: match
                         )) {
                             VStack(alignment: .leading, spacing: 12) {
+                                // 2️⃣ 제목
+                                Text(match.title)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                
                                 // 1️⃣ 풋살/축구 태그
                                 HStack {
                                     Text(match.matchType == "futsal" ? "풋살" : "축구")
@@ -53,11 +58,6 @@ struct FirebaseMatchListView: View {
                                             .frame(width: 44, height: 44)
                                     }
                                 }
-                                
-                                // 2️⃣ 제목
-                                Text(match.title)
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
                                 
                                 // 3️⃣ 시간
                                 HStack(spacing: 4) {
