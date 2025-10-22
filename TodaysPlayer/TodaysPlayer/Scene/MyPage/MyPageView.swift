@@ -96,7 +96,7 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        Text(storedName.isEmpty ? "이름 없음" : storedName)
+                        Text(UserSessionManager.shared.currentUser?.displayName ?? "이름없음")
                                 .font(.system(size: 23, weight: .bold))
                                 .padding(7)
                         Spacer()
