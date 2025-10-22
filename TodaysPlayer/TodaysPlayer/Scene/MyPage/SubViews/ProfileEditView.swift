@@ -100,19 +100,30 @@ struct ProfileEditView: View {
                         .padding(10)
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                     }
+                    
+                    let regionBinding = Binding(
+                        get: {viewModel.region },
+                        set: {viewModel.region = $0 }
+                    )
+                    
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("거주 지역").font(.caption).foregroundColor(.gray)
-                            Picker("거주 지역", selection: $viewModel.region) {
-                                ForEach(ProfileEditViewModel.Region.allCases, id: \.self) { r in
-                                    Text(r.rawValue).tag(r)
+                            Menu {
+                                Picker("거주 지역", selection: regionBinding) {
+                                   ForEach(ProfileEditViewModel.Region.allCases, id: \.self) { r in
+                                       Text(r.rawValue).tag(r)
+                                    }
                                 }
+                            } label: {
+                                HStack(spacing: 35) {
+                                    Text(viewModel.region.rawValue)
+                                    Image(systemName: "chevron.down")
+                                        .font(.system(size: 20, weight: .regular))
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
+                                .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                             }
-                            .pickerStyle(.menu)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(6)
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.white)))
-                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.gray.opacity(0.15), lineWidth: 1))
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
@@ -135,6 +146,18 @@ struct ProfileEditView: View {
             .padding()
             .background(RoundedRectangle(cornerRadius: 14).fill(Color(.white)))
             
+            let positionBinding = Binding(
+                get: {viewModel.position },
+                set: {viewModel.position = $0 }
+            )
+            
+            let levelBinding = Binding(
+                get: {viewModel.level },
+                set: {viewModel.level = $0 }
+            )
+            
+            
+            
             // 축구/풋살 정보
             VStack(alignment: .leading, spacing: 16) {
                 Text("축구/풋살 정보")
@@ -142,25 +165,41 @@ struct ProfileEditView: View {
                 HStack(spacing: 12) {
                     VStack(alignment: .leading, spacing: 7) {
                         Text("주 포지션").font(.caption).foregroundColor(.gray)
-                        Picker("주 포지션", selection: $viewModel.position) {
-                            ForEach(ProfileEditViewModel.Position.allCases, id: \.self) { pos in
-                                Text(pos.rawValue).tag(pos)
+                        Menu {
+                            Picker("주 포지션", selection: positionBinding) {
+                                ForEach(ProfileEditViewModel.Position.allCases, id: \.self) { pos in
+                                    Text(pos.rawValue).tag(pos)
+                                }
                             }
+                        } label: {
+                            HStack(spacing: 30) {
+                                Text(viewModel.position.rawValue)
+                                Image(systemName: "chevron.down")
+                                    .font(.system(size: 15, weight: .regular))
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                         }
-                        .pickerStyle(.menu)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                     }
-                    VStack(alignment: .leading, spacing: 4) {
+                    
+                    VStack(alignment: .leading, spacing: 7) {
                         Text("실력 레벨").font(.caption).foregroundColor(.gray)
-                        Picker("실력 레벨", selection: $viewModel.level) {
-                            ForEach(ProfileEditViewModel.SkillLevel.allCases, id: \.self) { lv in
-                                Text(lv.rawValue).tag(lv)
+                        Menu {
+                            Picker("실력 레벨", selection: levelBinding) {
+                                ForEach(ProfileEditViewModel.SkillLevel.allCases, id: \.self) { lv in
+                                  Text(lv.rawValue).tag(lv)
+                                }
                             }
+                        } label: {
+                            HStack(spacing: 35) {
+                                Text(viewModel.level.rawValue)
+                                Image(systemName: "chevron.down")
+                                    .font(.system(size: 15, weight: .regular))
+                            }
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 5)
+                            .background(RoundedRectangle(cornerRadius: 8  ).fill(Color(.systemGray5)))
                         }
-                        .pickerStyle(.menu)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                     }
                 }
                 VStack(alignment: .leading, spacing: 4) {

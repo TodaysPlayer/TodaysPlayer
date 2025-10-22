@@ -169,18 +169,27 @@ struct WritePostView: View {
                                 
                                 // 입력 필드
                                 HStack {
-                                    TextField("최대 30명까지 모집 가능", value: $viewModel.maxParticipants, format: .number)
-                                        .keyboardType(.numberPad)
-                                        .multilineTextAlignment(.center)
-                                        .onChange(of: viewModel.maxParticipants) { oldValue, newValue in
-                                            if newValue > 30 {
-                                                viewModel.maxParticipants = 30
-                                            } else if newValue < 1 {
-                                                viewModel.maxParticipants = 1
+                                    TextField("최대 30명까지 모집 가능", text: Binding(
+                                        get: {
+                                            viewModel.maxParticipants == 0 ? "" : "\(viewModel.maxParticipants)"
+                                        },
+                                        set: { newValue in
+                                            if newValue.isEmpty {
+                                                viewModel.maxParticipants = 0
+                                            } else {
+                                                let value = Int(newValue) ?? 0
+                                                viewModel.maxParticipants = min(value, 30) // 30 이상 제한
                                             }
                                         }
-                                    Text("명")
-                                        .foregroundColor(.primary)
+                                    ))
+                                    
+                                    .keyboardType(.numberPad)
+                                    .multilineTextAlignment(.center)
+                
+                                    if viewModel.maxParticipants > 0 {
+                                        Text("명")
+                                            .foregroundColor(.primary)
+                                    }
                                 }
                                 .padding()
                                 .background(Color.white)
@@ -188,7 +197,9 @@ struct WritePostView: View {
                                 
                                 // 플러스 버튼
                                 Button {
-                                    if viewModel.maxParticipants < 30 {
+                                    if viewModel.maxParticipants == 0 {
+                                        viewModel.maxParticipants = 1
+                                    } else if viewModel.maxParticipants < 30 {
                                         viewModel.maxParticipants += 1
                                     }
                                 } label: {
@@ -253,22 +264,26 @@ struct WritePostView: View {
                                     HStack {
                                         TextField("최대 20,000원까지 입력", text: Binding(
                                             get: {
-                                                viewModel.price == 0 ? "" : "\(viewModel.price)"
+                                                if viewModel.price == 0 {
+                                                    return ""
+                                                } else {
+                                                    let formatter = NumberFormatter()
+                                                    formatter.numberStyle = .decimal
+                                                    formatter.groupingSeparator = ","
+                                                    return formatter.string(from: NSNumber(value: viewModel.price)) ?? "\(viewModel.price)"
+                                                }
                                             },
                                             set: { newValue in
-                                                viewModel.price = Int(newValue) ?? 0
+                                                let filtered = newValue.filter { $0.isNumber }
+                                                viewModel.price = Int(filtered) ?? 0
                                             }
                                         ))
                                         .keyboardType(.numberPad)
-                                        .onChange(of: viewModel.price) { oldValue, newValue in
-                                            if newValue > 20000 {
-                                                viewModel.price = 20000
-                                            } else if newValue < 0 {
-                                                viewModel.price = 0
-                                            }
+                                    
+                                        if viewModel.price > 0 {
+                                            Text("원")
+                                                .foregroundColor(.primary)
                                         }
-                                        Text("원")
-                                            .foregroundColor(.primary)
                                     }
                                     .padding()
                                     .background(Color.white)
