@@ -29,10 +29,6 @@ final class WritePostViewModel {
                 if maxParticipants > 30 {
                     maxParticipants = 30
                 }
-                // 0 이하 시 1로 제한
-                if maxParticipants < 1 {
-                    maxParticipants = 1
-                }
             }
         }
     

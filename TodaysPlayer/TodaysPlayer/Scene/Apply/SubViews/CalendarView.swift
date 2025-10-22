@@ -83,7 +83,7 @@ struct CalendarView: View {
     // MARK: - 날짜 그리드
     private var weekDateGrid: some View {
         HStack(spacing: 0) {
-            ForEach(weekDates, id: \.self) { date in
+            ForEach(weekDates.enumerated(), id: \.offset) { index, date in
                 DateCell(
                     date: date,
                     isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
@@ -179,7 +179,7 @@ struct DateCell: View {
     let date: Date
     let isSelected: Bool
     let isToday: Bool
-    let isPast: Bool // ✅ 추가
+    let isPast: Bool
     
     private var dayNumber: String {
         let formatter = DateFormatter()

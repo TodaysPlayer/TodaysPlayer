@@ -17,6 +17,7 @@ struct AccountView: View {
     @State private var showLogoutAlert = false
     @State private var showLogoutResult = false
     @State private var goToLogin = false
+    @State private var path = NavigationPath()
     @Environment(\.dismiss) private var dismiss
     
     private var pwEdit: some View {
@@ -43,7 +44,10 @@ struct AccountView: View {
         }
         .alert("로그아웃", isPresented: $showLogoutResult) {
             Button("확인") {
-                // 로그인 화면으로 이동
+                // 로그인 화면으로 이동 - 네비게이션 스택 비우기
+                while !path.isEmpty {
+                    path.removeLast()
+                }
                 showLogoutResult = false
                 goToLogin = true
             }
@@ -70,7 +74,10 @@ struct AccountView: View {
         // 계정 삭제 완료
         .alert("계정 삭제 완료", isPresented: $showDeleteResult) {
             Button("확인") {
-                // 로그인 화면으로 이동
+                // 로그인 화면으로 이동 - 네비게이션 스택 비우기
+                while !path.isEmpty {
+                    path.removeLast()
+                }
                 showDeleteResult = false
                 goToLogin = true
             }
@@ -99,7 +106,7 @@ struct AccountView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 pwEdit
                 logOut
@@ -115,6 +122,7 @@ struct AccountView: View {
             }
             .fullScreenCover(isPresented: $goToLogin) {
                 LoginView()
+                    .interactiveDismissDisabled(true)
                     .toolbar(.hidden, for: .navigationBar)
             }
             .background(Color.gray.opacity(0.1))
@@ -158,6 +166,10 @@ struct AccountView: View {
                     } else {
                         // 3) 로컬 세션 정리
                         _ = try? Auth.auth().signOut()
+                        // 네비게이션 스택 비우기
+                        while !path.isEmpty {
+                            path.removeLast()
+                        }
                         self.showDeleteResult = true
                     }
                 }
@@ -167,6 +179,10 @@ struct AccountView: View {
     private func performLogout() {
         do {
             try Auth.auth().signOut()
+            // 네비게이션 스택 비우기
+            while !path.isEmpty {
+                path.removeLast()
+            }
             // 확인 알림 표시
             self.showLogoutAlert = false
             self.showLogoutResult = true
@@ -181,4 +197,3 @@ struct AccountView: View {
 #Preview {
     AccountView()
 }
-

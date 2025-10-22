@@ -172,13 +172,12 @@ struct ProfileEditView: View {
                                 }
                             }
                         } label: {
-                            HStack(spacing: 35) {
+                            HStack(spacing: 30) {
                                 Text(viewModel.position.rawValue)
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 15, weight: .regular))
                             }
-                            .padding(.horizontal, 30)
-                            .padding(.vertical, 5)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
                             .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                         }
                     }
@@ -197,7 +196,8 @@ struct ProfileEditView: View {
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 15, weight: .regular))
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 5)
                             .background(RoundedRectangle(cornerRadius: 8  ).fill(Color(.systemGray5)))
                         }
                     }
