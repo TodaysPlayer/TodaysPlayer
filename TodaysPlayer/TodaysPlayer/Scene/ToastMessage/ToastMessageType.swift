@@ -21,7 +21,8 @@ enum ToastMessageType {
     // 신청자 관련
     case participantAccepted
     case participantRejected
-
+    case maxiumParticipants
+    
     // 본인 내역 관련
     case myRecordDeleted
     
@@ -38,6 +39,7 @@ enum ToastMessageType {
         case .postDeleted:              "게시글이 삭제되었습니다."
         case .participantAccepted:      "신청자를 수락했습니다."
         case .participantRejected:      "신청자를 거절했습니다."
+        case .maxiumParticipants:       "참여가능한 인원을 초과하여 수락이 불가능합니다."
         case .myRecordDeleted:          "내 기록이 삭제되었습니다."
         case .finishMactch:             "해당 경기를 종료했습니다."
         case .finishRate:               "참여자 평가를 완료했습니다."
