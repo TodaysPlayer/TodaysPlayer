@@ -43,8 +43,23 @@ class LocationSearchViewModel {
         do {
             let response = try await search.start()
             
+            // 키워드 배열 정의
+            let sportsKeywords = ["축구", "구장", "운동장", "체육공원", "풋살", "soccer", "football", "풋볼"]
+            
+            // 필터링된 결과
+            let filteredResults = response.mapItems.filter { mapItem in
+                // 이름과 주소에서 키워드 검색
+                let name = mapItem.name?.lowercased() ?? ""
+                let address = mapItem.addressRepresentations?.fullAddress(includingRegion: false, singleLine: false)?.lowercased() ?? ""
+                
+                // 키워드 중 하나라도 포함되어 있으면 true
+                return sportsKeywords.contains { keyword in
+                    name.contains(keyword.lowercased()) || address.contains(keyword.lowercased())
+                }
+            }
+            
             await MainActor.run {
-                self.searchResults = response.mapItems
+                self.searchResults = filteredResults
                 self.isSearching = false
             }
         } catch {
