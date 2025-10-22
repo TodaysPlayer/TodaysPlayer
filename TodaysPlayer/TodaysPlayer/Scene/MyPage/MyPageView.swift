@@ -113,13 +113,12 @@ struct MyPageView: View {
                     HStack(spacing: 11.5) {
                             Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
                             .font(.system(size: 13))
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 5)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
                             .background(Color(.systemGray5))
                             .cornerRadius(6)
                         Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
                             .font(.system(size: 13))
-                            .padding(.horizontal, 7)
+                            .padding(.horizontal, 30)
                             .padding(.vertical, 5)
                             .background(Color(.systemGray5))
                             .cornerRadius(6)
@@ -199,8 +198,4 @@ struct MyPageView: View {
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }
-}
-
-#Preview {
-    MyPageView()
 }
