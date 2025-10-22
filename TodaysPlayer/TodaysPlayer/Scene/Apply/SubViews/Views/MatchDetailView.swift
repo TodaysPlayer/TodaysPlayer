@@ -72,14 +72,14 @@ struct MatchDetailView: View {
         .safeAreaInset(edge: .bottom) {
             DynamicMatchActionButton(viewModel: viewModel)
         }
+        .alert("신청 불가", isPresented: $viewModel.showGenderAlert) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(viewModel.genderAlertMessage)
+        }
         .onAppear {
             Task {
                 await viewModel.refreshUserApplyStatus()
-            }
-        }
-        .task {
-            if viewModel.userApplyStatus == .rejected {
-                await viewModel.fetchDetailedApply()
             }
         }
     }

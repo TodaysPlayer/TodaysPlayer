@@ -19,6 +19,10 @@ final class MatchDetailViewModel {
     var userApply: Apply? = nil
     var isLoading: Bool = false
     
+    // MARK: - Gender Validation State
+    var showGenderAlert: Bool = false
+    var genderAlertMessage: String = ""
+    
     // MARK: - Computed Properties
     
     /// Match.participants에서 빠르게 상태 확인
@@ -131,5 +135,67 @@ final class MatchDetailViewModel {
         userApply = allApplies.first { $0.userId == userId }
         
         print("✅ 신청 상태 새로고침: \(userApply?.status ?? "없음")")
+    }
+    
+    // MARK: - Gender Validation
+    
+    /// 성별 제한 체크
+    func canUserApply() -> Bool {
+        // 본인 매치거나 혼성 경기면 항상 가능
+        if isMyMatch || match.gender == GenderType.mixed.rawValue {
+            return true
+        }
+        
+        guard let userGender = AuthHelper.currentUser?.gender else {
+            print("❌ 사용자 성별 정보 없음")
+            return false
+        }
+        
+        // Match의 영어 성별을 한글로 변환해서 비교
+        let matchGenderKorean = convertGenderToKorean(match.gender)
+        
+        print("🔍 성별 체크 - Match: \(match.gender) (\(matchGenderKorean)) vs User: \(userGender)")
+        
+        return matchGenderKorean == userGender
+    }
+    
+    /// 영어 성별 -> 한글 변환
+    private func convertGenderToKorean(_ gender: String) -> String {
+        switch gender {
+        case GenderType.male.rawValue:
+            return "남성"
+        case GenderType.female.rawValue:
+            return "여성"
+        case GenderType.mixed.rawValue:
+            return "혼성"
+        default:
+            return gender
+        }
+    }
+    
+    /// 성별 불일치 시 Alert 메시지 생성
+    func getGenderMismatchMessage() -> String {
+        switch match.gender {
+        case GenderType.male.rawValue:
+            return "남성 전용 경기입니다.\n다른 매치를 구경해보세요!"
+        case GenderType.female.rawValue:
+            return "여성 전용 경기입니다.\n다른 매치를 구경해보세요!"
+        default:
+            return "신청할 수 없습니다."
+        }
+    }
+    
+    /// 신청 가능 여부 체크 후 액션 실행
+    func handleApplyButtonTap() {
+        if canUserApply() {
+            // 성별 제한 통과 - 네비게이션 진행
+            print("성별 체크 통과 - 신청 화면으로 이동")
+            return
+        } else {
+            // 성별 제한 걸림 - Alert 표시
+            print("성별 체크 실패 - Alert 표시")
+            genderAlertMessage = getGenderMismatchMessage()
+            showGenderAlert = true
+        }
     }
 }
