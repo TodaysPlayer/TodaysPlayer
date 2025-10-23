@@ -82,7 +82,7 @@ struct QuestionView: View {
                     .padding(.horizontal, 12)
                     .frame(height: 44)
                     .background(fieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
             }
 
@@ -93,7 +93,7 @@ struct QuestionView: View {
                     .padding(.horizontal, 12)
                     .frame(height: 44)
                     .background(fieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
             }
 
             // 문의 내용
@@ -103,7 +103,7 @@ struct QuestionView: View {
                         .frame(minHeight: 150)
                         .padding(8)
                         .background(fieldBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                     if bodyText.isEmpty {
                         Text("문의하실 내용을 자세히 작성해주세요. 문제 상황, 발생 시간, 사용 환경 등을 포함해주시면 더 빠른 답변이 가능합니다.")
                             .foregroundColor(.secondary)
@@ -123,7 +123,7 @@ struct QuestionView: View {
                     .padding(.horizontal, 12)
                     .frame(height: 44)
                     .background(fieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
             }
 
             // 전송 버튼
@@ -137,7 +137,7 @@ struct QuestionView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
                 .background(Color(.label)) // dark on light, adapts
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 40))
             }
             .buttonStyle(.plain)
             .disabled(!isFormValid)
@@ -146,9 +146,9 @@ struct QuestionView: View {
         .padding(16)
         .background(Color.white)
         .toolbar(.hidden, for: .tabBar)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }
@@ -166,9 +166,9 @@ struct QuestionView: View {
         }
         .padding(16)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }
@@ -183,9 +183,9 @@ struct QuestionView: View {
         }
         .padding(16)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }
@@ -268,9 +268,9 @@ private struct FAQCard: View {
         }
         .padding(14)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 40)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }
@@ -282,9 +282,9 @@ private struct ContactRow: View {
     let detail: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .foregroundColor(.accentColor)
+        HStack(alignment: .center, spacing: 12) {
+                Image(systemName: icon)
+                    .foregroundColor(.green)
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.subheadline)
@@ -297,9 +297,9 @@ private struct ContactRow: View {
         }
         .padding(12)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 40)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }

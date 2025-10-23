@@ -10,7 +10,6 @@ import SwiftUI
 // 통계 뷰
 struct Stat: View {
     let icon: String
-//    let value: String
     let label: String
     let color: Color
     var body: some View {
@@ -18,16 +17,14 @@ struct Stat: View {
             Image(systemName: icon)
                 .font(.system(size: 28))
                 .foregroundColor(color)
-//            Text(value)
-//                .font(.system(size: 20, weight: .bold))
             Text(label)
                 .font(.system(size: 11, weight: .bold))
                 .foregroundColor(.black)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(25)
         .background(Color.white)
-        .cornerRadius(16)
+        .cornerRadius(20)
     }
 }
 
@@ -60,6 +57,6 @@ struct MyPageRow: View {
         .padding()
         .background(Color.white)
         // 카드형 배경을 위한 모서리 둥글기
-        .cornerRadius(14)
+        .cornerRadius(40)
     }
 }

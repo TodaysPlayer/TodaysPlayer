@@ -42,13 +42,14 @@ struct NotiView: View {
                         } label: {
                             HStack(alignment: .top, spacing: 12) {
                                 Image(systemName: "bell")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.green)
                                 Text(message)
                                     .foregroundColor(.primary)
+                                Spacer()
                             }
-                            .padding(.vertical, 6)
+                            .padding()
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(.borderless)
                     }
                     .onDelete { indexSet in
                         for index in indexSet {
@@ -60,7 +61,9 @@ struct NotiView: View {
                         persistMessageDocMap()
                     }
                 }
-                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color.clear)
+                .listStyle(.sidebar)
             }
         }
         .padding(.top, 12)

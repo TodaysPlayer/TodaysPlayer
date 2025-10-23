@@ -98,7 +98,7 @@ struct AccountView: View {
                     ProgressView("탈퇴 처리 중...")
                         .padding(16)
                         .background(Color.white)
-                        .cornerRadius(12)
+                        .cornerRadius(40)
                 }
             }
         }
