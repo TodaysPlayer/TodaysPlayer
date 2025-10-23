@@ -99,6 +99,9 @@ struct ApplyView: View {
     // FavoriteViewModel 추가
     @EnvironmentObject var favoriteViewModel: FavoriteViewModel
     
+    // 바운스 애니메이션을 위한 상태 추가
+    @State private var filterButtonScale: CGFloat = 1.0
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -138,22 +141,28 @@ struct ApplyView: View {
 //                            .cornerRadius(16)
 //                        }
                         
-                        // 필터 버튼
+                        // 필터 버튼 - 개선된 버전
                         Button(action: {
                             isFilterSheetPresented = true
                         }) {
                             HStack(spacing: 6) {
                                 Image(systemName: filterViewModel.currentFilter.isEmpty ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                                     .font(.system(size: 14))
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(filterViewModel.currentFilter.isEmpty ? .blue : .white)
                                 Text("필터")
                                     .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(filterViewModel.currentFilter.isEmpty ? .primary : .white)
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
-                            .background(Color(.systemBackground))
+                            .background(
+                                // 필터 적용 시 파란색 배경
+                                filterViewModel.currentFilter.isEmpty
+                                    ? Color(.systemBackground)
+                                    : Color.blue.opacity(0.85)
+                            )
                             .cornerRadius(16)
+                            .scaleEffect(filterButtonScale) // 바운스 효과
                         }
                         
                         // 지역 선택 버튼 (새로운 스타일)
@@ -241,10 +250,30 @@ struct ApplyView: View {
                 isPresented: $isFilterSheetPresented
             )
             .environmentObject(filterViewModel)
+            .onDisappear {
+                // 필터 시트가 닫힐 때 바운스 애니메이션 트리거
+                triggerBounceAnimation()
+            }
         }
         .onAppear {
             // 초기 데이터 로드 (selectedDate는 filterViewModel이 관리)
             filterViewModel.fetchInitialMatches()
+        }
+    }
+    
+    // 바운스 애니메이션 함수
+    private func triggerBounceAnimation() {
+        // 필터가 비어있지 않을 때만 애니메이션 실행
+        guard !filterViewModel.currentFilter.isEmpty else { return }
+        
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+            filterButtonScale = 1.15
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                filterButtonScale = 1.0
+            }
         }
     }
     

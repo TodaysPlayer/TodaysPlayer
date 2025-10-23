@@ -131,7 +131,7 @@ class FilterViewModel: ObservableObject {
                 do {
                     return try doc.data(as: Match.self, decoder: decoder)
                 } catch {
-                    print("❌ Match 디코딩 실패: \(error)")
+                    print("Match 디코딩 실패: \(error)")
                     return nil
                 }
             }
@@ -150,6 +150,11 @@ class FilterViewModel: ObservableObject {
             // 날짜 필터
             filteredMatches = filteredMatches.filter { match in
                 Calendar.current.isDate(match.dateTime, inSameDayAs: selectedDate)
+            }
+            
+            // 시간 필터 추가: 현재 시간보다 미래 경기만 표시
+            filteredMatches = filteredMatches.filter { match in
+                match.dateTime > Date()
             }
             
             // 경기 종류 필터
