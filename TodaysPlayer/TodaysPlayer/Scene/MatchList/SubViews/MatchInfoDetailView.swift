@@ -52,15 +52,29 @@ struct MatchInfoDetailView: View {
             
             Spacer()
             
-            Image(systemName: "figure.2.arms.open")
-            Text(matchInfo.gender)
+            Image(convertGenderIcon(gender: matchInfo.gender))
+            Text(matchInfo.genderKorean)
             
             Spacer()
             
             Image(systemName: "person.fill")
-            Text(matchInfo.skillLevel)
+            Text(matchInfo.skillLevel.skillLevelToKorean())
             
             Spacer()
         }
     }
+    
+    private func convertGenderIcon(gender: String) -> String {
+        switch gender {
+        case "male":
+            return "icon_male"
+        case "female":
+            return "icon_female"
+        case "mixed":
+            return "icon_mixed"
+        default:
+            return "icon_mixed"
+        }
+    }
+
 }
