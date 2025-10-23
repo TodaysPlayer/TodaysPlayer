@@ -24,14 +24,14 @@ struct MatchDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                MatchTagViewForMatch(match: match, postedMatchCase: .allMatches)
+                MatchTagViewForMatch(match: viewModel.currentMatch, postedMatchCase: .allMatches)
                 
                 MatchDetailHeaderView(
                     title: match.title,
                     subtitle: "함께 할 플레이어를 모집합니다"
                 )
                 
-                MatchBasicInfoCardForMatch(match: match)
+                MatchBasicInfoCardForMatch(match: viewModel.currentMatch)
                 MatchLocationSectionForMatch(match: match)
                 MatchDescriptionSection(description: match.description)
                 WarningNoticeView()
