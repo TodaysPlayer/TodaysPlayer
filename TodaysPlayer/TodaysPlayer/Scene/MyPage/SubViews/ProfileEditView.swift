@@ -129,7 +129,7 @@ struct ProfileEditView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("성별").font(.caption).foregroundColor(.gray)
                             HStack {
-                                Image(systemName: "faceid")
+                                Image(systemName: "figure.stand.dress.line.vertical.figure")
                                     .foregroundColor(.black)
                                 Text(UserSessionManager.shared.currentUser?.gender ?? "")
                                     .foregroundColor(.black)
@@ -137,7 +137,8 @@ struct ProfileEditView: View {
                                     .disabled(true)
                                 Spacer()
                             }
-                            .padding(10)
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 5)
                             .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
                         }
                     }
@@ -257,6 +258,7 @@ struct ProfileEditView: View {
         .background(Color.gray.opacity(0.1).ignoresSafeArea())
         .navigationTitle("프로필 편집")
         .navigationBarTitleDisplayMode(.large)
+        .ignoresSafeArea(edges: .bottom)
 
         // 화면 최초 진입 시, 저장된 값을 편집용 상태로 로드 (한 번만 실행)
         .onAppear {

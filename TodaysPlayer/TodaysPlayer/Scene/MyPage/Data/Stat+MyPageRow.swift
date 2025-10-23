@@ -18,8 +18,6 @@ struct Stat: View {
             Image(systemName: icon)
                 .font(.system(size: 28))
                 .foregroundColor(color)
-//            Text(value)
-//                .font(.system(size: 20, weight: .bold))
             Text(label)
                 .font(.system(size: 11, weight: .bold))
                 .foregroundColor(.black)
