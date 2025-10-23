@@ -29,6 +29,10 @@ class HomeViewModel {
     var isLoading = false
     var errorMessage: String?
     
+    // 날씨 로딩 상태
+    var isWeatherLoading = false
+    var weatherErrorMessage: String?
+    
     // FirestoreManager 사용
     private let firestore = FirestoreManager.shared
     
@@ -154,7 +158,16 @@ class HomeViewModel {
     func loadWeatherData() async throws {
         guard let location = locationManager.currentLocation else {
             print("위치 정보를 가져올 수 없습니다.")
+            await MainActor.run {
+                self.isWeatherLoading = false
+                self.weatherErrorMessage = "위치 정보를 가져올 수 없습니다."
+            }
             return
+        }
+        
+        await MainActor.run {
+            self.isWeatherLoading = true
+            self.weatherErrorMessage = nil
         }
         
         do {
@@ -162,6 +175,8 @@ class HomeViewModel {
             
             await MainActor.run {
                 self.weatherData = data
+                self.isWeatherLoading = false
+                self.weatherErrorMessage = nil
             }
             
             print("날씨 데이터 로딩 완료")
@@ -170,7 +185,8 @@ class HomeViewModel {
             
             await MainActor.run {
                 self.weatherData = nil
-                self.errorMessage = "날씨 정보를 불러올 수 없습니다."
+                self.isWeatherLoading = false
+                self.weatherErrorMessage = "날씨 정보를 불러올 수 없습니다."
             }
         }
     }

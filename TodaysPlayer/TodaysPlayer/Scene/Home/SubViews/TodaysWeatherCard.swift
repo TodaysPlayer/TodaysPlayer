@@ -10,13 +10,19 @@ import WeatherKit
 
 struct TodaysWeatherCard: View {
     let weatherData: Weather?
+    let isLoading: Bool
+    let hasError: Bool
     
     var body: some View {
         Group {
             if let weather = weatherData {
                 weatherContentView(weather: weather)
-            } else {
+            } else if isLoading {
+                weatherLoadingView()
+            } else if hasError {
                 weatherErrorView()
+            } else {
+                weatherLoadingView()
             }
         }
         .padding(.horizontal, 16)
@@ -133,6 +139,54 @@ struct TodaysWeatherCard: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.bottom, 16)
+        }
+    }
+    
+    @ViewBuilder
+    private func weatherLoadingView() -> some View {
+        VStack(spacing: 15) {
+            // 타이틀 및 심볼
+            HStack {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Image(systemName: "sun.max.fill")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.red)
+                        
+                        Text("오늘의 날씨")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.black)
+                        
+                        Spacer()
+                    }
+                    
+                    Text("데이터를 불러오는 중입니다")
+                        .font(.system(size: 14))
+                        .fontWeight(.medium)
+                        .foregroundStyle(.gray)
+                }
+                
+                ProgressView()
+                    .scaleEffect(1.2)
+                    .tint(.blue)
+            }
+            .padding(.top, 16)
+            
+            // 로딩 메시지
+            VStack(spacing: 10) {
+                Text("날씨 정보를 가져오고 있어요")
+                    .font(.system(size: 18))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.gray)
+                
+                Text("잠시만 기다려주세요")
+                    .font(.system(size: 14))
+                    .foregroundStyle(.gray)
+            }
+            .padding(.vertical, 20)
+            
+            Spacer()
         }
     }
     

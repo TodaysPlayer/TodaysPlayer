@@ -25,7 +25,11 @@ struct HomeView: View {
                 .padding(.top, 24)
                 
                 // 오늘의 날씨
-                TodaysWeatherCard(weatherData: viewModel.weatherData)
+                TodaysWeatherCard(
+                    weatherData: viewModel.weatherData,
+                    isLoading: viewModel.isWeatherLoading,
+                    hasError: viewModel.weatherErrorMessage != nil
+                )
                 
                 // 내 주변 가까운 매치
                 NearbyMatchesCard(
