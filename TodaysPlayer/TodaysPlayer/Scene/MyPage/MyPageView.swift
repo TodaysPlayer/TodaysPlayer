@@ -107,7 +107,7 @@ struct MyPageView: View {
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 6)
                                 .background(Color(.systemGray6))
-                                .cornerRadius(15)
+                                .cornerRadius(20)
                         }
                     }
                     HStack(spacing: 11.5) {
@@ -118,14 +118,14 @@ struct MyPageView: View {
                             .padding(.horizontal, 30)
                             .padding(.vertical, 6)
                             .background(Color(.systemGray5))
-                            .cornerRadius(15)
+                            .cornerRadius(20)
                         Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
                             .font(.system(size: 11))
 //                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
                             .padding(.horizontal, 30)
                             .padding(.vertical, 6)
                             .background(Color(.systemGray5))
-                            .cornerRadius(15)
+                            .cornerRadius(20)
                         Spacer()
                     }
                 }
@@ -133,9 +133,9 @@ struct MyPageView: View {
         }
         .padding(16)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }
@@ -146,7 +146,7 @@ struct MyPageView: View {
                 // 나의 경기랑 탭이 겹치니 다른기능으로 바꾸기
                 Stat(icon: "backpack.fill", label: "장비 관리", color: .gray)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 14)
+                        RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )            }
             .disabled(true)
@@ -156,7 +156,7 @@ struct MyPageView: View {
             ) {
                 Stat(icon: "chart.line.uptrend.xyaxis", label: "나의 평점", color: .green.opacity(0.7))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 14)
+                        RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
             }
@@ -164,7 +164,7 @@ struct MyPageView: View {
             NavigationLink(destination: ScrapView()) {
                 Stat(icon: "bookmark.fill", label: "찜한 매치", color: .cyan.opacity(0.4))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 14)
+                        RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )
             }
@@ -178,7 +178,7 @@ struct MyPageView: View {
                 .frame(maxWidth: .infinity)
         }
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }
@@ -198,9 +198,9 @@ struct MyPageView: View {
         .padding(7)
         .foregroundStyle(.black)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.gray.opacity(0.15), lineWidth: 1)
         )
     }

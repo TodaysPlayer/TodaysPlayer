@@ -24,7 +24,7 @@ struct Stat: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(25)
         .background(Color.white)
-        .cornerRadius(16)
+        .cornerRadius(20)
     }
 }
 
@@ -57,6 +57,6 @@ struct MyPageRow: View {
         .padding()
         .background(Color.white)
         // 카드형 배경을 위한 모서리 둥글기
-        .cornerRadius(14)
+        .cornerRadius(40)
     }
 }
