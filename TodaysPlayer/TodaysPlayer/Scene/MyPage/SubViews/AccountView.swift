@@ -22,7 +22,7 @@ struct AccountView: View {
     
     private var pwEdit: some View {
         NavigationLink(destination: PwEditView()) {
-            MyPageRow(icon: "key.viewfinder", iconColor: .blue, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
+            MyPageRow(icon: "key.viewfinder", iconColor: .green, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
         }
         .padding(.horizontal)
     }
@@ -126,6 +126,7 @@ struct AccountView: View {
                     .toolbar(.hidden, for: .navigationBar)
             }
             .background(Color.gray.opacity(0.1))
+            .foregroundStyle(Color(.black))
         }
     }
     

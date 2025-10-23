@@ -20,7 +20,7 @@ struct DynamicMatchActionButton: View {
                     // 본인 매치 - 참여자 관리
                     NavigationLink(
                         destination: ParticipantListView(
-                            viewModel: ParticipantListViewModel(matchID: viewModel.match.id)
+                            viewModel: ParticipantListViewModel(match: viewModel.match)
                         )
                     ) {
                         buttonLabel

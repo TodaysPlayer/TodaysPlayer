@@ -25,7 +25,7 @@ struct Match: Codable, Identifiable, Hashable {
     let skillLevel: String
     let position: String?
     let price: Int
-    let rating: Double? // 매치 평점 (0.0 ~ 5.0)
+    var rating: Double? // 매치 평점 (0.0 ~ 5.0)
     let status: String // "recruiting", "confirmed", "completed", "cancelled"
     let tags: [String]
     let requirements: String?

@@ -40,7 +40,7 @@ struct NotiView: View {
                                 onSelectMatch(docId)
                             }
                         } label: {
-                            HStack(alignment: .top, spacing: 12) {
+                            HStack(alignment: .center, spacing: 12) {
                                 Image(systemName: "bell")
                                     .foregroundColor(.green)
                                 Text(message)

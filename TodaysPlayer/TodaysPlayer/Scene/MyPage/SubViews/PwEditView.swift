@@ -76,7 +76,7 @@ struct PwEditView: View {
                         .padding(.vertical, 12)
                         .background((viewModel.isFormValid && !viewModel.isLoading) ? Color.green : Color.gray.opacity(0.5))
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .cornerRadius(40)
                     }
                     .disabled(!viewModel.isFormValid || viewModel.isLoading)
                 }

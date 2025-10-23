@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ParticipantListView: View {
     @State var viewModel: ParticipantListViewModel
-    @State private var selectedStatus: ApplyStatus = .standby
     
     var body: some View {
 
@@ -26,6 +25,10 @@ struct ParticipantListView: View {
                 ) {
                     viewModel.fetchParticipantDatas(type: $0)
                 }
+                
+                Text("참여자가 없습니다.")
+                    .visible(viewModel.displayedApplies.isEmpty)
+                    .padding(.top, 50)
                 
                 
                 ScrollView {
@@ -48,14 +51,15 @@ struct ParticipantListView: View {
         }
         .sheet(isPresented: $viewModel.isShowRejectSheet) {
             RejectionReasonPickerView(onRejectButtonTapped: { rejectCase, otherReason  in
-                viewModel.managementAppliedStatus(
+                Task {
+                   await viewModel.managementAppliedStatus(
                         status: .rejected,
                         rejectCase: rejectCase,
                         otherReason
                     )
-                
-                
-                viewModel.toastManager.show(.participantRejected)
+                    
+                    viewModel.toastManager.show(.participantRejected)
+                }
             })
             .padding()
             .presentationDetents([.height(350)])
@@ -65,8 +69,10 @@ struct ParticipantListView: View {
             Button("취소") {}
             
             Button("수락") {
-                viewModel.managementAppliedStatus(status: .accepted)
-                viewModel.toastManager.show(.participantAccepted)
+                Task {
+                    await viewModel.managementAppliedStatus(status: .accepted)
+                    viewModel.toastManager.show(.participantAccepted)
+                }
             }
             .foregroundStyle(Color.green)
         }

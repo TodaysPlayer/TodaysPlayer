@@ -136,7 +136,7 @@ struct QuestionView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(Color(.label)) // dark on light, adapts
+                .background(Color(.green)) // dark on light, adapts
                 .clipShape(RoundedRectangle(cornerRadius: 40))
             }
             .buttonStyle(.plain)
@@ -208,13 +208,27 @@ struct QuestionView: View {
     }
 
     private func sendInquiry() {
-        // In a real app, send to server here.
+        // Validate again just in case
+        guard let inquiryType else { return }
+
+        // Create and store the email message
+        let message = EmailMessage(
+            inquiryType: inquiryType.title,
+            subject: subject.trimmingCharacters(in: .whitespacesAndNewlines),
+            body: bodyText.trimmingCharacters(in: .whitespacesAndNewlines),
+            contactEmail: contactEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        EmailCollection.shared.add(message)
+
+        // Notify user
         alertMessage = "문의가 정상적으로 접수되었습니다. 빠른 시일 내에 답변드리겠습니다."
         showAlert = true
-        // Optionally reset fields
+
+        // Reset fields (including contact email)
         subject = ""
         bodyText = ""
-        // keep email & type for convenience
+        contactEmail = ""
+        // Keep inquiryType for convenience
     }
 }
 
@@ -310,3 +324,4 @@ private struct ContactRow: View {
         QuestionView()
     }
 }
+

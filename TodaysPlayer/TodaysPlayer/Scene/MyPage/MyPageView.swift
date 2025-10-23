@@ -71,6 +71,7 @@ struct MyPageView: View {
         VStack {
             HStack(alignment: .center, spacing: 10) {
                 Group {
+                    // 구현은 되어있으나, firestore storage 요금제로 인해 사용 불가
                     if let urlString = session.currentUser?.profileImageUrl, let url = URL(string: urlString) {
                         AsyncImage(url: url) { phase in
                             switch phase {
