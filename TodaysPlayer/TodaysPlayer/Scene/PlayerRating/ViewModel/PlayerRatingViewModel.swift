@@ -19,7 +19,7 @@ final class PlayerRatingViewModel {
     private var userIds: [String] = []
 
     private let repository: UserDataRepository = UserDataRepository()
-  
+    
     init(matchInfo: Match) {
         self.matchInfo = matchInfo
         self.userIds = matchInfo.participants.map { $0.key }
@@ -100,23 +100,17 @@ final class PlayerRatingViewModel {
     }
 
     /// 평가한 항목 저장하기
-    @MainActor
     func updateUserRate() async{
-        // 저장하기를 누르거나 뒤로가기 누르면 각 데이터에 저장하기
-        print("기존 ratings: \(ratings)")
-        
         // 모든 참여자에게 기본 평가값 설정 (평가하지 않은 경우)
         setDefaultRatingsForAllUsers()
-        
-        print("✅ 보정된 ratings: \(ratings)")
         
         // 보정된 값을 가지고 기존 User데이터에 해당 평점을 넣어주고 하나씩 업데이트
         do {
             try await withThrowingTaskGroup(of: Void.self) { group in
                 for userId in userIds {
-                    guard let userData = participatedUsers.first(where: { $0.id == userId }) else { 
-                        print("❌ 사용자 데이터를 찾을 수 없음: \(userId)")
-                        continue 
+                    guard let userData = participatedUsers.first(where: { $0.id == userId }) else {
+                        print("사용자 데이터를 찾을 수 없음: \(userId)")
+                        continue
                     }
                     
                     let rating = ratings[userId] ?? [:]

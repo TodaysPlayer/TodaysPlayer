@@ -10,7 +10,7 @@ import Foundation
 
 @Observable
 final class ParticipantListViewModel {
-    let matchID: String
+    let match: Match
     var participantDatas: [Apply] = []
     var standbyApplies: [Apply] { participantDatas.filter { $0.applyStatusEnum == .standby }}
     var acceptedApplies: [Apply] { participantDatas.filter { $0.applyStatusEnum == .accepted }}
@@ -26,13 +26,13 @@ final class ParticipantListViewModel {
     var toastManager: ToastMessageManager = ToastMessageManager()
     private let repository: ParticipantRepository = ParticipantRepository()
     
-    init(matchID: String){
-        self.matchID = matchID
+    init(match: Match){
+        self.match = match
         
         Task {
-          let applyDatas = await repository.fetchParticipants(matchId: matchID)
-          participantDatas = applyDatas
-          displayedApplies = participantDatas.filter({ $0.applyStatusEnum == .standby })
+            let applyDatas = await repository.fetchParticipants(matchId: match.id)
+            participantDatas = applyDatas
+            displayedApplies = participantDatas.filter({ $0.applyStatusEnum == .standby })
         }
     }
     
@@ -40,7 +40,7 @@ final class ParticipantListViewModel {
     func fetchParticipantDatas(type: String){
         guard let type = ApplyStatus(rawValue: type) else { return }
         // apply로 모델 변경
-
+        
         displayedApplies = []
         
         switch type {
@@ -51,13 +51,20 @@ final class ParticipantListViewModel {
         }
     }
     
+    // MARK: 신청자 수락 및 거절
+    
+    
     /// 신청 수락 / 거절
     func managementAppliedStatus(
         status: ApplyStatus,
         rejectCase: RejectCase? = nil,
         _ reason: String? = ""
-    )  {
-        guard let info = selectedPersonInfo else { return }
+    ) async  {
+        guard !(match.maxParticipants == acceptedApplies.count),
+              let info = selectedPersonInfo else {
+            toastManager.show(.maxiumParticipants)
+            return
+        }
         
         // 기존 데이터 항목에서 제거
         participantDatas.removeAll { $0.userId == info.userId }
@@ -72,7 +79,7 @@ final class ParticipantListViewModel {
                     applyStatus: status,
                     applyInfo: info,
                     rejectReason: rejectionReason,
-                    matchId: matchID
+                    matchId: match.id
                 )
         }
         
@@ -94,7 +101,56 @@ final class ParticipantListViewModel {
         )
         
         participantDatas.append(modifiedApply)
+        
+        // 최대인원수가 되었을 때 나머지 인원들 거절하기
+        if match.maxParticipants == acceptedApplies.count {
+            await rejectRemainingStandbyApplies()
+        }
     }
+    
+    // 나머지 인원 자동거절
+    private func rejectRemainingStandbyApplies() async {
+        let remainingStandby = standbyApplies
+        
+        // 로컬 데이터 즉시 갱신
+        participantDatas.removeAll { apply in
+            remainingStandby.contains(where: { $0.userId == apply.userId })
+        }
+        
+        let rejectedApplies = remainingStandby.map { standby in
+            Apply(
+                id: standby.id,
+                matchId: standby.matchId,
+                userId: standby.userId,
+                userNickname: standby.userNickname,
+                userSkillLevel: standby.userSkillLevel,
+                position: standby.position,
+                participantCount: standby.participantCount,
+                message: standby.message,
+                status: ApplyStatus.rejected.rawValue,
+                rejectionReason: "정원 마감으로 인한 자동 거절",
+                appliedAt: standby.appliedAt,
+                processedAt: standby.processedAt,
+                userRate: standby.userRate
+            )
+        }
+        
+        participantDatas.append(contentsOf: rejectedApplies)
+        
+        await withTaskGroup(of: Void.self) { group in
+            for standby in remainingStandby {
+                group.addTask {
+                    await self.repository.updateParticipant(
+                        applyStatus: .rejected,
+                        applyInfo: standby,
+                        rejectReason: "정원 마감으로 인한 자동 거절",
+                        matchId: self.match.id
+                    )
+                }
+            }
+        }
+    }
+    
     
     /// 평균 평점 계산
     func avgRating(for participant: Apply) -> Double {
