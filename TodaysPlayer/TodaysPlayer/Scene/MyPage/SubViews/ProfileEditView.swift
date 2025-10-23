@@ -70,7 +70,7 @@ struct ProfileEditView: View {
                             Spacer()
                         }
                         .padding(10)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
+                        .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text("연락처").font(.caption).foregroundColor(.gray)
@@ -84,7 +84,7 @@ struct ProfileEditView: View {
                             Spacer()
                         }
                         .padding(10)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
+                        .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text("이메일").font(.caption).foregroundColor(.gray)
@@ -98,7 +98,7 @@ struct ProfileEditView: View {
                             Spacer()
                         }
                         .padding(10)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
+                        .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                     }
                     
                     let regionBinding = Binding(
@@ -122,7 +122,7 @@ struct ProfileEditView: View {
                                         .font(.system(size: 20, weight: .regular))
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
-                                .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
+                                .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                             }
                         }
                         
@@ -137,9 +137,8 @@ struct ProfileEditView: View {
                                     .disabled(true)
                                 Spacer()
                             }
-                            .padding(.horizontal, 30)
-                            .padding(.vertical, 5)
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
+                            .padding(10)
+                            .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                         }
                     }
                 }
@@ -179,7 +178,7 @@ struct ProfileEditView: View {
                                     .font(.system(size: 15, weight: .regular))
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray5)))
+                            .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                         }
                     }
                     
@@ -198,8 +197,8 @@ struct ProfileEditView: View {
                                     .font(.system(size: 15, weight: .regular))
                             }
                             .padding(.horizontal, 30)
-                            .padding(.vertical, 5)
-                            .background(RoundedRectangle(cornerRadius: 8  ).fill(Color(.systemGray5)))
+                            .padding(.vertical, 10)
+                            .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                         }
                     }
                 }
@@ -215,7 +214,7 @@ struct ProfileEditView: View {
                                     .padding(.vertical, 8)
                                     .padding(.horizontal, 12)
                                     .background(viewModel.preferredTimes.contains(t) ? Color(.green) : Color(.systemGray5))
-                                    .cornerRadius(8)
+                                    .cornerRadius(20)
                             }
                             .buttonStyle(.plain)
                         }
@@ -228,12 +227,12 @@ struct ProfileEditView: View {
                         .font(.body)
                         .foregroundColor(.black)
                         .padding(4)
-                        .frame(minHeight: 120)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1)))
+                        .frame(minHeight: 150)
+                        .background(RoundedRectangle(cornerRadius: 20).fill(Color.gray.opacity(0.1)))
                 }
             }
             .padding()
-            .background(RoundedRectangle(cornerRadius: 16).fill(Color(.white)))
+            .background(RoundedRectangle(cornerRadius: 20).fill(Color(.white)))
             HStack {
                 Spacer()
                 Button(action: {
@@ -247,7 +246,7 @@ struct ProfileEditView: View {
                         .foregroundColor(.black)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color.green.opacity(0.5)))
+                        .background(RoundedRectangle(cornerRadius: 20).fill(Color.green.opacity(0.5)))
                 }
                 Spacer()
             }

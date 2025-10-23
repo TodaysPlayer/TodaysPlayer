@@ -98,7 +98,7 @@ struct MyPageView: View {
                     HStack {
                         Text(UserSessionManager.shared.currentUser?.displayName ?? "이름없음")
                                 .font(.system(size: 23, weight: .bold))
-                                .padding(7)
+                                .padding(1)
                         Spacer()
                         NavigationLink(destination: ProfileEditView()) {
                             Image(systemName: "square.and.pencil")
@@ -112,17 +112,20 @@ struct MyPageView: View {
                     }
                     HStack(spacing: 11.5) {
                         // 추후 추가될 종목에 따른 포지션 변경 요청
-                            Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
-                            .font(.system(size: 13))
-                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
-                            .background(Color(.systemGray5))
-                            .cornerRadius(6)
-                        Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
-                            .font(.system(size: 13))
-                            .padding(.horizontal, 37)
+                        Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
+                            .font(.system(size: 11))
+//                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
+                            .padding(.horizontal, 30)
                             .padding(.vertical, 6)
                             .background(Color(.systemGray5))
-                            .cornerRadius(6)
+                            .cornerRadius(15)
+                        Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
+                            .font(.system(size: 11))
+//                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 6)
+                            .background(Color(.systemGray5))
+                            .cornerRadius(15)
                         Spacer()
                     }
                 }
@@ -141,11 +144,12 @@ struct MyPageView: View {
         HStack {
             NavigationLink(destination: MatchListView()) {
                 // 나의 경기랑 탭이 겹치니 다른기능으로 바꾸기
-                Stat(icon: "calendar", label: "신청한 경기", color: .green)
+                Stat(icon: "backpack.fill", label: "장비 관리", color: .gray)
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )            }
+            .disabled(true)
 
             NavigationLink(
                 destination: MyRatingView(viewModel: MyRatingViewModel())

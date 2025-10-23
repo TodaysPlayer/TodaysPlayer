@@ -10,7 +10,6 @@ import SwiftUI
 // 통계 뷰
 struct Stat: View {
     let icon: String
-//    let value: String
     let label: String
     let color: Color
     var body: some View {
@@ -22,7 +21,7 @@ struct Stat: View {
                 .font(.system(size: 11, weight: .bold))
                 .foregroundColor(.black)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(25)
         .background(Color.white)
         .cornerRadius(16)
