@@ -63,24 +63,24 @@ final class MatchDetailViewModel {
             return "참여자 관리"
         }
         
+        if let status = userApplyStatus {
+            switch status {
+            case .standby:
+                return "수락 대기중"
+            case .accepted:
+                return "참여 확정"
+            case .rejected:
+                return "거절됨"
+            default:
+                break
+            }
+        }
+        
         if !currentMatch.isRecruiting {
             return currentMatch.buttonTitle  // "모집마감", "경기확정" 등
         }
         
-        guard let status = userApplyStatus else {
-            return "신청하기"
-        }
-        
-        switch status {
-        case .standby:
-            return "수락 대기중"
-        case .accepted:
-            return "참여 확정"
-        case .rejected:
-            return "거절됨"
-        default:
-            return "신청하기"
-        }
+        return "신청하기"
     }
     
     /// 버튼 활성화 여부
