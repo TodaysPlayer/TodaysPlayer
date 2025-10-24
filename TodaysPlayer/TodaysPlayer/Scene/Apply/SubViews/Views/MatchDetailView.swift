@@ -100,7 +100,8 @@ struct MatchTagViewForMatch: View {
                 .foregroundColor(.white)
                 .cornerRadius(12)
             
-            if match.appliedParticipantsCount == match.maxParticipants - 1 {
+            if match.maxParticipants >= 2 &&
+               match.appliedParticipantsCount == match.maxParticipants - 1 {
                 Text("1자리 남음!")
                     .font(.system(size: 14))
                     .padding(.horizontal, 12)
