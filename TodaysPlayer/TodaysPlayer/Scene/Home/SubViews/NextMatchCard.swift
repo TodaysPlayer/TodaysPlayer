@@ -173,7 +173,12 @@ struct NextMatchCard: View {
         
         let calendar = Calendar.current
         let today = Date()
-        let days = calendar.dateComponents([.day], from: today, to: match.dateTime).day ?? 0
+        
+        // 오늘과 경기일의 날짜만 비교 (시간 제외)
+        let todayStart = calendar.startOfDay(for: today)
+        let matchStart = calendar.startOfDay(for: match.dateTime)
+        
+        let days = calendar.dateComponents([.day], from: todayStart, to: matchStart).day ?? 0
         
         if days == 0 {
             return "D-Day"
