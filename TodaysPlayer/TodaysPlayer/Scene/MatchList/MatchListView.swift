@@ -17,7 +17,7 @@ struct MatchListView: View {
                 Color.gray.opacity(0.1)
                     .ignoresSafeArea()
                 
-                VStack(alignment: .leading, spacing: 15) {
+                VStack(alignment: .leading) {
                     Text("나의 경기관리")
                         .font(.system(size: 26, weight: .bold))
                         .padding(.leading, 20)
@@ -35,11 +35,14 @@ struct MatchListView: View {
                         selectedFilter: $viewModel.selectedFilterButton
                     )
                     .padding(.horizontal, 10)
+                    .visible(!viewModel.filteringButtonTypes.isEmpty)
+                    
+                    SortSheetButtonView(selectedOption: $viewModel.sortOption)
                     
                     ScrollView {
                         LazyVStack(spacing: 16) {
                             if !viewModel.isLoading && viewModel.displayedMatches.isEmpty {
-                                Text("매치 데이터가 없습니다")
+                                Text("경기 데이터가 없습니다")
                                     .foregroundColor(.gray)
                             }
 
@@ -60,7 +63,8 @@ struct MatchListView: View {
                                         )
                                     }
                                     .padding()
-                                    .background(Color.white)
+                                    .background(checkRejectMatch(match)
+                                                ? Color.gray.opacity(0.2) : Color.white)
                                     .cornerRadius(12)
                                 }
                                 .onAppear {
@@ -103,4 +107,10 @@ struct MatchListView: View {
             }
         }
     }
+    
+    private func checkRejectMatch(_ match: Match) -> Bool {
+        let applyStatus = viewModel.getUserApplyStatus(appliedMatch: match)
+        return applyStatus.2 == .rejected
+    }
+
 }

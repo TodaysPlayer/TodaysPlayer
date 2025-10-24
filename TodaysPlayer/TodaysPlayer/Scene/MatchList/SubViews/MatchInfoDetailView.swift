@@ -57,7 +57,7 @@ struct MatchInfoDetailView: View {
             
             Spacer()
             
-            Image(systemName: "person.fill")
+            Image(systemName: "arrow.up.circle")
             Text(matchInfo.skillLevel.skillLevelToKorean())
             
             Spacer()
