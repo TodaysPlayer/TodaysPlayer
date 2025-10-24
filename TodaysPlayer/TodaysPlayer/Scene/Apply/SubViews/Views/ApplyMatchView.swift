@@ -13,6 +13,8 @@ struct ApplyMatchView: View {
     // ViewModel 연결
     @StateObject private var viewModel: ApplyMatchViewModel
     
+    @State private var toastManager = ToastMessageManager()
+    
     @Environment(\.dismiss) private var dismiss
     
     // init에서 ViewModel 초기화
@@ -22,182 +24,195 @@ struct ApplyMatchView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                // 상단 타이틀
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("용병 신청")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    
-                    Text("매칭 참여를 위해 본인을 간단히 소개해주세요.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 20)
-                
-                // 신청하는 매치 정보 카드
-                ApplyMatchInfoCard(match: match)
-                    .padding(.horizontal, 20)
-                
-                // 포지션 선택 (선택사항)
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("선호 포지션 (선택)")
-                        .font(.headline)
-                        .padding(.horizontal, 20)
-                    
-                    HStack(spacing: 12) {
-                        positionButton("공격수", isSelected: viewModel.position == "공격수")
-                        positionButton("미드필더", isSelected: viewModel.position == "미드필더")
-                        positionButton("수비수", isSelected: viewModel.position == "수비수")
-                        positionButton("골키퍼", isSelected: viewModel.position == "골키퍼")
+        ZStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    // 상단 타이틀
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("용병 신청")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
+                        Text("매칭 참여를 위해 본인을 간단히 소개해주세요.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
                     .padding(.horizontal, 20)
-                }
-                
-                // 자기소개 섹션
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("자기소개 및 각오")
-                        .font(.headline)
+                    .padding(.top, 20)
+                    
+                    // 신청하는 매치 정보 카드
+                    ApplyMatchInfoCard(match: match)
                         .padding(.horizontal, 20)
                     
+                    // 포지션 선택 (선택사항)
                     VStack(alignment: .leading, spacing: 12) {
-                        // 텍스트 에디터
-                        ZStack(alignment: .topLeading) {
-                            if viewModel.message.isEmpty {
-                                Text("본인의 플레이 스타일, 축구 경력, 각오 등을 간단히 소개해주세요.\n\n예) 안녕하세요! 축구 경력 3년차로 수비를 담당하고 있습니다. 패스워크를 중시하며 팀워크를 중요하게 생각합니다. 좋은 경기 만들어가요!")
-                                    .font(.body)
-                                    .foregroundColor(.secondary)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 12)
-                            }
-                            
-                            TextEditor(text: $viewModel.message)
-                                .font(.body)
-                                .frame(minHeight: 200)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .scrollContentBackground(.hidden)
-                                .disabled(viewModel.isGeneratingAI) // AI 생성 중엔 비활성화
-                        }
-                        .background(Color(.systemGray6))
-                        .cornerRadius(12)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color(.systemGray4), lineWidth: 1)
-                        )
-                        .padding(.horizontal, 20)
+                        Text("선호 포지션 (선택)")
+                            .font(.headline)
+                            .padding(.horizontal, 20)
                         
-                        // AI 작성 버튼 (ViewModel 연결)
-                        Button(action: {
-                            viewModel.generateAIIntroduction()
-                        }) {
-                            HStack {
-                                if viewModel.isGeneratingAI {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                        .scaleEffect(0.8)
-                                } else {
-                                    Image(systemName: "sparkles")
-                                        .font(.system(size: 16))
+                        HStack(spacing: 12) {
+                            positionButton("공격수", isSelected: viewModel.position == "공격수")
+                            positionButton("미드필더", isSelected: viewModel.position == "미드필더")
+                            positionButton("수비수", isSelected: viewModel.position == "수비수")
+                            positionButton("골키퍼", isSelected: viewModel.position == "골키퍼")
+                        }
+                        .padding(.horizontal, 20)
+                    }
+                    
+                    // 자기소개 섹션
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("자기소개 및 각오")
+                            .font(.headline)
+                            .padding(.horizontal, 20)
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            // 텍스트 에디터
+                            ZStack(alignment: .topLeading) {
+                                if viewModel.message.isEmpty {
+                                    Text("본인의 플레이 스타일, 축구 경력, 각오 등을 간단히 소개해주세요.\n\n예) 안녕하세요! 축구 경력 3년차로 수비를 담당하고 있습니다. 패스워크를 중시하며 팀워크를 중요하게 생각합니다. 좋은 경기 만들어가요!")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 12)
                                 }
                                 
-                                Text(viewModel.isGeneratingAI ? "AI 작성 중..." : "AI로 자기소개 완성하기")
-                                    .font(.system(size: 15, weight: .medium))
+                                TextEditor(text: $viewModel.message)
+                                    .font(.body)
+                                    .frame(minHeight: 200)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .scrollContentBackground(.hidden)
+                                    .disabled(viewModel.isGeneratingAI) // AI 생성 중엔 비활성화
                             }
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(
-                                viewModel.isGeneratingAI ?
-                                LinearGradient(
-                                    colors: [Color.purple.opacity(0.6), Color.blue.opacity(0.6)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ) :
-                                LinearGradient(
-                                    colors: [Color.purple, Color.blue],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
+                            .background(Color(.systemGray6))
                             .cornerRadius(12)
-                        }
-                        .disabled(viewModel.isGeneratingAI)
-                        .padding(.horizontal, 20)
-                        
-                        // 안내 문구
-                        HStack(alignment: .top, spacing: 8) {
-                            Image(systemName: "info.circle")
-                                .font(.system(size: 14))
-                                .foregroundColor(.blue)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color(.systemGray4), lineWidth: 1)
+                            )
+                            .padding(.horizontal, 20)
                             
-                            Text("신청 전 확인해주세요")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.blue)
+                            // AI 작성 버튼 (ViewModel 연결)
+                            Button(action: {
+                                viewModel.generateAIIntroduction()
+                            }) {
+                                HStack {
+                                    if viewModel.isGeneratingAI {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            .scaleEffect(0.8)
+                                    } else {
+                                        Image(systemName: "sparkles")
+                                            .font(.system(size: 16))
+                                    }
+                                    
+                                    Text(viewModel.isGeneratingAI ? "AI 작성 중..." : "AI로 자기소개 완성하기")
+                                        .font(.system(size: 15, weight: .medium))
+                                }
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .background(
+                                    viewModel.isGeneratingAI ?
+                                    LinearGradient(
+                                        colors: [Color.purple.opacity(0.6), Color.blue.opacity(0.6)],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ) :
+                                        LinearGradient(
+                                            colors: [Color.purple, Color.blue],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                )
+                                .cornerRadius(12)
+                            }
+                            .disabled(viewModel.isGeneratingAI)
+                            .padding(.horizontal, 20)
                             
-                            Spacer()
+                            // 안내 문구
+                            HStack(alignment: .top, spacing: 8) {
+                                Image(systemName: "info.circle")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.blue)
+                                
+                                Text("신청 전 확인해주세요")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.blue)
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.top, 8)
+                            
+                            VStack(alignment: .leading, spacing: 6) {
+                                bulletPoint("허위 정보 작성 시 매칭이 불가능할 수 있습니다")
+                                bulletPoint("매칭 신청 후 주최자의 승인을 기다려주세요")
+                            }
+                            .padding(.horizontal, 20)
                         }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 8)
-                        
-                        VStack(alignment: .leading, spacing: 6) {
-                            bulletPoint("허위 정보 작성 시 매칭이 불가능할 수 있습니다")
-                            bulletPoint("매칭 신청 후 주최자의 승인을 기다려주세요")
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.bottom, 100)
+            }
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle("매칭 신청")
+            .navigationBarTitleDisplayMode(.inline)
+            .onDisappear {
+                viewModel.cancelGeneration()
+            }
+            .safeAreaInset(edge: .bottom) {
+                // 하단 신청 버튼
+                VStack(spacing: 0) {
+                    Divider()
+                    
+                    Button(action: {
+                        viewModel.submitApplication()
+                    }) {
+                        if viewModel.isSubmitting {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                        } else {
+                            Text("신청하기")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
                         }
-                        .padding(.horizontal, 20)
                     }
+                    .background(
+                        (viewModel.isFormValid && !viewModel.isSubmitting) ? Color.green : Color.gray
+                    )
+                    .cornerRadius(12)
+                    .disabled(!viewModel.isFormValid || viewModel.isSubmitting)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
                 }
-                
-                Spacer()
+                .background(Color(.systemBackground))
             }
-            .padding(.bottom, 100)
-        }
-        .background(Color(.systemGroupedBackground))
-        .navigationTitle("매칭 신청")
-        .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
-            // 하단 신청 버튼
-            VStack(spacing: 0) {
-                Divider()
-                
-                Button(action: {
-                    viewModel.submitApplication()
-                }) {
-                    if viewModel.isSubmitting {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                    } else {
-                        Text("신청하기")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
+            .onChange(of: viewModel.showSuccessAlert) { oldValue, newValue in
+                if newValue {
+                    toastManager.show(.applyCompleted, duration: 2.0)
+                            
+                    Task {
+                        try? await Task.sleep(nanoseconds: 2_000_000_000)
+                        dismiss()
                     }
+                    
+                    viewModel.showSuccessAlert = false
                 }
-                .background(viewModel.isFormValid ? Color.green : Color.gray)
-                .cornerRadius(12)
-                .disabled(!viewModel.isFormValid || viewModel.isSubmitting)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
             }
-            .background(Color(.systemBackground))
-        }
-        .alert("신청 완료", isPresented: $viewModel.showSuccessAlert) {
-            Button("확인", role: .cancel) {
-                dismiss()
+            .alert("오류", isPresented: $viewModel.showErrorAlert) {
+                Button("확인", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage)
             }
-        } message: {
-            Text("매칭 신청이 완료되었습니다.\n주최자의 승인을 기다려주세요!")
-        }
-        .alert("오류", isPresented: $viewModel.showErrorAlert) {
-            Button("확인", role: .cancel) { }
-        } message: {
-            Text(viewModel.errorMessage)
+            ToastMessageView(manager: toastManager)
         }
     }
     

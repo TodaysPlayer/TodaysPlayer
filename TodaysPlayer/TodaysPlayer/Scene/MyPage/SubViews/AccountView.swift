@@ -19,6 +19,7 @@ struct AccountView: View {
     @State private var goToLogin = false
     @State private var path = NavigationPath()
     @Environment(\.dismiss) private var dismiss
+    private let authManager: AuthManager = AuthManager()
     
     private var pwEdit: some View {
         NavigationLink(destination: PwEditView()) {
@@ -172,14 +173,17 @@ struct AccountView: View {
                             path.removeLast()
                         }
                         self.showDeleteResult = true
+                        
+                        UserSessionManager.shared.removeSeesion()
                     }
                 }
             }
         }
     }
     private func performLogout() {
-        do {
-            try Auth.auth().signOut()
+//        do {
+//            try Auth.auth().signOut()
+            authManager.logout()
             // 네비게이션 스택 비우기
             while !path.isEmpty {
                 path.removeLast()
@@ -187,10 +191,10 @@ struct AccountView: View {
             // 확인 알림 표시
             self.showLogoutAlert = false
             self.showLogoutResult = true
-        } catch {
-            print("Sign out failed: \(error.localizedDescription)")
-            self.showLogoutAlert = false
-        }
+//        } catch {
+//            print("Sign out failed: \(error.localizedDescription)")
+//            self.showLogoutAlert = false
+//        }
     }
 }
 

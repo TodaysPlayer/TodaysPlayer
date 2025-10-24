@@ -22,7 +22,11 @@ final class PlayerRatingViewModel {
     
     init(matchInfo: Match) {
         self.matchInfo = matchInfo
-        self.userIds = matchInfo.participants.map { $0.key }
+        self.userIds = matchInfo.participants
+            .filter({ (userId: String, status: String) -> Bool in
+                status == ApplyStatus.accepted.title
+            })
+            .map({ $0.key})
     }
     
     

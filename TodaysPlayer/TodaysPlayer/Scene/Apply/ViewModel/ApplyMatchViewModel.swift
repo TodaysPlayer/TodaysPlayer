@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import AlanAI
+//import AlanAI
 
 /// 매칭 신청 화면의 상태 관리 및 비즈니스 로직
 @MainActor
@@ -41,7 +41,9 @@ class ApplyMatchViewModel: ObservableObject {
     
     // MARK: - Private Properties
     
-    private let aiService: AIIntroductionService
+    //private let aiService: AIIntroductionService
+    private let aiStreamService: AIIntroductionStreamService
+    private var currentGenerationTask: Task<Void, Never>?
     private let match: Match
     
     // MARK: - Computed Properties
@@ -55,18 +57,25 @@ class ApplyMatchViewModel: ObservableObject {
     
     init(match: Match, aiClientID: String) {
         self.match = match
-        self.aiService = AIIntroductionService(clientID: aiClientID)
+        //self.aiService = AIIntroductionService(clientID: aiClientID)
+        self.aiStreamService = AIIntroductionStreamService(clientID: aiClientID)
+
     }
     
     // MARK: - Public Methods
     
-    /// AI로 자기소개 생성
+    /// AI로 자기소개 생성 (SSE 스트리밍 방식)
     func generateAIIntroduction() {
+        cancelGeneration()
+        
         isGeneratingAI = true
         errorMessage = ""
+        message = ""
         
-        Task {
+        currentGenerationTask = Task {
             do {
+                try Task.checkCancellation()
+                
                 // 1. 현재 사용자 정보 가져오기
                 let userId = AuthHelper.currentUserId
                 let user = try await FirestoreManager.shared.getDocument(
@@ -79,25 +88,27 @@ class ApplyMatchViewModel: ObservableObject {
                     throw AIIntroductionError.invalidRequest
                 }
                 
+                try Task.checkCancellation()
+                
                 // 2. 포지션 우선순위: View 선택 → User 프로필 → nil
                 let selectedPosition = position.isEmpty ? user.position : position
                 
-                // 3. AI 호출
-                let generatedText = try await aiService.generateIntroduction(
+                // 3. 🆕 SSE 스트리밍으로 AI 호출
+                try await aiStreamService.generateIntroductionStream(
                     position: selectedPosition,
                     skillLevel: user.skillLevel
-                )
+                ) { [weak self] accumulatedText in
+                    // 실시간으로 메시지 업데이트
+                    Task { @MainActor in
+                        guard !Task.isCancelled else { return }
+                        self?.message = accumulatedText
+                    }
+                }
                 
-                // 4. 결과를 메시지에 반영
-                message = generatedText
+                print("AI 자기소개 스트리밍 완료")
                 
-                print("AI 자기소개 생성 완료")
-                
-            } catch let error as AlanAIError {
-                // AlanAI 에러 처리
-                errorMessage = "AI 생성 실패: \(error.localizedDescription)"
-                showErrorAlert = true
-                print("AlanAI 에러: \(error)")
+            } catch is CancellationError {
+                print("AI 생성이 취소되었습니다")
                 
             } catch let error as AIIntroductionError {
                 // 커스텀 에러 처리
@@ -113,11 +124,24 @@ class ApplyMatchViewModel: ObservableObject {
             }
             
             isGeneratingAI = false
+            currentGenerationTask = nil
         }
+    }
+    
+    func cancelGeneration() {
+        currentGenerationTask?.cancel()
+        aiStreamService.cancel()
+        currentGenerationTask = nil
+        isGeneratingAI = false
     }
     
     /// 매칭 신청 제출
     func submitApplication() {
+        guard !isSubmitting else {
+            print("이미 신청 처리 중입니다")
+            return
+        }
+        
         isSubmitting = true
         
         Task {
@@ -175,9 +199,13 @@ class ApplyMatchViewModel: ObservableObject {
                 print("매칭 신청 실패: \(error)")
                 errorMessage = "신청 중 오류가 발생했습니다.\n다시 시도해주세요."
                 showErrorAlert = true
+                isSubmitting = false
             }
-            
-            isSubmitting = false
         }
     }
+    
+    deinit {
+       currentGenerationTask?.cancel()
+       aiStreamService.cancel()
+   }
 }

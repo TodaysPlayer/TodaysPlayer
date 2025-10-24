@@ -23,10 +23,7 @@ final class MatchListViewModel {
     var filteringButtonTypes: [MatchFilter] = MatchFilter.appliedCases
     // 선택된 세그먼트 버튼
     var selectedFilterButton: MatchFilter = .applied(.all) {
-        didSet {
-            print(selectedFilterButton)
-            filteringButtonTapped(selectedFilterButton)
-        }
+        didSet { updateDisplayedMatches(selectedFilterButton) }
     }
     
     var isLoading: Bool = false
@@ -37,9 +34,7 @@ final class MatchListViewModel {
         .filter { $0 != PostedMatchCase.allMatches.rawValue }
 
     // 게시글 타입
-    var postedMatchCase: PostedMatchCase = .appliedMatch {
-        didSet { updateDisplayedMatches() }
-    }
+    var postedMatchCase: PostedMatchCase = .appliedMatch
 
     private let userId = UserSessionManager.shared.currentUser?.id
     private var lastAppliedSnapshot: DocumentSnapshot?
@@ -63,6 +58,12 @@ final class MatchListViewModel {
     }
     
     var isFinishMatchAlertShow: Bool = false
+    private var updateTask: Task<Void, Never>?
+    
+    // 정렬 상태
+    var sortOption: MatchSortOption = .matchDateDesc {
+        didSet { sortDisplayedMatches() }
+    }
     
     // MARK: 세그먼트에 따라 경기 필터링
     // - 신청한 경기, 내가 모집중인 경기, 종료된 경기
@@ -70,41 +71,47 @@ final class MatchListViewModel {
     /// 필터링 버튼 설정
     @MainActor
     func fetchFilteringButtonTitle(selectedType: String) {
-        guard let type = PostedMatchCase(rawValue: selectedType) else { return }
-        postedMatchCase = type
+        updateTask?.cancel()
         
-        filteringButtonTypes = []
-        var isMatchEmpty = false
-        
-        switch type {
-        case .appliedMatch:
-            filteringButtonTypes = MatchFilter.appliedCases
-            selectedFilterButton = .applied(.all)
-            isMatchEmpty = appliedMatches.isEmpty
-            displayedMatches = appliedMatches
+        updateTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: debounceDelay)
             
-        case .myRecruitingMatch:
+            guard let type = PostedMatchCase(rawValue: selectedType) else { return }
+            postedMatchCase = type
+            
             filteringButtonTypes = []
-            selectedFilterButton = .myRecruting
-            isMatchEmpty = recruitingMatches.isEmpty
-            displayedMatches = recruitingMatches
+            var isMatchEmpty = false
             
-        case .finishedMatch:
-            filteringButtonTypes = MatchFilter.finishedCases
-            selectedFilterButton = .finished(.all)
-            isMatchEmpty = finishedMatches.isEmpty
-            displayedMatches = finishedMatches
+            switch type {
+            case .appliedMatch:
+                filteringButtonTypes = MatchFilter.appliedCases
+                selectedFilterButton = .applied(.all)
+                isMatchEmpty = appliedMatches.isEmpty
+                displayedMatches = appliedMatches
+                
+            case .myRecruitingMatch:
+                filteringButtonTypes = []
+                selectedFilterButton = .myRecruting
+                isMatchEmpty = recruitingMatches.isEmpty
+                displayedMatches = recruitingMatches
+                
+            case .finishedMatch:
+                filteringButtonTypes = MatchFilter.finishedCases
+                selectedFilterButton = .finished(.all)
+                isMatchEmpty = finishedMatches.isEmpty
+                displayedMatches = finishedMatches
+                
+            default:
+                displayedMatches = []
+            }
             
-        default:
-            displayedMatches = []
-        }
-        
-        // 데이터가 없을 때만 서버 요청
-        if isMatchEmpty {
-            lastAppliedSnapshot = nil
-            lastRecruitingSnapshot = nil
-            hasMore = true
-            Task { await loadMoreMatches() }
+            // 데이터가 없을 때만 서버 요청
+            if isMatchEmpty {
+                lastAppliedSnapshot = nil
+                lastRecruitingSnapshot = nil
+                hasMore = true
+                Task { await loadMoreMatches() }
+            }
         }
     }
 
@@ -112,14 +119,16 @@ final class MatchListViewModel {
     
     /// 경기 종류에 따라 보여지는 경기 변경
     /// - 신청한 경기, 내가 모집중인 경기, 종료된 경기
-    private func updateDisplayedMatches() {
-        switch postedMatchCase {
-        case .appliedMatch:         displayedMatches = appliedMatches
-        case .myRecruitingMatch:    displayedMatches = recruitingMatches
-        case .finishedMatch:        displayedMatches = finishedMatches
-        default:                    displayedMatches = []
+    private func updateDisplayedMatches(_ filter: MatchFilter)  {
+        updateTask?.cancel()
+        
+        updateTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: debounceDelay)
+         
+             filteringButtonTapped(filter)
+            }
         }
-    }
+    
     
     // MARK: 필터링 버튼에 따른 경기 보여주기
     
@@ -238,16 +247,15 @@ final class MatchListViewModel {
 
             case .finishedMatch:
                 let matches = try await repository.fetchFinishedMatches(with: userId ?? "")
-                finishedMatches = matches
                 fetchedCount = matches.count
-
+                appendMatches(&finishedMatches, with: matches)
             default:
                 break
             }
 
             // 갱신이 필요할 때만 수행
             if shouldUpdateDisplay {
-                filteringButtonTapped(selectedFilterButton)
+                updateDisplayedMatches(selectedFilterButton)
             }
 
             hasMore = fetchedCount == pageSize && currentType != .finishedMatch
@@ -283,7 +291,7 @@ final class MatchListViewModel {
         finishedMatches.append(finishedMatch)
         
         // 보여줄 데이터 다시 넣어주기
-        filteringButtonTapped(.myRecruting)
+        updateDisplayedMatches(.myRecruting)
         
         // 서버에서 처리해주기
         await repository.eidtMatchStatusToFinish(matchId: finishedMatchId)
@@ -349,4 +357,22 @@ final class MatchListViewModel {
 
         return (matchType, applyStatus, leftPersonCount)
     }
+    
+    /// displayedMatches를 현재 정렬 설정에 따라 정렬
+    @MainActor
+    func sortDisplayedMatches() {
+        displayedMatches.sort { a, b in
+            switch sortOption {
+            case .matchDateAsc:
+                return a.dateTime < b.dateTime
+            case .matchDateDesc:
+                return a.dateTime > b.dateTime
+            case .createdAtAsc:
+                return a.createdAt < b.createdAt
+            case .createdAtDesc:
+                return a.createdAt > b.createdAt
+            }
+        }
+    }
+    
 }

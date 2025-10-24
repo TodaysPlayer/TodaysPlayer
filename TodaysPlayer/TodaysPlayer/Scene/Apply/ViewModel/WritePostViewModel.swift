@@ -23,7 +23,7 @@ final class WritePostViewModel {
     var hasFee: Bool = false
     var selectedLocation: MatchLocation?
     
-    var maxParticipants: Int = 6 {
+    var maxParticipants: Int = 1 {
             didSet {
                 // 30명 초과 시 30으로 제한
                 if maxParticipants > 30 {
@@ -49,6 +49,7 @@ final class WritePostViewModel {
     var isLoading: Bool = false
     var showLocationSearch: Bool = false
     var errorMessage: String?
+    var isSubmitting: Bool = false
     
     // MARK: - Validation
     var isFormValid: Bool {
@@ -73,6 +74,10 @@ final class WritePostViewModel {
     
     // MARK: - Actions
     func createMatch(organizerId: String) async throws -> Match {
+        guard !isSubmitting else {
+            throw ValidationError.alreadySubmitting
+        }
+        
         guard isFormValid else {
             throw ValidationError.invalidForm
         }
@@ -81,8 +86,14 @@ final class WritePostViewModel {
             throw ValidationError.noLocation
         }
         
+        // 제출 중 플래그 설정
+        isSubmitting = true
         isLoading = true
-        defer { isLoading = false }
+        
+        defer {
+            // 메서드 종료 시 항상 실행 (에러 발생 시에도)
+            // 단, View에서 dismiss 전까지는 유지하므로 여기서는 해제하지 않음
+        }
         
         let user = try await FirestoreManager.shared.getDocument(
             collection: "users",
@@ -174,6 +185,7 @@ enum ValidationError: LocalizedError {
     case noLocation
     case invalidTime
     case userNotFound
+    case alreadySubmitting
     
     var errorDescription: String? {
         switch self {
@@ -185,6 +197,8 @@ enum ValidationError: LocalizedError {
             return "시간을 올바르게 입력해주세요"
         case .userNotFound:
             return "사용자 정보를 찾을 수 없습니다"
+        case .alreadySubmitting:
+            return "이미 처리 중입니다"
         }
     }
 }

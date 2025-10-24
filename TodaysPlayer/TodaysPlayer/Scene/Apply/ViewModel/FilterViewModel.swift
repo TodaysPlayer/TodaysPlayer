@@ -190,13 +190,13 @@ class FilterViewModel: ObservableObject {
             self.matches = filteredMatches
             self.isLoading = false
             
-            print("✅ 필터링 완료")
+            print("필터링 완료")
             print("   - 지역: \(currentFilter.region.rawValue)")
             print("   - 날짜: \(selectedDate)")
             print("   - 결과: \(self.matches.count)개")
             
         } catch {
-            print("❌ Firestore 에러: \(error.localizedDescription)")
+            print("Firestore 에러: \(error.localizedDescription)")
             self.isLoading = false
         }
     }
