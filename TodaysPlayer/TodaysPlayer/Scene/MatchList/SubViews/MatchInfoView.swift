@@ -27,25 +27,26 @@ struct MatchInfoView: View {
                 .font(.headline)
                 .bold()
             
-            // participants에서 유저아이디로 내가 있는지 걸르고 그거에 상태를 확인해야함
-            // 거절된 경기의 경우 이름을 빈칸으로 확인하고 있는데 이걸 고쳐야할듯
             MatchInfoDetailView(matchInfo: matchInfo)
                 .visible(apply.status != .rejected)
-        
+            
             Text("경기 주최자의 거절사유입니다.")
                 .visible(apply.status == .rejected && postedMatchCase != .myRecruitingMatch)
             
-            // 매치상태가 거절이 아니라 applystatus가 거절이면
             Text(apply.rejectReason)
                 .modifier(DescriptionTextStyle())
+                .multilineTextAlignment(.leading)
                 .visible(apply.status == .rejected && postedMatchCase != .myRecruitingMatch)
             
             Divider()
                 .visible(postedMatchCase == .appliedMatch && matchInfo.organizerId != apply.userId)
             
             HStack {
-                Image(systemName: "person.fill")
-                    .clipShape(.circle)
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 40)
+                    .foregroundColor(.gray)
                 
                 Text(matchInfo.organizerName)
                 
@@ -68,9 +69,28 @@ struct MatchInfoView: View {
                 Text("참여자 평가하기")
                     .modifier(MyMatchButtonStyle())
             }
-            .visible(postedMatchCase == .finishedMatch && matchInfo.organizerId == apply.userId && matchInfo.rating == nil)
+            .visible(
+                shouldShowRatingButton(
+                for: matchInfo,
+                userId: apply.userId,
+                postedMatchCase: postedMatchCase
+                )
+            )
+            
         }
         .foregroundStyle(Color.black)
         
+    }
+    
+    private func shouldShowRatingButton(
+        for matchInfo: Match,
+        userId: String,
+        postedMatchCase: PostedMatchCase
+    ) -> Bool {
+        guard postedMatchCase == .finishedMatch else { return false }
+        guard matchInfo.organizerId == userId else { return false }
+        guard matchInfo.rating == nil else { return false }
+        let acceptedCount = matchInfo.participants.values.filter { $0 == ApplyStatus.accepted.title }.count
+        return acceptedCount > 0
     }
 }
