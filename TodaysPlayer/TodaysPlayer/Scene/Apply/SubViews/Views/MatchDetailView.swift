@@ -53,7 +53,7 @@ struct MatchDetailView: View {
                     .font(.headline)
             }
             
-            if !viewModel.isMyMatch {
+            if !viewModel.isMyMatch && viewModel.userApplyStatus != .rejected {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         favoriteViewModel.toggleFavorite(
