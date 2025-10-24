@@ -158,6 +158,9 @@ struct ApplyMatchView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle("매칭 신청")
         .navigationBarTitleDisplayMode(.inline)
+        .onDisappear {
+            viewModel.cancelGeneration()
+        }
         .safeAreaInset(edge: .bottom) {
             // 하단 신청 버튼
             VStack(spacing: 0) {

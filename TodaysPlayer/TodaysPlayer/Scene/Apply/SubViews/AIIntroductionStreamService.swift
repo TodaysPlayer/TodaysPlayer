@@ -12,12 +12,19 @@ class AIIntroductionStreamService {
     private let clientID: String
     private let apiURLPrefix = "https://kdt-api-function.azurewebsites.net/api/v1/"
     
+    private var currentTask: URLSessionTask?
+    
     // MARK: - initialization
     init(clientID: String) {
         self.clientID = clientID
     }
     
     // MARK: - public methods
+    
+    func cancel() {
+        currentTask?.cancel()
+        currentTask = nil
+    }
     
     // sse 스트리밍 방식으로 자기소개 생성
     // parameters: postion/skillLevel/streamHandler
@@ -38,32 +45,37 @@ class AIIntroductionStreamService {
             throw AIIntroductionError.invalidRequest
         }
         
-        let (asyncBytes, response) = try await URLSession.shared.bytes(from: apiUrl)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else {
-            throw AIIntroductionError.invalidRequest
-        }
-        
-        var accumulatedText = ""
-        
-        for try await line in asyncBytes.lines {
-            // "data:" 로 시작하는 라인만 처리
-            print(line)
-            try? await Task.sleep(for: .seconds(0.03))
-            if line.hasPrefix("data:") {
-                // "data: " 제거 (6글자)
-                let jsonString = String(line.dropFirst(6))
-                
-                if let content = parseSSEContent(jsonString) {
-                    accumulatedText += content
-                    // 실시간으로 누적된 텍스트 전달
-                    streamHandler(accumulatedText)
+        try await withTaskCancellationHandler {
+            let (asyncBytes, response) = try await URLSession.shared.bytes(from: apiUrl)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                throw AIIntroductionError.invalidRequest
+            }
+            
+            var accumulatedText = ""
+            
+            for try await line in asyncBytes.lines {
+                try Task.checkCancellation()
+                // "data:" 로 시작하는 라인만 처리
+                print(line)
+                try? await Task.sleep(for: .seconds(0.03))
+                if line.hasPrefix("data:") {
+                    // "data: " 제거 (6글자)
+                    let jsonString = String(line.dropFirst(6))
+                    
+                    if let content = parseSSEContent(jsonString) {
+                        accumulatedText += content
+                        // 실시간으로 누적된 텍스트 전달
+                        streamHandler(accumulatedText)
+                    }
                 }
             }
+        } onCancel: {
+            print("AI 스트리밍이 취소되었습니다")
         }
     }
-
+    
     private func parseSSEContent(_ jsonString: String) -> String? {
         let trimmed = jsonString.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {

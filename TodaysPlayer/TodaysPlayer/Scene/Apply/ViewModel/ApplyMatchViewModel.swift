@@ -43,6 +43,7 @@ class ApplyMatchViewModel: ObservableObject {
     
     //private let aiService: AIIntroductionService
     private let aiStreamService: AIIntroductionStreamService
+    private var currentGenerationTask: Task<Void, Never>?
     private let match: Match
     
     // MARK: - Computed Properties
@@ -65,12 +66,16 @@ class ApplyMatchViewModel: ObservableObject {
     
     /// AI로 자기소개 생성 (SSE 스트리밍 방식)
     func generateAIIntroduction() {
+        cancelGeneration()
+        
         isGeneratingAI = true
         errorMessage = ""
-        message = ""  // 🆕 기존 메시지 초기화 (중요!)
+        message = ""
         
-        Task {
+        currentGenerationTask = Task {
             do {
+                try Task.checkCancellation()
+                
                 // 1. 현재 사용자 정보 가져오기
                 let userId = AuthHelper.currentUserId
                 let user = try await FirestoreManager.shared.getDocument(
@@ -83,6 +88,8 @@ class ApplyMatchViewModel: ObservableObject {
                     throw AIIntroductionError.invalidRequest
                 }
                 
+                try Task.checkCancellation()
+                
                 // 2. 포지션 우선순위: View 선택 → User 프로필 → nil
                 let selectedPosition = position.isEmpty ? user.position : position
                 
@@ -93,11 +100,15 @@ class ApplyMatchViewModel: ObservableObject {
                 ) { [weak self] accumulatedText in
                     // 실시간으로 메시지 업데이트
                     Task { @MainActor in
+                        guard !Task.isCancelled else { return }
                         self?.message = accumulatedText
                     }
                 }
                 
                 print("AI 자기소개 스트리밍 완료")
+                
+            } catch is CancellationError {
+                print("AI 생성이 취소되었습니다")
                 
             } catch let error as AIIntroductionError {
                 // 커스텀 에러 처리
@@ -113,7 +124,15 @@ class ApplyMatchViewModel: ObservableObject {
             }
             
             isGeneratingAI = false
+            currentGenerationTask = nil
         }
+    }
+    
+    func cancelGeneration() {
+        currentGenerationTask?.cancel()
+        aiStreamService.cancel()
+        currentGenerationTask = nil
+        isGeneratingAI = false
     }
     
     /// 매칭 신청 제출
@@ -180,4 +199,9 @@ class ApplyMatchViewModel: ObservableObject {
             isSubmitting = false
         }
     }
+    
+    deinit {
+       currentGenerationTask?.cancel()
+       aiStreamService.cancel()
+   }
 }
