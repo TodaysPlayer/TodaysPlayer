@@ -12,356 +12,379 @@ struct WritePostView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showCalendar = false
     
+    @State private var toastManager = ToastMessageManager()
+    
     @EnvironmentObject var filterViewModel: FilterViewModel
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottom) {
-                Color(.systemGray6)
-                    .ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 24) {
-                        // 제목 입력
-                        FormSection(title: "제목") {
-                            HStack {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundColor(.gray)
-                                TextField("경기 제목을 입력하세요", text: $viewModel.title)
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(12)
-                        }
-                        
-                        // 경기 종류
-                        FormSection(title: "경기 종류") {
-                            HStack(spacing: 12) {
-                                MatchTypeButton(
-                                    type: "futsal",
-                                    title: "풋살",
-                                    isSelected: viewModel.matchType == "futsal"
-                                ) {
-                                    viewModel.matchType = "futsal"
-                                }
-                                
-                                MatchTypeButton(
-                                    type: "soccer",
-                                    title: "축구",
-                                    isSelected: viewModel.matchType == "soccer"
-                                ) {
-                                    viewModel.matchType = "soccer"
-                                }
-                            }
-                        }
-                        
-                        // 날짜 선택
-                        FormSection(title: "날짜") {
-                            Button(action: { showCalendar = true }) {
-                                HStack {
-                                    Text(dateFormatter.string(from: viewModel.selectedDate))
-                                        .foregroundColor(.primary)
-                                    Spacer()
-                                    Image(systemName: "calendar")
-                                        .foregroundColor(.gray)
-                                }
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(12)
-                            }
-                        }
-                        
-                        // 시간 입력
-                        FormSection(title: "시간") {
-                            HStack(spacing: 12) {
-                                DatePicker(
-                                    "시작 시간",
-                                    selection: $viewModel.startTime,
-                                    displayedComponents: .hourAndMinute
-                                )
-                                .labelsHidden()
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(12)
-                                
-                                Text("~")
-                                    .foregroundColor(.gray)
-                                
-                                DatePicker(
-                                    "종료 시간",
-                                    selection: $viewModel.endTime,
-                                    displayedComponents: .hourAndMinute
-                                )
-                                .labelsHidden()
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(12)
-                            }
-                        }
-                        
-                        // 구장 선택
-                        FormSection(title: "구장명") {
-                            Button {
-                                viewModel.showLocationSearch = true
-                            } label: {
+            ZStack {
+                ZStack(alignment: .bottom) {
+                    Color(.systemGray6)
+                        .ignoresSafeArea()
+                    
+                    ScrollView {
+                        VStack(spacing: 24) {
+                            // 제목 입력
+                            FormSection(title: "제목") {
                                 HStack {
                                     Image(systemName: "magnifyingglass")
                                         .foregroundColor(.gray)
-                                    Text(viewModel.selectedLocation?.name ?? "구장을 검색하세요")
-                                        .foregroundColor(viewModel.selectedLocation == nil ? .gray : .primary)
-                                    Spacer()
+                                    TextField("경기 제목을 입력하세요", text: $viewModel.title)
                                 }
                                 .padding()
                                 .background(Color.white)
                                 .cornerRadius(12)
                             }
                             
-                            if let location = viewModel.selectedLocation {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(location.address)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(.top, 4)
-                            }
-                        }
-                        
-                        // 모집 상세
-                        FormSection(title: "모집 상세") {
-                            TextEditor(text: $viewModel.description)
-                                .frame(minHeight: 150)
-                                .padding(8)
-                                .background(Color.white)
-                                .cornerRadius(12)
-                                .overlay(
-                                    Group {
-                                        if viewModel.description.isEmpty {
-                                            Text("매칭에 대해 알려주세요\n(팀이름/연령대/소개 등)")
-                                                .foregroundColor(.gray)
-                                                .padding(.top, 16)
-                                                .padding(.leading, 12)
-                                                .allowsHitTesting(false)
-                                        }
-                                    },
-                                    alignment: .topLeading
-                                )
-                        }
-                        
-                        // 모집 인원
-                        FormSection(title: "모집 인원") {
-                            HStack(spacing: 12) {
-                                // 마이너스 버튼
-                                Button {
-                                    if viewModel.maxParticipants > 1 {
-                                        viewModel.maxParticipants -= 1
-                                    }
-                                } label: {
-                                    Image(systemName: "minus")
-                                        .font(.system(size: 18, weight: .semibold))
-                                        .foregroundColor(viewModel.maxParticipants > 1 ? .primary : .gray)
-                                        .frame(width: 44, height: 44)
-                                        .background(Color.white)
-                                        .cornerRadius(12)
-                                }
-                                .disabled(viewModel.maxParticipants <= 1)
-                                
-                                // 입력 필드
-                                HStack {
-                                    TextField("최대 30명까지 모집 가능", text: Binding(
-                                        get: {
-                                            viewModel.maxParticipants == 0 ? "" : "\(viewModel.maxParticipants)"
-                                        },
-                                        set: { newValue in
-                                            if newValue.isEmpty {
-                                                viewModel.maxParticipants = 0
-                                            } else {
-                                                let value = Int(newValue) ?? 0
-                                                viewModel.maxParticipants = min(value, 30) // 30 이상 제한
-                                            }
-                                        }
-                                    ))
-                                    
-                                    .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.center)
-                
-                                    if viewModel.maxParticipants > 0 {
-                                        Text("명")
-                                            .foregroundColor(.primary)
-                                    }
-                                }
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(12)
-                                
-                                // 플러스 버튼
-                                Button {
-                                    if viewModel.maxParticipants == 0 {
-                                        viewModel.maxParticipants = 1
-                                    } else if viewModel.maxParticipants < 30 {
-                                        viewModel.maxParticipants += 1
-                                    }
-                                } label: {
-                                    Image(systemName: "plus")
-                                        .font(.system(size: 18, weight: .semibold))
-                                        .foregroundColor(viewModel.maxParticipants < 30 ? .primary : .gray)
-                                        .frame(width: 44, height: 44)
-                                        .background(Color.white)
-                                        .cornerRadius(12)
-                                }
-                                .disabled(viewModel.maxParticipants >= 30)
-                            }
-                        }
-                        
-                        // 실력
-                        FormSection(title: "실력") {
-                            SkillLevelPicker(selectedLevel: $viewModel.skillLevel)
-                        }
-                        
-                        // 성별
-                        FormSection(title: "성별") {
-                            GenderPicker(selectedGender: $viewModel.gender)
-                        }
-                        
-                        // 참가비
-                        FormSection(title: "참가비") {
-                            VStack(spacing: 12) {
+                            // 경기 종류
+                            FormSection(title: "경기 종류") {
                                 HStack(spacing: 12) {
-                                    Button {
-                                        viewModel.hasFee = false
-                                        viewModel.price = 0
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: viewModel.hasFee ? "circle" : "checkmark.circle.fill")
-                                                .foregroundColor(viewModel.hasFee ? .gray : .green)
-                                            Text("없어요")
-                                                .foregroundColor(.primary)
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.white)
-                                        .cornerRadius(12)
+                                    MatchTypeButton(
+                                        type: "futsal",
+                                        title: "풋살",
+                                        isSelected: viewModel.matchType == "futsal"
+                                    ) {
+                                        viewModel.matchType = "futsal"
                                     }
                                     
-                                    Button {
-                                        viewModel.hasFee = true
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: viewModel.hasFee ? "checkmark.circle.fill" : "circle")
-                                                .foregroundColor(viewModel.hasFee ? .green : .gray)
-                                            Text("있어요")
-                                                .foregroundColor(.primary)
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.white)
-                                        .cornerRadius(12)
+                                    MatchTypeButton(
+                                        type: "soccer",
+                                        title: "축구",
+                                        isSelected: viewModel.matchType == "soccer"
+                                    ) {
+                                        viewModel.matchType = "soccer"
                                     }
                                 }
-                                
-                                if viewModel.hasFee {
+                            }
+                            
+                            // 날짜 선택
+                            FormSection(title: "날짜") {
+                                Button(action: { showCalendar = true }) {
                                     HStack {
-                                        TextField("최대 20,000원까지 입력", text: Binding(
-                                            get: {
-                                                if viewModel.price == 0 {
-                                                    return ""
-                                                } else {
-                                                    let formatter = NumberFormatter()
-                                                    formatter.numberStyle = .decimal
-                                                    formatter.groupingSeparator = ","
-                                                    return formatter.string(from: NSNumber(value: viewModel.price)) ?? "\(viewModel.price)"
-                                                }
-                                            },
-                                            set: { newValue in
-                                                let filtered = newValue.filter { $0.isNumber }
-                                                viewModel.price = Int(filtered) ?? 0
-                                            }
-                                        ))
-                                        .keyboardType(.numberPad)
-                                    
-                                        if viewModel.price > 0 {
-                                            Text("원")
-                                                .foregroundColor(.primary)
-                                        }
+                                        Text(dateFormatter.string(from: viewModel.selectedDate))
+                                            .foregroundColor(.primary)
+                                        Spacer()
+                                        Image(systemName: "calendar")
+                                            .foregroundColor(.gray)
                                     }
                                     .padding()
                                     .background(Color.white)
                                     .cornerRadius(12)
                                 }
                             }
-                        }
-                    }
-                    .padding()
-                    .padding(.bottom, 80) // 하단 버튼 공간 확보
-                }
-                
-                // 하단 고정 등록 버튼
-                VStack(spacing: 0) {
-                    Divider()
-                    
-                    Button {
-                        Task {
-                            do {
-                                guard AuthHelper.isLoggedIn else {
-                                    viewModel.errorMessage = "로그인이 필요합니다."
-                                    return
+                            
+                            // 시간 입력
+                            FormSection(title: "시간") {
+                                HStack(spacing: 12) {
+                                    DatePicker(
+                                        "시작 시간",
+                                        selection: $viewModel.startTime,
+                                        displayedComponents: .hourAndMinute
+                                    )
+                                    .labelsHidden()
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    
+                                    Text("~")
+                                        .foregroundColor(.gray)
+                                    
+                                    DatePicker(
+                                        "종료 시간",
+                                        selection: $viewModel.endTime,
+                                        displayedComponents: .hourAndMinute
+                                    )
+                                    .labelsHidden()
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                }
+                            }
+                            
+                            // 구장 선택
+                            FormSection(title: "구장명") {
+                                Button {
+                                    viewModel.showLocationSearch = true
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "magnifyingglass")
+                                            .foregroundColor(.gray)
+                                        Text(viewModel.selectedLocation?.name ?? "구장을 검색하세요")
+                                            .foregroundColor(viewModel.selectedLocation == nil ? .gray : .primary)
+                                        Spacer()
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(12)
                                 }
                                 
-                                let userId = AuthHelper.currentUserId
-                                
-                                // 생성된 match 객체 받기
-                                let newMatch = try await viewModel.createMatch(organizerId: userId)
-                                
-                                // 새 매치 추가
-                                filterViewModel.addNewMatch(newMatch)
-                                
-                                // 캘린더 날짜를 경기 날짜로 변경
-                                filterViewModel.selectedDate = newMatch.dateTime
-                                
-                                // 해당 날짜의 매치들로 필터 재적용
-                                filterViewModel.applyFilter()
-                                
-                                dismiss()
-                            } catch {
-                                viewModel.errorMessage = error.localizedDescription
+                                if let location = viewModel.selectedLocation {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(location.address)
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .padding(.top, 4)
+                                }
+                            }
+                            
+                            // 모집 상세
+                            FormSection(title: "모집 상세") {
+                                TextEditor(text: $viewModel.description)
+                                    .frame(minHeight: 150)
+                                    .padding(8)
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    .overlay(
+                                        Group {
+                                            if viewModel.description.isEmpty {
+                                                Text("매칭에 대해 알려주세요\n(팀이름/연령대/소개 등)")
+                                                    .foregroundColor(.gray)
+                                                    .padding(.top, 16)
+                                                    .padding(.leading, 12)
+                                                    .allowsHitTesting(false)
+                                            }
+                                        },
+                                        alignment: .topLeading
+                                    )
+                            }
+                            
+                            // 모집 인원
+                            FormSection(title: "모집할 인원") {
+                                HStack(spacing: 12) {
+                                    // 마이너스 버튼
+                                    Button {
+                                        if viewModel.maxParticipants > 1 {
+                                            viewModel.maxParticipants -= 1
+                                        }
+                                    } label: {
+                                        Image(systemName: "minus")
+                                            .font(.system(size: 18, weight: .semibold))
+                                            .foregroundColor(viewModel.maxParticipants > 1 ? .primary : .gray)
+                                            .frame(width: 44, height: 44)
+                                            .background(Color.white)
+                                            .cornerRadius(12)
+                                    }
+                                    .disabled(viewModel.maxParticipants <= 1)
+                                    
+                                    // 입력 필드
+                                    HStack {
+                                        TextField("최대 30명까지 모집 가능", text: Binding(
+                                            get: {
+                                                viewModel.maxParticipants == 0 ? "" : "\(viewModel.maxParticipants)"
+                                            },
+                                            set: { newValue in
+                                                if newValue.isEmpty {
+                                                    viewModel.maxParticipants = 0
+                                                } else {
+                                                    let value = Int(newValue) ?? 0
+                                                    viewModel.maxParticipants = min(value, 30) // 30 이상 제한
+                                                }
+                                            }
+                                        ))
+                                        
+                                        .keyboardType(.numberPad)
+                                        .multilineTextAlignment(.center)
+                                        
+                                        if viewModel.maxParticipants > 0 {
+                                            Text("명")
+                                                .foregroundColor(.primary)
+                                        }
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    
+                                    // 플러스 버튼
+                                    Button {
+                                        if viewModel.maxParticipants == 0 {
+                                            viewModel.maxParticipants = 1
+                                        } else if viewModel.maxParticipants < 30 {
+                                            viewModel.maxParticipants += 1
+                                        }
+                                    } label: {
+                                        Image(systemName: "plus")
+                                            .font(.system(size: 18, weight: .semibold))
+                                            .foregroundColor(viewModel.maxParticipants < 30 ? .primary : .gray)
+                                            .frame(width: 44, height: 44)
+                                            .background(Color.white)
+                                            .cornerRadius(12)
+                                    }
+                                    .disabled(viewModel.maxParticipants >= 30)
+                                }
+                            }
+                            
+                            // 실력
+                            FormSection(title: "실력") {
+                                SkillLevelPicker(selectedLevel: $viewModel.skillLevel)
+                            }
+                            
+                            // 성별
+                            FormSection(title: "성별") {
+                                GenderPicker(selectedGender: $viewModel.gender)
+                            }
+                            
+                            // 참가비
+                            FormSection(title: "참가비") {
+                                VStack(spacing: 12) {
+                                    HStack(spacing: 12) {
+                                        Button {
+                                            viewModel.hasFee = false
+                                            viewModel.price = 0
+                                        } label: {
+                                            HStack {
+                                                Image(systemName: viewModel.hasFee ? "circle" : "checkmark.circle.fill")
+                                                    .foregroundColor(viewModel.hasFee ? .gray : .green)
+                                                Text("없어요")
+                                                    .foregroundColor(.primary)
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.white)
+                                            .cornerRadius(12)
+                                        }
+                                        
+                                        Button {
+                                            viewModel.hasFee = true
+                                        } label: {
+                                            HStack {
+                                                Image(systemName: viewModel.hasFee ? "checkmark.circle.fill" : "circle")
+                                                    .foregroundColor(viewModel.hasFee ? .green : .gray)
+                                                Text("있어요")
+                                                    .foregroundColor(.primary)
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.white)
+                                            .cornerRadius(12)
+                                        }
+                                    }
+                                    
+                                    if viewModel.hasFee {
+                                        HStack {
+                                            TextField("최대 20,000원까지 입력", text: Binding(
+                                                get: {
+                                                    if viewModel.price == 0 {
+                                                        return ""
+                                                    } else {
+                                                        let formatter = NumberFormatter()
+                                                        formatter.numberStyle = .decimal
+                                                        formatter.groupingSeparator = ","
+                                                        return formatter.string(from: NSNumber(value: viewModel.price)) ?? "\(viewModel.price)"
+                                                    }
+                                                },
+                                                set: { newValue in
+                                                    let filtered = newValue.filter { $0.isNumber }
+                                                    viewModel.price = Int(filtered) ?? 0
+                                                }
+                                            ))
+                                            .keyboardType(.numberPad)
+                                            
+                                            if viewModel.price > 0 {
+                                                Text("원")
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        .padding()
+                                        .background(Color.white)
+                                        .cornerRadius(12)
+                                    }
+                                }
                             }
                         }
-                    } label: {
-                        Text("등록하기")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(viewModel.isFormValid ? Color.green : Color.gray)
-                            .cornerRadius(12)
-                            .padding(.horizontal)
+                        .padding()
+                        .padding(.bottom, 80) // 하단 버튼 공간 확보
                     }
-                    .disabled(!viewModel.isFormValid)
-                    .padding(.vertical, 12)
+                    
+                    // 하단 고정 등록 버튼
+                    VStack(spacing: 0) {
+                        Divider()
+                        
+                        Button {
+                            Task {
+                                do {
+                                    guard AuthHelper.isLoggedIn else {
+                                        viewModel.errorMessage = "로그인이 필요합니다."
+                                        return
+                                    }
+                                    
+                                    let userId = AuthHelper.currentUserId
+                                    
+                                    // 생성된 match 객체 받기
+                                    let newMatch = try await viewModel.createMatch(organizerId: userId)
+                                    
+                                    // 새 매치 추가
+                                    filterViewModel.addNewMatch(newMatch)
+                                    
+                                    // 캘린더 날짜를 경기 날짜로 변경
+                                    filterViewModel.selectedDate = newMatch.dateTime
+                                    
+                                    // 해당 날짜의 매치들로 필터 재적용
+                                    filterViewModel.applyFilter()
+                                    
+                                    // 토스트 메시지 표시
+                                    toastManager.show(.postCreated, duration: 2.0)
+                                    
+                                    // 2초 대기 (토스트 메시지 표시 시간)
+                                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                                    
+                                    // 화면 닫기
+                                    dismiss()
+                                    
+                                } catch {
+                                    viewModel.isSubmitting = false
+                                    viewModel.isLoading = false
+                                    viewModel.errorMessage = error.localizedDescription
+                                }
+                            }
+                        } label: {
+                            if viewModel.isSubmitting {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            } else {
+                                Text("등록하기")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            }
+                        }
+                        .background(
+                        (viewModel.isFormValid && !viewModel.isSubmitting) ? Color.green : Color.gray)
+                        .cornerRadius(12)
+                        .padding(.horizontal)
+                        .disabled(!viewModel.isFormValid || viewModel.isSubmitting)
+                        .padding(.vertical, 12)
+                    }
+                    .background(Color(.systemBackground))
                 }
-                .background(Color(.systemBackground))
-            }
-            .navigationTitle("용병 모집하기")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar(.hidden, for: .tabBar)
-            .sheet(isPresented: $showCalendar) {
-                MonthCalendarSheet(selectedDate: $viewModel.selectedDate, showCalendar: $showCalendar)
-            }
-            .sheet(isPresented: $viewModel.showLocationSearch) {
-                LocationSearchBottomSheet(
-                    isPresented: $viewModel.showLocationSearch,
-                    selectedMatchLocation: $viewModel.selectedLocation
-                )
-            }
-            .alert("오류", isPresented: .constant(viewModel.errorMessage != nil)) {
-                Button("확인") {
-                    viewModel.errorMessage = nil
+                .navigationTitle("용병 모집하기")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar(.hidden, for: .tabBar)
+                .sheet(isPresented: $showCalendar) {
+                    MonthCalendarSheet(selectedDate: $viewModel.selectedDate, showCalendar: $showCalendar)
                 }
-            } message: {
-                if let error = viewModel.errorMessage {
-                    Text(error)
+                .sheet(isPresented: $viewModel.showLocationSearch) {
+                    LocationSearchBottomSheet(
+                        isPresented: $viewModel.showLocationSearch,
+                        selectedMatchLocation: $viewModel.selectedLocation
+                    )
                 }
+                .alert("오류", isPresented: .constant(viewModel.errorMessage != nil)) {
+                    Button("확인") {
+                        viewModel.errorMessage = nil
+                    }
+                } message: {
+                    if let error = viewModel.errorMessage {
+                        Text(error)
+                    }
+                }
+                ToastMessageView(manager: toastManager)
             }
         }
     }

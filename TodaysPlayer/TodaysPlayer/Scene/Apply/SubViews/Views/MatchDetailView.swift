@@ -24,14 +24,14 @@ struct MatchDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                MatchTagViewForMatch(match: match, postedMatchCase: .allMatches)
+                MatchTagViewForMatch(match: viewModel.currentMatch, postedMatchCase: .allMatches)
                 
                 MatchDetailHeaderView(
                     title: match.title,
                     subtitle: "함께 할 플레이어를 모집합니다"
                 )
                 
-                MatchBasicInfoCardForMatch(match: match)
+                MatchBasicInfoCardForMatch(match: viewModel.currentMatch)
                 MatchLocationSectionForMatch(match: match)
                 MatchDescriptionSection(description: match.description)
                 WarningNoticeView()
@@ -53,7 +53,7 @@ struct MatchDetailView: View {
                     .font(.headline)
             }
             
-            if !viewModel.isMyMatch {
+            if !viewModel.isMyMatch && viewModel.userApplyStatus != .rejected {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         favoriteViewModel.toggleFavorite(
@@ -100,7 +100,8 @@ struct MatchTagViewForMatch: View {
                 .foregroundColor(.white)
                 .cornerRadius(12)
             
-            if match.maxParticipants - match.participants.count == 1 {
+            if match.maxParticipants >= 2 &&
+               match.appliedParticipantsCount == match.maxParticipants - 1 {
                 Text("1자리 남음!")
                     .font(.system(size: 14))
                     .padding(.horizontal, 12)
@@ -108,7 +109,7 @@ struct MatchTagViewForMatch: View {
                     .background(Color.orange)
                     .foregroundColor(.white)
                     .cornerRadius(12)
-            } else if match.participants.count >= match.maxParticipants {
+            } else if match.appliedParticipantsCount >= match.maxParticipants {
                 Text("마감")
                     .font(.system(size: 14))
                     .padding(.horizontal, 12)
@@ -149,7 +150,7 @@ struct MatchBasicInfoCardForMatch: View {
                 InfoItemView(
                     icon: "person.2",
                     title: "인원",
-                    value: "\(match.participants.count)/\(match.maxParticipants)"
+                    value: "\(match.appliedParticipantsCount)/\(match.maxParticipants)"
                 )
                 
                 InfoItemView(

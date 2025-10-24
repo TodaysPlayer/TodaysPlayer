@@ -182,3 +182,35 @@ extension Match {
     }
 
 }
+
+extension Match {
+    /// 현재 수락된 참가자 수
+    var appliedParticipantsCount: Int {
+        participants.values.filter { $0 == "accepted" }.count
+    }
+    
+    /// 모집 인원이 가득 찼는지 확인
+    var isFull: Bool {
+        appliedParticipantsCount >= maxParticipants
+    }
+    
+    /// 모집 중인지 확인 (신청 가능 여부)
+    var isRecruiting: Bool {
+        status == "recruiting" && !isFull
+    }
+    
+    /// 버튼에 표시할 텍스트
+    var buttonTitle: String {
+        if isFull || status == "closed" {
+            return "모집마감"
+        } else if status == "confirmed" {
+            return "경기확정"
+        } else if status == "completed" {
+            return "경기종료"
+        } else if status == "cancelled" {
+            return "경기취소"
+        } else {
+            return "신청하기"
+        }
+    }
+}

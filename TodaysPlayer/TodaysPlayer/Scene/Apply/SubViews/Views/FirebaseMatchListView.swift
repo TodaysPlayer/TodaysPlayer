@@ -86,7 +86,7 @@ struct FirebaseMatchListView: View {
                                         Image(systemName: "person.2")
                                             .font(.caption2)
                                             .foregroundColor(.primary)
-                                        Text("\(match.participants.count)/\(match.maxParticipants)명")
+                                        Text("\(match.appliedParticipantsCount)/\(match.maxParticipants)명")
                                             .font(.caption)
                                             .foregroundColor(.primary)
                                     }
