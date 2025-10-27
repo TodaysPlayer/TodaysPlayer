@@ -59,9 +59,9 @@ struct MatchListView: View {
                                     .background(checkRejectMatch(match)
                                                 ? Color.gray.opacity(0.2) : Color.white)
                                     .cornerRadius(12)
-                                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
 
                                 }
+                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
                                 .onAppear {
                                     if index == viewModel.displayedMatches.count - 1 {
                                         Task { await viewModel.loadMoreMatches() }
@@ -80,8 +80,11 @@ struct MatchListView: View {
                         }
                         .padding(.vertical)
                     }
+                    .refreshable {
+                        viewModel.fetchMyMatchData()
+                    }
                     .scrollIndicators(.hidden)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 24)
                     .navigationDestination(for: Match.self) { match in
                         MatchDetailView(match: match)
                     }
@@ -89,6 +92,7 @@ struct MatchListView: View {
                 
                 ToastMessageView(manager: viewModel.toastManager)
             }
+
             .onAppear {
                 viewModel.fetchMyMatchData()
             }
