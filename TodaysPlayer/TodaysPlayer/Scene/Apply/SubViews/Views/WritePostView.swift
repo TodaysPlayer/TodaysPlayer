@@ -20,7 +20,7 @@ struct WritePostView: View {
         NavigationStack {
             ZStack {
                 ZStack(alignment: .bottom) {
-                    Color(.systemGray6)
+                    Color.gray.opacity(0.1)
                         .ignoresSafeArea()
                     
                     ScrollView {

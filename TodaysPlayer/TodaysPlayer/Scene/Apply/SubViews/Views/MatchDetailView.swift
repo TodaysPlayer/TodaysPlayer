@@ -45,7 +45,7 @@ struct MatchDetailView: View {
             }
             .padding()
         }
-        .background(Color(.systemGray6))
+        .background(Color.gray.opacity(0.1))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
