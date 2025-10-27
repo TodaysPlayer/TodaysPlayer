@@ -64,11 +64,10 @@ struct DynamicMatchActionButton: View {
             .frame(maxWidth: .infinity)
             .padding()
             .background(
-                viewModel.isButtonEnabled ?
-                viewModel.buttonBackgroundColor :
-                Color.gray.opacity(0.5)
+                viewModel.buttonBackgroundColor
             )
             .cornerRadius(12)
+            .opacity(viewModel.isButtonEnabled ? 1.0 : 0.7)
     }
 }
 

@@ -99,28 +99,32 @@ final class MatchDetailViewModel {
     
     /// 버튼 배경색
     var buttonBackgroundColor: Color {
+        // 1. 본인 매치 체크
         if isMyMatch {
-            return .secondaryMintGreen
+            return .secondaryMintGreen  // 참여자 관리
         }
         
+        // 2. 사용자의 신청 상태가 있으면 우선 체크
+        if let status = userApplyStatus {
+            switch status {
+            case .standby:
+                return .primaryLight  // 수락 대기중
+            case .accepted:
+                return .primaryBaseGreen  // 참여 확정
+            case .rejected:
+                return .accentRed
+            default:
+                return .gray
+            }
+        }
+        
+        // 3. 신청 안했는데 모집 마감됐으면
         if !currentMatch.isRecruiting {
-            return .gray
+            return .accentRed  // 모집 마감
         }
         
-        guard let status = userApplyStatus else {
-            return .primaryBaseGreen // 신청하기
-        }
-        
-        switch status {
-        case .standby:
-            return .orange
-        case .accepted:
-            return .blue
-        case .rejected:
-            return .gray
-        default:
-            return .green
-        }
+        // 4. 신청 가능한 상태
+        return .primaryBaseGreen  // 신청하기
     }
     
     // 최신 매치 정보 가져오기
