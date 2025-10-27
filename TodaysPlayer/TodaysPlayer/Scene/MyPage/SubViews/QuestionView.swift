@@ -116,10 +116,9 @@ struct QuestionView: View {
 
             // 이메일
             LabeledContainer(label: "연락받을 이메일") {
-                TextField("example@email.com", text: $contactEmail)
-                    .keyboardType(.emailAddress)
-                    .textInputAutocapitalization(.never)
+                Text(UserSessionManager.shared.currentUser?.email ?? "")
                     .autocorrectionDisabled(true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 12)
                     .frame(height: 44)
                     .background(fieldBackground)

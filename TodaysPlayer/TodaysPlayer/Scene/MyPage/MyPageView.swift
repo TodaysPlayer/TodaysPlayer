@@ -142,7 +142,7 @@ struct MyPageView: View {
         HStack {
             NavigationLink(destination: EmailListView()) {
                 // 당장은 연결할 뷰가 없어서 문의사항 보여주는 뷰로 변경
-                Stat(icon: "mail.fill", label: "문의 사항 관리", color: .secondaryDeepGray)
+                Stat(icon: "mail.fill", label: "내 문의", color: .primaryDark)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
