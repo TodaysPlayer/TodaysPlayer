@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MatchItemView: View {
     let title: String
+    let matchType: String
     let location: String
     let distance: String
     let time: String
@@ -23,8 +24,10 @@ struct MatchItemView: View {
         switch gender {
         case .male:
             return "icon_male"
+            
         case .female:
             return "icon_female"
+            
         case .mixed:
             return "icon_mixed"
         }
@@ -34,16 +37,32 @@ struct MatchItemView: View {
         switch gender {
         case .male:
             return .blue
+            
         case .female:
             return .red
+            
         case .mixed:
             return .gray
         }
     }
     
+    private var genderLabel: String {
+        switch gender {
+        case .male:
+            return "남성"
+            
+        case .female:
+            return "여성"
+            
+        case .mixed:
+            return "혼성"
+        }
+    }
+    
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // 상단: 제목과 평점
+            // 제목과 평점
             HStack {
                 Text(title)
                     .font(.subheadline)
@@ -65,8 +84,41 @@ struct MatchItemView: View {
                 }
             }
             
+            // 실력 레벨 & 종목
+            HStack(spacing: 10) {
+                Text(skillLevel)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.gray.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+                Text(matchType == "futsal" ? "풋살" : "축구")
+                    .font(.caption)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(matchType == "futsal" ? Color.green : Color.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+                Spacer()
+            }
+            .padding(.bottom)
+            
+            // 시간 정보
+            HStack(spacing: 4) {
+                Image(systemName: "clock")
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray)
+                
+                Text(time)
+                    .font(.caption)
+                    .foregroundColor(.black)
+            }
+            
             // 위치 정보
-            HStack {
+            HStack(spacing: 4) {
                 Image(systemName: "location")
                     .foregroundColor(.gray)
                     .font(.system(size: 12))
@@ -81,18 +133,8 @@ struct MatchItemView: View {
                     .foregroundColor(.blue)
             }
             
-            // 시간과 참가자 정보
-            HStack {
-                HStack(spacing: 4) {
-                    Image(systemName: "clock")
-                        .font(.system(size: 12))
-                        .foregroundColor(.gray)
-                    
-                    Text(time)
-                        .font(.caption)
-                        .foregroundColor(.black)
-                }
-                
+            // 매치 정보
+            HStack(spacing: 15) {
                 HStack(spacing: 4) {
                     Image(systemName: "person.2")
                         .font(.system(size: 12))
@@ -102,8 +144,16 @@ struct MatchItemView: View {
                         .font(.caption)
                         .foregroundColor(.black)
                 }
-                .padding(.leading, 10)
-                .padding(.trailing, 10)
+                
+                HStack(spacing: 4) {
+                    Image(systemName: "wonsign.circle")
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+                    
+                    Text(price)
+                        .font(.caption)
+                        .foregroundColor(.black)
+                }
                 
                 HStack(spacing: 4) {
                     Image(genderIcon)
@@ -111,25 +161,11 @@ struct MatchItemView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 20, height: 20)
                         .foregroundColor(genderColor)
+                    
+                    Text(genderLabel)
+                        .font(.caption)
+                        .foregroundColor(.black)
                 }
-                
-                Spacer()
-                
-                Text(price)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.blue)
-            }
-            
-            // 하단: 실력 레벨
-            HStack {
-                Text(skillLevel)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.gray.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 Spacer()
             }
@@ -142,19 +178,4 @@ struct MatchItemView: View {
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
-}
-
-#Preview {
-    MatchItemView(
-        title: "풋살 초보분들 찾아여~",
-        location: "강남풋살파크",
-        distance: "1.2km",
-        time: "오늘 20:00",
-        participants: "2/10",
-        gender: .female,
-        rating: "4.6",
-        price: "15,000원",
-        skillLevel: "중급",
-        tags: []
-    )
 }

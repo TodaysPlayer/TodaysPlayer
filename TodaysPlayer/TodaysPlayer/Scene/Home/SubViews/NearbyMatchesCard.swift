@@ -68,6 +68,7 @@ struct NearbyMatchesCard: View {
                     } label: {
                         MatchItemView(
                             title: match.title,
+                            matchType: match.matchType,
                             location: match.location.name,
                             distance: formatDistance(match.location.coordinates),
                             time: match.dateTime.formatForDisplay(),

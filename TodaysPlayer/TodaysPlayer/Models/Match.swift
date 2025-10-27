@@ -16,17 +16,17 @@ struct Match: Codable, Identifiable, Hashable {
     let organizerName: String
     let organizerProfileURL: String?
     let teamId: String?
-    let matchType: String // "individual", "team"
-    let gender: String // "male", "female", "mixed"
+    let matchType: String   // "futsal", "soccer"
+    let gender: String      // "male", "female", "mixed"
     let location: MatchLocation
     let dateTime: Date
-    let duration: Int // 경기 시간 (분)
+    let duration: Int       // 경기 시간 (분)
     let maxParticipants: Int
     let skillLevel: String
     let position: String?
     let price: Int
-    var rating: Double? // 매치 평점 (0.0 ~ 5.0)
-    let status: String // "recruiting", "confirmed", "completed", "cancelled"
+    var rating: Double?     // 매치 평점 (0.0 ~ 5.0)
+    let status: String      // "recruiting", "confirmed", "completed", "cancelled"
     let tags: [String]
     let requirements: String?
     let participants: [String: String] // [userId: status] - "accepted", "pending", "rejected"
