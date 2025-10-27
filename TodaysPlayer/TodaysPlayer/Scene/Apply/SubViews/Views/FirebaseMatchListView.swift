@@ -54,7 +54,7 @@ struct FirebaseMatchListView: View {
                                         .padding(.vertical, 4)
                                         .background(match.matchType == "futsal" ? Color.green : Color.blue)
                                         .foregroundColor(.white)
-                                        .cornerRadius(8)
+                                        .cornerRadius(12)
                                     
                                     Spacer()
                                     
