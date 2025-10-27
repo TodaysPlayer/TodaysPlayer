@@ -88,7 +88,7 @@ struct MyPageView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
                             .scaledToFill()
-                            .foregroundStyle(Color.green)
+                            .foregroundStyle(Color.primaryBaseGreen)
                     }
                 }
                 .frame(width: 75, height: 75)
@@ -102,27 +102,27 @@ struct MyPageView: View {
                         Spacer()
                         NavigationLink(destination: ProfileEditView()) {
                             Image(systemName: "square.and.pencil")
-                                .foregroundStyle(Color(.green))
+                                .foregroundStyle(Color.futsalGreen)
                                 .font(.system(size: 15, weight: .medium))
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 6)
-                                .background(Color(.systemGray6))
+                                .background(Color.secondaryCoolGray)
                                 .cornerRadius(20)
                         }
                     }
                     HStack(spacing: 11.5) {
                         // 추후 추가될 종목에 따른 포지션 변경 요청
                         Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
-                            .font(.system(size: 11))
+                            .font(.system(size: 11).bold())
                             .padding(.horizontal, 30)
                             .padding(.vertical, 6)
-                            .background(Color(.systemGray5))
+                            .background(Color.secondaryCoolGray)
                             .cornerRadius(20)
-                        Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
-                            .font(.system(size: 11))
+                        Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel.skillLevelToKorean())
+                            .font(.system(size: 11).bold())
                             .padding(.horizontal, 30)
                             .padding(.vertical, 6)
-                            .background(Color(.systemGray5))
+                            .background(Color.secondaryCoolGray)
                             .cornerRadius(20)
                         Spacer()
                     }
@@ -140,19 +140,19 @@ struct MyPageView: View {
 
     private var statsRow: some View {
         HStack {
-            NavigationLink(destination: MatchListView()) {
-                // 나의 경기랑 탭이 겹치니 다른기능으로 바꾸기
-                Stat(icon: "backpack.fill", label: "장비 관리", color: .gray)
+            NavigationLink(destination: EmailListView()) {
+                // 당장은 연결할 뷰가 없어서 문의사항 보여주는 뷰로 변경
+                Stat(icon: "mail.fill", label: "문의 사항 관리", color: .secondaryDeepGray)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
                     )            }
-            .disabled(true)
+//            .disabled(true)
 
             NavigationLink(
                 destination: MyRatingView(viewModel: MyRatingViewModel())
             ) {
-                Stat(icon: "chart.line.uptrend.xyaxis", label: "나의 평점", color: .green.opacity(0.7))
+                Stat(icon: "chart.line.uptrend.xyaxis", label: "나의 평점", color: .futsalGreen)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -160,7 +160,7 @@ struct MyPageView: View {
             }
             
             NavigationLink(destination: ScrapView()) {
-                Stat(icon: "bookmark.fill", label: "찜한 매치", color: .cyan.opacity(0.4))
+                Stat(icon: "bookmark.fill", label: "찜한 매치", color: .secondaryMintGreen)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.gray.opacity(0.15), lineWidth: 1)
@@ -184,13 +184,15 @@ struct MyPageView: View {
     private var menuList: some View {
         VStack(spacing: 12) {
             NavigationLink(destination: AnnouncementView()) {
-                MyPageRow(icon: "megaphone.fill", iconColor: .blue, title: "앱 공지사항", subtitle: "최신 공지사항 및 업데이트 정보")
+                MyPageRow(icon: "megaphone.fill", iconColor: .secondaryMintGreen, title: "앱 공지사항", subtitle: "최신 공지사항 및 업데이트 정보")
             }
+            Divider()
             NavigationLink(destination: QuestionView()) {
-                MyPageRow(icon: "questionmark.circle.fill", iconColor: .green, title: "운영자에게 문의하기", subtitle: "궁금한 점이나 문제점을 문의하세요")
+                MyPageRow(icon: "questionmark.circle.fill", iconColor: .futsalGreen, title: "운영자에게 문의하기", subtitle: "궁금한 점이나 문제점을 문의하세요")
             }
+            Divider()
             NavigationLink(destination: PersonalityView()) {
-                MyPageRow(icon: "shield.lefthalf.fill", iconColor: .purple, title: "개인정보 처리방침", subtitle: "개인정보 보호 정책 및 이용약관")
+                MyPageRow(icon: "shield.lefthalf.fill", iconColor: .primaryLight, title: "개인정보 처리방침", subtitle: "개인정보 보호 정책 및 이용약관")
             }
         }
         .padding(7)

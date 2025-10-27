@@ -27,13 +27,13 @@ extension String {
     func skillLevelToKorean() -> String {
         switch self.lowercased() {
         case "beginner":
-            return "초급"
+            return "입문자"
         case "intermediate":
-            return "중급"
+            return "초급"
         case "advanced":
-            return "고급"
+            return "중급"
         case "expert":
-            return "전문가"
+            return "상급"
         default:
             return self
         }

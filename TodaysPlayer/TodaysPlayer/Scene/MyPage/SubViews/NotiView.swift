@@ -42,7 +42,7 @@ struct NotiView: View {
                         } label: {
                             HStack(alignment: .center, spacing: 12) {
                                 Image(systemName: "bell")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(.accentOrange)
                                 Text(message)
                                     .foregroundColor(.primary)
                                 Spacer()

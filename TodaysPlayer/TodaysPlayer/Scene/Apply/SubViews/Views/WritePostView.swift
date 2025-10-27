@@ -20,7 +20,7 @@ struct WritePostView: View {
         NavigationStack {
             ZStack {
                 ZStack(alignment: .bottom) {
-                    Color(.systemGray6)
+                    Color.gray.opacity(0.1)
                         .ignoresSafeArea()
                     
                     ScrollView {
@@ -361,7 +361,7 @@ struct WritePostView: View {
                         .disabled(!viewModel.isFormValid || viewModel.isSubmitting)
                         .padding(.vertical, 12)
                     }
-                    .background(Color(.systemBackground))
+                    .background(Color.gray.opacity(0.1))
                 }
                 .navigationTitle("용병 모집하기")
                 .navigationBarTitleDisplayMode(.inline)

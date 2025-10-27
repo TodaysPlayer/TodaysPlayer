@@ -24,12 +24,11 @@ struct MatchDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                MatchTagViewForMatch(match: viewModel.currentMatch, postedMatchCase: .allMatches)
-                
                 MatchDetailHeaderView(
-                    title: match.title,
-                    subtitle: "함께 할 플레이어를 모집합니다"
+                    title: match.title
                 )
+                
+                MatchTagViewForMatch(match: viewModel.currentMatch, postedMatchCase: .allMatches)
                 
                 MatchBasicInfoCardForMatch(match: viewModel.currentMatch)
                 MatchLocationSectionForMatch(match: match)
@@ -45,7 +44,7 @@ struct MatchDetailView: View {
             }
             .padding()
         }
-        .background(Color(.systemGray6))
+        .background(Color.gray.opacity(0.1))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -177,7 +176,7 @@ struct MatchBasicInfoCardForMatch: View {
             }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(Color.white)
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
     }

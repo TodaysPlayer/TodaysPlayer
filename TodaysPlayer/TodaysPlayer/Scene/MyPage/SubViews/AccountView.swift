@@ -23,7 +23,7 @@ struct AccountView: View {
     
     private var pwEdit: some View {
         NavigationLink(destination: PwEditView()) {
-            MyPageRow(icon: "key.viewfinder", iconColor: .green, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
+            MyPageRow(icon: "key.viewfinder", iconColor: .primaryBaseGreen, title: "비밀번호 변경", subtitle: "비밀번호를 변경할 수 있습니다.")
         }
         .padding(.horizontal)
     }
@@ -32,7 +32,7 @@ struct AccountView: View {
         Button {
             showLogoutAlert = true
         } label: {
-            MyPageRow(icon: "rectangle.portrait.and.arrow.right", iconColor: .orange, title: "로그아웃", subtitle: "현재 계정에서 로그아웃 합니다.")
+            MyPageRow(icon: "rectangle.portrait.and.arrow.right", iconColor: .accentOrange, title: "로그아웃", subtitle: "현재 계정에서 로그아웃 합니다.")
         }
         .alert("로그아웃 하시겠습니까?", isPresented: $showLogoutAlert) {
             Button("취소", role: .cancel) {
@@ -62,7 +62,7 @@ struct AccountView: View {
         Button {
             showDeleteAlert = true
         } label: {
-            MyPageRow(icon: "person.slash.fill", iconColor: .red, title: "회원 탈퇴", subtitle: "모든 정보를 지우고 회원 탈퇴 합니다.")
+            MyPageRow(icon: "person.slash.fill", iconColor: .accentRed, title: "회원 탈퇴", subtitle: "모든 정보를 지우고 회원 탈퇴 합니다.")
         }
         .alert("정말 탈퇴하시겠습니까?", isPresented: $showDeleteAlert) {
             Button("취소", role: .cancel) { }

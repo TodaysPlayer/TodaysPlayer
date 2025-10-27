@@ -1,4 +1,10 @@
-// FirebaseMatchListView.swift
+//
+//  FirebaseMatchListView.swift
+//  TodaysPlayer
+//
+//  Created by 권소정 on 9/24/25.
+//
+
 import SwiftUI
 import FirebaseFirestore
 
@@ -35,12 +41,12 @@ struct FirebaseMatchListView: View {
                             match: match
                         )) {
                             VStack(alignment: .leading, spacing: 12) {
-                                // 2️⃣ 제목
+                                // 제목
                                 Text(match.title)
                                     .font(.headline)
                                     .foregroundColor(.primary)
                                 
-                                // 1️⃣ 풋살/축구 태그
+                                // 풋살/축구 태그
                                 HStack {
                                     Text(match.matchType == "futsal" ? "풋살" : "축구")
                                         .font(.caption)
@@ -48,18 +54,12 @@ struct FirebaseMatchListView: View {
                                         .padding(.vertical, 4)
                                         .background(match.matchType == "futsal" ? Color.green : Color.blue)
                                         .foregroundColor(.white)
-                                        .cornerRadius(8)
+                                        .cornerRadius(12)
                                     
                                     Spacer()
-                                    
-                                    // 내 글이 아닐때만 북마크 공간 확보
-                                    if match.organizerId != AuthHelper.currentUserId {
-                                        Color.clear
-                                            .frame(width: 44, height: 44)
-                                    }
                                 }
                                 
-                                // 3️⃣ 시간
+                                // 시간
                                 HStack(spacing: 4) {
                                     Image(systemName: "clock")
                                         .font(.caption)
@@ -69,9 +69,9 @@ struct FirebaseMatchListView: View {
                                         .foregroundColor(.primary)
                                 }
                                 
-                                // 4️⃣ 장소명
+                                // 장소명
                                 HStack(spacing: 4) {
-                                    Image(systemName: "mappin.circle")
+                                    Image(systemName: "location")
                                         .font(.caption)
                                         .foregroundColor(.primary)
                                     Text(match.location.name)
@@ -79,7 +79,7 @@ struct FirebaseMatchListView: View {
                                         .foregroundColor(.primary)
                                 }
                                 
-                                // 5️⃣ 인원 / 참가비 / 성별 / 실력
+                                // 인원 / 참가비 / 성별 / 실력
                                 HStack(spacing: 16) {
                                     // 인원
                                     HStack(spacing: 2) {
@@ -102,12 +102,18 @@ struct FirebaseMatchListView: View {
                                     }
                                     
                                     // 성별
-                                    Text(match.genderKorean)
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
+                                    HStack(spacing: 2) {
+                                        Image(convertGenderIcon(gender: match.gender))
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 12, height: 12)
+                                        Text(match.genderKorean)
+                                            .font(.caption)
+                                            .foregroundColor(.primary)
+                                    }
                                     
                                     // 실력
-                                    Text(skillLevelKorean(match.skillLevel))
+                                    Text(match.skillLevel.skillLevelToKorean())
                                         .font(.caption)
                                         .foregroundColor(.primary)
                                     
@@ -115,7 +121,7 @@ struct FirebaseMatchListView: View {
                                 }
                             }
                             .padding()
-                            .background(Color(.systemBackground))
+                            .background(Color.white)
                             .cornerRadius(12)
                             .shadow(color: .black.opacity(0.1), radius: 4)
                         }
@@ -144,15 +150,16 @@ struct FirebaseMatchListView: View {
             filterViewModel.applyFilter()
         }
     }
-    
-    // 실력 레벨을 한글로 변환하는 헬퍼 함수
-    private func skillLevelKorean(_ level: String) -> String {
-        switch level.lowercased() {
-        case "beginner": return "초급"
-        case "intermediate": return "중급"
-        case "advanced": return "고급"
-        case "expert": return "상급"
-        default: return "무관"
+    private func convertGenderIcon(gender: String) -> String {
+        switch gender {
+        case "male":
+            return "icon_male"
+        case "female":
+            return "icon_female"
+        case "mixed":
+            return "icon_mixed"
+        default:
+            return "icon_mixed"
         }
     }
 }

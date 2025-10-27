@@ -182,7 +182,7 @@ struct MatchCardView: View {
             }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 4)
     }

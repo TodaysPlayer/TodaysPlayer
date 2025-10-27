@@ -20,11 +20,14 @@ struct EmailMessage: Codable, Identifiable {
 
 final class EmailCollection {
     static let shared = EmailCollection()
-    private init() {}
-
     private let storageKey = "email_collection_storage_key"
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+
+    private init() {
+        encoder.dateEncodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .iso8601
+    }
 
     func add(_ message: EmailMessage) {
         var current = fetchAll()
@@ -48,5 +51,29 @@ final class EmailCollection {
         } catch {
             // Silently ignore encoding errors for now
         }
+    }
+
+    func dumpAll() {
+        let messages = fetchAll()
+        if messages.isEmpty {
+            print("[EmailCollection] No messages saved.")
+        } else {
+            print("[EmailCollection] Total: \(messages.count)")
+            messages.forEach { print($0.debugDescription) }
+        }
+    }
+}
+
+extension EmailMessage {
+    var debugDescription: String {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return """
+        [\(df.string(from: createdAt))] \(subject)
+        - inquiryType: \(inquiryType)
+        - contactEmail: \(contactEmail)
+        - id: \(id.uuidString)
+        - body: \(body)
+        """
     }
 }

@@ -36,7 +36,8 @@ class ProfileEditViewModel: ObservableObject {
     
     @Published var region: Region = .서울
     @Published var position: Position = .공격수
-    @Published var level: SkillLevel = .입문자
+    @Published var levelRaw: String = "beginner" // 내부 저장용(영문 등 원문)
+    @Published var levelDisplay: String = "초급" // 화면 표시용(한국어)
     @Published var preferredTimes: Set<TimeOption> = []
     
     // MARK: - Options
@@ -52,13 +53,6 @@ class ProfileEditViewModel: ObservableObject {
         case 미드필더
         case 수비수
         case 골키퍼
-    }
-    enum SkillLevel: String, CaseIterable {
-        case 입문자
-        case 초보
-        case 중수
-        case 고수
-        case 쌉고수
     }
     enum Region: String, CaseIterable {
         case 서울
@@ -95,11 +89,12 @@ class ProfileEditViewModel: ObservableObject {
             position = .공격수
         }
         
-        if let lv = SkillLevel(rawValue: storedLevel), !storedLevel.isEmpty {
-            level = lv
+        if !storedLevel.isEmpty {
+            levelRaw = storedLevel
         } else {
-            level = .입문자
+            levelRaw = "beginner"
         }
+        levelDisplay = levelRaw.skillLevelToKorean()
         
         if let r = Region(rawValue: storedRegion), !storedRegion.isEmpty {
             region = r
@@ -115,21 +110,21 @@ class ProfileEditViewModel: ObservableObject {
         // 편집 내용을 AppStorage로 반영
         storedName = UserSessionManager.shared.currentUser?.displayName ?? ""
         storedPosition = position.rawValue
-        storedLevel = level.rawValue
+        storedLevel = levelRaw
         storedIntro = editIntro
         storedAvatarData = editAvatarData
         storedRegion = region.rawValue
         storedPreferredTimesRaw = preferredTimes.map { $0.rawValue }.sorted().joined(separator: ",")
-        saveToFirebase(position: position, level: level)
+        saveToFirebase(position: position, levelRaw: levelRaw)
     }
     
-    private func saveToFirebase(position: Position, level: SkillLevel) {
+    private func saveToFirebase(position: Position, levelRaw: String) {
         guard let uid = UserSessionManager.shared.currentUser?.id else { return }
         let db = Firestore.firestore()
         let docRef = db.collection("users").document(uid)
         let data: [String: Any] = [
             "position": position.rawValue,
-            "level": level.rawValue,
+            "level": levelRaw,
             "updatedAt": FieldValue.serverTimestamp()
         ]
         Task {
@@ -151,6 +146,11 @@ class ProfileEditViewModel: ObservableObject {
                 preferredTimes.insert(t)
             }
         }
+    }
+    
+    func updateLevel(raw: String) {
+        levelRaw = raw
+        levelDisplay = raw.skillLevelToKorean()
     }
     
     // MARK: - Photos

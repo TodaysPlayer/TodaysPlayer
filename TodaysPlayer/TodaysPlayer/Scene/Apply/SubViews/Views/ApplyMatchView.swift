@@ -84,7 +84,7 @@ struct ApplyMatchView: View {
                                     .scrollContentBackground(.hidden)
                                     .disabled(viewModel.isGeneratingAI) // AI 생성 중엔 비활성화
                             }
-                            .background(Color(.systemGray6))
+                            .background(Color.white)
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)

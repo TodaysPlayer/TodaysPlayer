@@ -136,7 +136,7 @@ struct QuestionView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(Color(.green)) // dark on light, adapts
+                .background(Color.primaryBaseGreen) // dark on light, adapts
                 .clipShape(RoundedRectangle(cornerRadius: 40))
             }
             .buttonStyle(.plain)
@@ -177,7 +177,7 @@ struct QuestionView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("연락처 정보")
                 .font(.headline)
-            ContactRow(icon: "envelope.fill", title: "이메일", detail: "support@futsalmatch.com")
+            ContactRow(icon: "envelope.fill", title: "이메일", detail: "inCollection@futsalmatch.com")
             ContactRow(icon: "phone.fill", title: "고객센터", detail: "1588-1234 (평일 09:00~18:00)")
             ContactRow(icon: "clock.fill", title: "운영시간", detail: "평일 09:00~18:00 (주말 및 공휴일 제외)")
         }
