@@ -18,23 +18,14 @@ struct MatchDashboardComponentView<T: MatchFilterType>: View {
             selectedTitle = buttonType
         } label: {
             Text(buttonType.title)
-                .foregroundStyle(.black)
+                .foregroundStyle(selectedTitle == buttonType ? Color.white : Color.secondaryDeepGray)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .background(selectedTitle == buttonType ? .green.opacity(0.1) : .gray.opacity(0.2))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 20)
-                        .strokeBorder(
-                            selectedTitle == buttonType ? Color.green.opacity(0.8) : Color.gray.opacity(0.8),
-                            lineWidth: 2
-                        )
-                }
+                .background(selectedTitle == buttonType ? Color.primaryBaseGreen : Color.secondaryCoolGray)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
 }
-
-
 
 
 /// MatchList DashBoard

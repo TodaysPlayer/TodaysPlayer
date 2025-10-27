@@ -17,9 +17,9 @@ struct MatchTagStyle: ViewModifier {
             .padding(.horizontal, 15)
             .foregroundColor(tag.textColor)
             .background(tag.backgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 12)
                     .stroke(tag.borderColor.opacity(0.2), lineWidth: 1)
             )
     }

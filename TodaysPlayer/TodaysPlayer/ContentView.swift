@@ -30,6 +30,7 @@ struct ContentView: View {
                 MyPageView()
             }
         }
+        .tint(Color.primaryBaseGreen)
         .environment(tabSelection)
     }
 }

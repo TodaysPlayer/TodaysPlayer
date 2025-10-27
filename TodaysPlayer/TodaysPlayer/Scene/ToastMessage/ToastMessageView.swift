@@ -18,7 +18,7 @@ struct ToastMessageView: View {
                manager.isShowing {
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color.green)
+                        .foregroundStyle(Color.primaryBaseGreen)
                     
                     Text(message)
                 }

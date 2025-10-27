@@ -15,7 +15,8 @@ struct MatchInfoView: View {
     let matchInfo: Match
     let postedMatchCase: PostedMatchCase
     let apply: (userId: String, rejectReason: String, status: ApplyStatus)   // 신청자Id: 참여상태
-    
+    let matchTagInfo: (matchType: String, appliedStatus: ApplyStatus, leftPersonCount: Int)
+
     @Binding var finishedMatchId: String
     @Binding var finishedMatchWithRatingId: String
     
@@ -26,6 +27,8 @@ struct MatchInfoView: View {
                 .foregroundStyle(Color.black)
                 .font(.headline)
                 .bold()
+            
+            MatchTagView(info: matchTagInfo, matchCase: postedMatchCase)
             
             MatchInfoDetailView(matchInfo: matchInfo)
                 .visible(apply.status != .rejected)

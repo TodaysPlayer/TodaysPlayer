@@ -10,8 +10,8 @@ import SwiftUI
 
 /// 인원수 표시 ProgressView Style
 struct LinearGaugeProgressStyle: ProgressViewStyle {
-    var tintColor: Color = .green
-    var backgroundColor: Color = .gray.opacity(0.2)
+    var tintColor: Color = .primaryBaseGreen
+    var backgroundColor: Color = .primaryBaseGreen.opacity(0.2)
     
     func makeBody(configuration: Configuration) -> some View {
         let fractionCompleted = configuration.fractionCompleted ?? 0

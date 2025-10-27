@@ -61,7 +61,7 @@ final class MatchListViewModel {
     private var updateTask: Task<Void, Never>?
     
     // 정렬 상태
-    var sortOption: MatchSortOption = .matchDateDesc {
+    var sortOption: MatchSortOption = .matchDateAsc {
         didSet { sortDisplayedMatches() }
     }
     
@@ -104,7 +104,7 @@ final class MatchListViewModel {
             default:
                 displayedMatches = []
             }
-            
+                        
             // 데이터가 없을 때만 서버 요청
             if isMatchEmpty {
                 lastAppliedSnapshot = nil
@@ -257,7 +257,7 @@ final class MatchListViewModel {
             if shouldUpdateDisplay {
                 updateDisplayedMatches(selectedFilterButton)
             }
-
+            
             hasMore = fetchedCount == pageSize && currentType != .finishedMatch
 
         } catch {
