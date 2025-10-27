@@ -189,8 +189,7 @@ struct QuestionView: View {
         guard let inquiryType else { return false }
         _ = inquiryType // silence unused warning if builds strip usage
         return !subject.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-               !bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-               isValidEmail(contactEmail)
+               !bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private func isValidEmail(_ email: String) -> Bool {
