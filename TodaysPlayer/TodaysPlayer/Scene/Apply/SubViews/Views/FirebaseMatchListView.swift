@@ -33,101 +33,13 @@ struct FirebaseMatchListView: View {
                 }
                 .padding(.top, 40)
             } else {
-                // ViewModel의 matches 표시
                 ForEach(filterViewModel.matches, id: \.id) { match in
                     ZStack(alignment: .topTrailing) {
-                        // 기존 카드 (NavigationLink)
-                        NavigationLink(destination: MatchDetailView(
-                            match: match
-                        )) {
-                            VStack(alignment: .leading, spacing: 12) {
-                                // 제목
-                                Text(match.title)
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                
-                                // 풋살/축구 태그
-                                HStack {
-                                    Text(match.matchType == "futsal" ? "풋살" : "축구")
-                                        .font(.caption)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 4)
-                                        .background(match.matchType == "futsal" ? Color.futsalGreen : Color.secondaryMintGreen)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(12)
-                                    
-                                    Spacer()
-                                }
-                                
-                                // 시간
-                                HStack(spacing: 4) {
-                                    Image(systemName: "clock")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                    Text(match.dateTime.formatForDisplay())
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                }
-                                
-                                // 장소명
-                                HStack(spacing: 4) {
-                                    Image(systemName: "location")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                    Text(match.location.name)
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                }
-                                
-                                // 인원 / 참가비 / 성별 / 실력
-                                HStack(spacing: 16) {
-                                    // 인원
-                                    HStack(spacing: 2) {
-                                        Image(systemName: "person.2")
-                                            .font(.caption2)
-                                            .foregroundColor(.primary)
-                                        Text("\(match.appliedParticipantsCount) / \(match.maxParticipants)")
-                                            .font(.caption)
-                                            .foregroundColor(.primary)
-                                    }
-                                    
-                                    // 참가비
-                                    HStack(spacing: 2) {
-                                        Image(systemName: "wonsign.circle")
-                                            .font(.caption2)
-                                            .foregroundColor(.primary)
-                                        Text(match.price == 0 ? "무료" : "\(match.price)원")
-                                            .font(.caption)
-                                            .foregroundColor(.primary)
-                                    }
-                                    
-                                    // 성별
-                                    HStack(spacing: 2) {
-                                        Image(convertGenderIcon(gender: match.gender))
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 12, height: 12)
-                                        Text(match.genderKorean)
-                                            .font(.caption)
-                                            .foregroundColor(.primary)
-                                    }
-                                    
-                                    // 실력
-                                    Text(match.skillLevel.skillLevelToKorean())
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                    
-                                    Spacer()
-                                }
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .shadow(color: .black.opacity(0.1), radius: 4)
+                        NavigationLink(destination: MatchDetailView(match: match)) {
+                            MatchCardView(match: match)
                         }
                         .buttonStyle(PlainButtonStyle())
                         
-                        // 북마크 버튼
                         BookmarkButton(
                             match: match,
                             isFavorited: favoriteViewModel.isFavorited(matchId: match.id),
@@ -150,18 +62,6 @@ struct FirebaseMatchListView: View {
             filterViewModel.applyFilter()
         }
     }
-    private func convertGenderIcon(gender: String) -> String {
-        switch gender {
-        case "male":
-            return "icon_male"
-        case "female":
-            return "icon_female"
-        case "mixed":
-            return "icon_mixed"
-        default:
-            return "icon_mixed"
-        }
-    }
 }
 
 // MARK: - 북마크 버튼 컴포넌트
@@ -180,7 +80,7 @@ struct BookmarkButton: View {
             Button(action: action) {
                 Image(systemName: isFavorited ? "bookmark.fill" : "bookmark")
                     .font(.system(size: 20))
-                    .foregroundColor(isFavorited ? .blue : .primary)
+                    .foregroundColor(isFavorited ? .primaryBaseGreen : .primary)
                     .frame(width: 44, height: 44)
                     .background(Color(.systemBackground))
                     .clipShape(Circle())
