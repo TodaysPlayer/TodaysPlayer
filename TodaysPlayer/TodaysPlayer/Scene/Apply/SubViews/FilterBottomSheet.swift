@@ -10,13 +10,10 @@ import SwiftUI
 struct FilterBottomSheet: View {
     @Binding var isPresented: Bool
     
-    // ✅ ViewModel 사용
     @EnvironmentObject var filterViewModel: FilterViewModel
     
-    // ✅ 임시 필터 (적용하기 전까지는 원본 유지)
     @State private var tempFilter: GameFilter
     
-    // 필터 선택 여부를 확인하는 computed property
     private var hasActiveFilters: Bool {
         tempFilter.matchType != nil ||
         !tempFilter.skillLevels.isEmpty ||
@@ -24,7 +21,6 @@ struct FilterBottomSheet: View {
         tempFilter.feeType != nil
     }
     
-    // ✅ 생성자에서 ViewModel의 currentFilter를 tempFilter에 복사
     init(isPresented: Binding<Bool>) {
         self._isPresented = isPresented
         self._tempFilter = State(initialValue: GameFilter())
@@ -65,7 +61,7 @@ struct FilterBottomSheet: View {
                                 filterToggleButton(
                                     title: matchType.rawValue,
                                     isSelected: tempFilter.matchType == matchType,
-                                    color: matchType.backgroundColor
+                                    color: matchType.rawValue == "풋살" ? .futsalGreen : .secondaryMintGreen
                                 ) {
                                     tempFilter.matchType = (tempFilter.matchType == matchType) ? nil : matchType
                                 }
@@ -84,7 +80,8 @@ struct FilterBottomSheet: View {
                             ForEach(SkillLevel.allCases, id: \.self) { skillLevel in
                                 filterToggleButton(
                                     title: skillLevel.rawValue,
-                                    isSelected: tempFilter.skillLevels.contains(skillLevel)
+                                    isSelected: tempFilter.skillLevels.contains(skillLevel),
+                                    color: .primaryBaseGreen
                                 ) {
                                     if tempFilter.skillLevels.contains(skillLevel) {
                                         tempFilter.skillLevels.remove(skillLevel)
@@ -105,7 +102,8 @@ struct FilterBottomSheet: View {
                             ForEach(Gender.allCases, id: \.self) { gender in
                                 filterToggleButton(
                                     title: gender.rawValue,
-                                    isSelected: tempFilter.gender == gender
+                                    isSelected: tempFilter.gender == gender,
+                                    color: .primaryBaseGreen
                                 ) {
                                     tempFilter.gender = (tempFilter.gender == gender) ? nil : gender
                                 }
@@ -122,7 +120,8 @@ struct FilterBottomSheet: View {
                             ForEach(FeeType.allCases, id: \.self) { feeType in
                                 filterToggleButton(
                                     title: feeType.rawValue,
-                                    isSelected: tempFilter.feeType == feeType
+                                    isSelected: tempFilter.feeType == feeType,
+                                    color: .primaryBaseGreen
                                 ) {
                                     tempFilter.feeType = (tempFilter.feeType == feeType) ? nil : feeType
                                 }
@@ -140,20 +139,18 @@ struct FilterBottomSheet: View {
                 Divider()
                 
                 HStack(spacing: 12) {
-                    // ✅ 조건 초기화 버튼
                     Button(action: {
                         tempFilter = GameFilter()
                     }) {
                         Text("조건 초기화")
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(hasActiveFilters ? .white : .secondary)
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(hasActiveFilters ? Color.green : Color(.systemGray5))
+                            .background(hasActiveFilters ? Color.primaryDark: Color.secondaryDeepGray)
                             .cornerRadius(12)
                     }
                     
-                    // ✅ 적용하기 버튼 (ViewModel 호출)
                     Button(action: {
                         // ViewModel에 필터 적용
                         filterViewModel.currentFilter = tempFilter
@@ -167,7 +164,7 @@ struct FilterBottomSheet: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(Color.blue)
+                            .background(Color.primaryBaseGreen)
                             .cornerRadius(12)
                     }
                 }
@@ -179,7 +176,6 @@ struct FilterBottomSheet: View {
         .presentationDetents([.height(500)])
         .presentationDragIndicator(.hidden)
         .onAppear {
-            // ✅ 시트가 나타날 때 ViewModel의 현재 필터를 tempFilter에 복사
             tempFilter = filterViewModel.currentFilter
         }
     }
@@ -212,12 +208,4 @@ struct FilterBottomSheet: View {
                 .cornerRadius(20)
         }
     }
-}
-
-#Preview {
-    @Previewable @State var isPresented = true
-    @Previewable @StateObject var filterViewModel = FilterViewModel()
-    
-    return FilterBottomSheet(isPresented: $isPresented)
-        .environmentObject(filterViewModel)
 }
