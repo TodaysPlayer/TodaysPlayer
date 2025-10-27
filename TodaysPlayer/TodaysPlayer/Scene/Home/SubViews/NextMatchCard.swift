@@ -11,6 +11,8 @@ import MapKit
 
 struct NextMatchCard: View {
     @Environment(TabSelection.self) var tabSelection
+    @State private var showNavigationAlert = false
+    @State private var matchToNavigate: Match?
     
     let user: User?
     let nextMatch: Match?
@@ -99,8 +101,9 @@ struct NextMatchCard: View {
                         }
                         
                         Button(action: {
-                            // 길찾기 기능
-                            openAppleMap(to: nextMatch)
+                            // 길찾기 기능 - 얼럿 표시 후 이동
+                            matchToNavigate = nextMatch
+                            showNavigationAlert = true
                         }) {
                             HStack {
                                 Image(systemName: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
@@ -113,7 +116,7 @@ struct NextMatchCard: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color.blue)
+                            .background(Color.futsalGreen)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                     }
@@ -162,6 +165,17 @@ struct NextMatchCard: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .alert("지도 앱으로 이동", isPresented: $showNavigationAlert) {
+            Button("취소", role: .cancel) {
+                matchToNavigate = nil
+            }
+            Button("이동") {
+                openAppleMap(to: matchToNavigate)
+                matchToNavigate = nil
+            }
+        } message: {
+            Text("Apple 지도 앱으로 이동하여 길찾기를 시작하시겠습니까?")
+        }
     }
     
     // MARK: - Helper Functions

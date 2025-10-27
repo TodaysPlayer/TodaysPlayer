@@ -37,7 +37,7 @@ class ProfileEditViewModel: ObservableObject {
     @Published var region: Region = .서울
     @Published var position: Position = .공격수
     @Published var levelRaw: String = "beginner" // 내부 저장용(영문 등 원문)
-    @Published var levelDisplay: String = "초급" // 화면 표시용(한국어)
+    @Published var levelDisplay: String = "입문자" // 화면 표시용(한국어)
     @Published var preferredTimes: Set<TimeOption> = []
     
     // MARK: - Options

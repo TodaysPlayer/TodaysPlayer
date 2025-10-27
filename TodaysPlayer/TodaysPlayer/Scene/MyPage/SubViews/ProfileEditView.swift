@@ -179,11 +179,12 @@ struct ProfileEditView: View {
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 15, weight: .regular))
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
+                            .frame(maxHeight: .infinity , alignment: .center)
+                            .padding(.horizontal, 21)
+//                            .padding(.vertical, 10)
                             .background(RoundedRectangle(cornerRadius: 20).fill(Color.secondaryCoolGray))
                         }
                     }
-                    
                     VStack(alignment: .leading, spacing: 7) {
                         Text("실력 레벨").font(.caption).foregroundColor(.gray)
                         Menu {
@@ -194,12 +195,13 @@ struct ProfileEditView: View {
                                 }
                             }
                         } label: {
-                            HStack(spacing: 35) {
+                            HStack(spacing: 25) {
                                 Text(viewModel.levelDisplay)
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 15, weight: .regular))
                             }
-                            .padding(.horizontal, 30)
+//                            .padding(.horizontal, 30)
+                            .frame(maxWidth: .infinity, alignment: .center)
                             .padding(.vertical, 10)
                             .background(RoundedRectangle(cornerRadius: 20).fill(Color.secondaryCoolGray))
                         }
@@ -216,7 +218,7 @@ struct ProfileEditView: View {
                                     .foregroundColor(viewModel.preferredTimes.contains(t) ? .white : .black)
                                     .padding(.vertical, 8)
                                     .padding(.horizontal, 12)
-                                    .background(viewModel.preferredTimes.contains(t) ? Color.primaryDark : Color(.systemGray5))
+                                    .background(viewModel.preferredTimes.contains(t) ? Color.primaryDark : Color.secondaryCoolGray)
                                     .cornerRadius(20)
                             }
                             .buttonStyle(.plain)
@@ -244,7 +246,7 @@ struct ProfileEditView: View {
                     dismiss()
                 })
                 {
-                    Text("저   장")
+                    Text("저장")
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                         .padding(.vertical, 12)

@@ -125,7 +125,7 @@ struct TodaysWeatherCard: View {
             .background(Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.blue.opacity(0.6), lineWidth: 1)
+                    .stroke(Color.futsalGreen, lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.bottom, 16)

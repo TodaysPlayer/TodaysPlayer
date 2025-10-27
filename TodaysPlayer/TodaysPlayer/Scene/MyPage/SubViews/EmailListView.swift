@@ -73,16 +73,6 @@ struct EmailListView: View {
                 }
             }
             .navigationTitle("문의 사항")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        reload()
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .help("Reload")
-                }
-            }
             .onAppear(perform: reload)
             .refreshable { reload() }
             .sheet(isPresented: $isPresentingDetail) {
@@ -123,12 +113,6 @@ private struct EmailRow: View {
                 Label(message.inquiryType, systemImage: "tag")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text("·")
-                    .foregroundStyle(.secondary)
-                Text(message.contactEmail)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
             }
             Text(message.body)
                 .font(.subheadline)
@@ -164,7 +148,7 @@ private struct EmailDetailView: View {
                     Divider()
                     Group {
                         Text("연락받을 이메일").font(.caption).foregroundStyle(.secondary)
-                        Text(message.contactEmail)
+                        Text(UserSessionManager.shared.currentUser?.email ?? "")
                     }
                     Divider()
                     Group {
