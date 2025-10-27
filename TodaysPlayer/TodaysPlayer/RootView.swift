@@ -14,7 +14,7 @@ struct RootView: View {
     var body: some View {
         Group {
             if userSessionManager.isLoading {
-                ProgressView()
+                LaunchScreenView()
             } else if userSessionManager.isLoggedIn {
                 ContentView()
                     .environmentObject(favoriteViewModel)
