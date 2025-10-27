@@ -129,7 +129,7 @@ struct ProfileEditView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("성별").font(.caption).foregroundColor(.gray)
                             HStack {
-                                Image(systemName: "figure.stand.dress.line.vertical.figure")
+                                Image("icon_mixed")
                                     .foregroundColor(.black)
                                 Text(UserSessionManager.shared.currentUser?.gender ?? "")
                                     .foregroundColor(.black)
