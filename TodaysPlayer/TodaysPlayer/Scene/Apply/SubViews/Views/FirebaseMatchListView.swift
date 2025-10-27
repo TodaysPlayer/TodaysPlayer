@@ -107,7 +107,7 @@ struct FirebaseMatchListView: View {
                                         .foregroundColor(.primary)
                                     
                                     // 실력
-                                    Text(skillLevelKorean(match.skillLevel))
+                                    Text(match.skillLevel.skillLevelToKorean())
                                         .font(.caption)
                                         .foregroundColor(.primary)
                                     
@@ -142,17 +142,6 @@ struct FirebaseMatchListView: View {
         }
         .onAppear {
             filterViewModel.applyFilter()
-        }
-    }
-    
-    // 실력 레벨을 한글로 변환하는 헬퍼 함수
-    private func skillLevelKorean(_ level: String) -> String {
-        switch level.lowercased() {
-        case "beginner": return "초급"
-        case "intermediate": return "중급"
-        case "advanced": return "고급"
-        case "expert": return "상급"
-        default: return "무관"
         }
     }
 }
