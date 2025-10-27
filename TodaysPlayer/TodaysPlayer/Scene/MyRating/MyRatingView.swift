@@ -29,5 +29,6 @@ struct MyRatingView: View {
         .background(Color.gray.opacity(0.1))
         .ignoresSafeArea()
         .toolbar(.hidden, for: .tabBar)
+        .navigationTitle("나의 평점")
     }
 }
