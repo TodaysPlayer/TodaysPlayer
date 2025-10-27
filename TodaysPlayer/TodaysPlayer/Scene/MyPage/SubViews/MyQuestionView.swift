@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct StoredEmailMessage: Identifiable, Codable, Equatable {
+struct StoredQuestionMessage: Identifiable, Codable, Equatable {
     let id: UUID
     let inquiryType: String
     let subject: String
@@ -24,19 +24,19 @@ final class EmailCollections {
 
     private init() {}
 
-    func fetchAll() -> [StoredEmailMessage] {
+    func fetchAll() -> [StoredQuestionMessage] {
         guard let data = UserDefaults.standard.data(forKey: storageKey) else {
             return []
         }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        if let msgs = try? decoder.decode([StoredEmailMessage].self, from: data) {
+        if let msgs = try? decoder.decode([StoredQuestionMessage].self, from: data) {
             return msgs
         }
         return []
     }
 
-    func saveAll(_ msgs: [StoredEmailMessage]) {
+    func saveAll(_ msgs: [StoredQuestionMessage]) {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         if let data = try? encoder.encode(msgs) {
@@ -45,16 +45,18 @@ final class EmailCollections {
     }
 }
 
-struct EmailListView: View {
-    @State private var messages: [StoredEmailMessage] = []
-    @State private var selected: StoredEmailMessage?
+struct MyQuestionView: View {
+    @State private var messages: [StoredQuestionMessage] = []
+    @State private var selected: StoredQuestionMessage?
     @State private var isPresentingDetail: Bool = false
 
     var body: some View {
-        NavigationStack {
+        ZStack {
+            Color.gray.opacity(0.1)
+                .ignoresSafeArea()
             Group {
                 if messages.isEmpty {
-                    ContentUnavailableView("No Emails", systemImage: "tray", description: Text("저장된 이메일이 없습니다."))
+                    ContentUnavailableView("No Questions", systemImage: "tray", description: Text("저장된 문의 사항이 없습니다."))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List {
@@ -63,21 +65,25 @@ struct EmailListView: View {
                                 selected = message
                                 isPresentingDetail = true
                             } label: {
-                                EmailRow(message: message)
+                                QuestionRow(message: message)
                             }
                             .buttonStyle(.plain)
                         }
                         .onDelete(perform: delete)
                     }
                     .listStyle(.insetGrouped)
+                    .scrollContentBackground(.hidden)
+                    .background(.clear)
+                    .padding(.top, 8)
                 }
             }
-            .navigationTitle("문의 사항")
+            .navigationTitle("내 문의 사항")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: reload)
             .refreshable { reload() }
             .sheet(isPresented: $isPresentingDetail) {
                 if let selected {
-                    EmailDetailView(message: selected)
+                    QuestionDetailView(message: selected)
                 }
             }
         }
@@ -95,8 +101,8 @@ struct EmailListView: View {
     }
 }
 
-private struct EmailRow: View {
-    let message: StoredEmailMessage
+private struct QuestionRow: View {
+    let message: StoredQuestionMessage
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -129,8 +135,8 @@ private struct EmailRow: View {
     }
 }
 
-private struct EmailDetailView: View {
-    let message: StoredEmailMessage
+private struct QuestionDetailView: View {
+    let message: StoredQuestionMessage
 
     var body: some View {
         NavigationStack {
@@ -165,7 +171,7 @@ private struct EmailDetailView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             }
-            .navigationTitle("문의 사항")
+            .navigationTitle("세부 문의 사항")
         }
     }
 
@@ -178,14 +184,14 @@ private struct EmailDetailView: View {
 
 #Preview {
     // Provide some sample data for preview without touching UserDefaults
-    let samples: [StoredEmailMessage] = [
-        StoredEmailMessage(inquiryType: "Support", subject: "로그인 문제", body: "로그인이 되지 않습니다.", contactEmail: "user1@example.com"),
-        StoredEmailMessage(inquiryType: "Feedback", subject: "앱이 좋아요", body: "디자인이 마음에 듭니다.", contactEmail: "user2@example.com"),
-        StoredEmailMessage(inquiryType: "Bug", subject: "크래시 발생", body: "특정 화면에서 크래시가 발생합니다.", contactEmail: "user3@example.com")
+    let samples: [StoredQuestionMessage] = [
+        StoredQuestionMessage(inquiryType: "Support", subject: "로그인 문제", body: "로그인이 되지 않습니다.", contactEmail: "user1@example.com"),
+        StoredQuestionMessage(inquiryType: "Feedback", subject: "앱이 좋아요", body: "디자인이 마음에 듭니다.", contactEmail: "user2@example.com"),
+        StoredQuestionMessage(inquiryType: "Bug", subject: "크래시 발생", body: "특정 화면에서 크래시가 발생합니다.", contactEmail: "user3@example.com")
     ]
 
     return NavigationStack {
-        EmailListView()
+        MyQuestionView()
             .onAppear {
                 // Inject sample data for preview by saving to UserDefaults
                 let encoder = JSONEncoder()

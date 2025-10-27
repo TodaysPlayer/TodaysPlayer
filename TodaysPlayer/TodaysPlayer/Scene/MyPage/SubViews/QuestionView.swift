@@ -46,15 +46,8 @@ struct QuestionView: View {
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
         }
-        .background(Color(.systemGray6))
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("운영자에게 문의하기")
-                    .font(.title2)
-                    .bold()
-            }
-        }
+        .background(Color.gray.opacity(0.1))
+        .navigationTitle("운영자에게 문의하기")
         .alert("알림", isPresented: $showAlert, actions: {
             Button("확인", role: .cancel) {}
         }, message: {
@@ -196,8 +189,7 @@ struct QuestionView: View {
         guard let inquiryType else { return false }
         _ = inquiryType // silence unused warning if builds strip usage
         return !subject.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-               !bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-               isValidEmail(contactEmail)
+               !bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private func isValidEmail(_ email: String) -> Bool {
@@ -211,13 +203,13 @@ struct QuestionView: View {
         guard let inquiryType else { return }
 
         // Create and store the email message
-        let message = EmailMessage(
+        let message = QuestionMessage(
             inquiryType: inquiryType.title,
             subject: subject.trimmingCharacters(in: .whitespacesAndNewlines),
             body: bodyText.trimmingCharacters(in: .whitespacesAndNewlines),
             contactEmail: contactEmail.trimmingCharacters(in: .whitespacesAndNewlines)
         )
-        EmailCollection.shared.add(message)
+        QuestionCollection.shared.add(message)
 
         // Notify user
         alertMessage = "문의가 정상적으로 접수되었습니다. 빠른 시일 내에 답변드리겠습니다."

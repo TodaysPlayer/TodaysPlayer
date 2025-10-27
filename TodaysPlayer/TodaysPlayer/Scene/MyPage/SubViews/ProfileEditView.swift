@@ -259,9 +259,9 @@ struct ProfileEditView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 15)
         .toolbar(.hidden, for: .tabBar)
-        .background(Color.gray.opacity(0.1).ignoresSafeArea())
+        .background(Color.gray.opacity(0.1))
         .navigationTitle("프로필 편집")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea(edges: .bottom)
 
         // 화면 최초 진입 시, 저장된 값을 편집용 상태로 로드 (한 번만 실행)

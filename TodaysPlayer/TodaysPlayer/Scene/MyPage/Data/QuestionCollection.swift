@@ -1,6 +1,6 @@
 import Foundation
 
-struct EmailMessage: Codable, Identifiable {
+struct QuestionMessage: Codable, Identifiable {
     let id: UUID
     let inquiryType: String
     let subject: String
@@ -18,9 +18,9 @@ struct EmailMessage: Codable, Identifiable {
     }
 }
 
-final class EmailCollection {
-    static let shared = EmailCollection()
-    private let storageKey = "email_collection_storage_key"
+final class QuestionCollection {
+    static let shared = QuestionCollection()
+    private let storageKey = "question_collection_storage_key"
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
@@ -29,22 +29,22 @@ final class EmailCollection {
         decoder.dateDecodingStrategy = .iso8601
     }
 
-    func add(_ message: EmailMessage) {
+    func add(_ message: QuestionMessage) {
         var current = fetchAll()
         current.append(message)
         saveAll(current)
     }
 
-    func fetchAll() -> [EmailMessage] {
+    func fetchAll() -> [QuestionMessage] {
         guard let data = UserDefaults.standard.data(forKey: storageKey) else { return [] }
         do {
-            return try decoder.decode([EmailMessage].self, from: data)
+            return try decoder.decode([QuestionMessage].self, from: data)
         } catch {
             return []
         }
     }
 
-    private func saveAll(_ messages: [EmailMessage]) {
+    private func saveAll(_ messages: [QuestionMessage]) {
         do {
             let data = try encoder.encode(messages)
             UserDefaults.standard.set(data, forKey: storageKey)
@@ -56,15 +56,15 @@ final class EmailCollection {
     func dumpAll() {
         let messages = fetchAll()
         if messages.isEmpty {
-            print("[EmailCollection] No messages saved.")
+            print("[QuestionCollection] No messages saved.")
         } else {
-            print("[EmailCollection] Total: \(messages.count)")
+            print("[QuestionCollection] Total: \(messages.count)")
             messages.forEach { print($0.debugDescription) }
         }
     }
 }
 
-extension EmailMessage {
+extension QuestionMessage {
     var debugDescription: String {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
