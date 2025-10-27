@@ -121,7 +121,7 @@ struct FirebaseMatchListView: View {
                                 }
                             }
                             .padding()
-                            .background(Color.gray.opacity(0.1))
+                            .background(Color.white)
                             .cornerRadius(12)
                             .shadow(color: .black.opacity(0.1), radius: 4)
                         }
