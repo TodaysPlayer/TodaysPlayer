@@ -88,10 +88,10 @@ struct MatchItemView: View {
             HStack(spacing: 10) {
                 Text(skillLevel)
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color.gray.opacity(0.1))
+                    .background(Color.secondaryDeepGray.opacity(0.5))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 Text(matchType == "futsal" ? "풋살" : "축구")
@@ -99,7 +99,7 @@ struct MatchItemView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(matchType == "futsal" ? Color.green : Color.blue)
+                    .background(matchType == "futsal" ? Color.futsalGreen : Color.secondaryMintGreen)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 Spacer()

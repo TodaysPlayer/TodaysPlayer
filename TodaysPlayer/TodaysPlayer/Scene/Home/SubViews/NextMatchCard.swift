@@ -116,7 +116,7 @@ struct NextMatchCard: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color.blue)
+                            .background(Color.futsalGreen)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                     }
