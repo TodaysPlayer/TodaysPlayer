@@ -82,7 +82,6 @@ struct SortBottomSheet: View {
                     }
                     .padding(.vertical, 10)
                     .padding(.horizontal, 20)
-                    .background(Color(.systemGray6))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .padding(.horizontal)
