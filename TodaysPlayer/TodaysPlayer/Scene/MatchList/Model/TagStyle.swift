@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import SwiftUI
+
 protocol TagStyle {
     var backgroundColor: Color { get }
     var textColor: Color { get }
@@ -23,8 +25,8 @@ enum MatchType: String, TagStyle, CaseIterable {
     
     var backgroundColor: Color {
         switch self {
-        case .futsal: return Color.green
-        case .soccer: return Color.blue
+        case .futsal: return .primaryBaseGreen
+        case .soccer: return .secondaryMintGreen
         }
     }
     
@@ -32,8 +34,8 @@ enum MatchType: String, TagStyle, CaseIterable {
     
     var borderColor: Color {
         switch self {
-        case .futsal: return Color.green
-        case .soccer: return Color.blue
+        case .futsal: return .primaryDark
+        case .soccer: return .secondaryDeepGray
         }
     }
 }
@@ -47,8 +49,8 @@ enum MatchInfoStatus: String, TagStyle {
 
     var backgroundColor: Color {
         switch self {
-        case .deadline: return Color(hex: "#F4B183")
-        case .lastOne: return Color(hex: "#FFD966")
+        case .deadline: return .accentOrange
+        case .lastOne: return .primaryLight
         }
     }
 
@@ -56,8 +58,8 @@ enum MatchInfoStatus: String, TagStyle {
 
     var borderColor: Color {
         switch self {
-        case .deadline: return Color(hex: "#E57C04")
-        case .lastOne: return Color(hex: "#F1C232")
+        case .deadline: return .accentOrange
+        case .lastOne: return .primaryBaseGreen
         }
     }
 }
@@ -73,37 +75,25 @@ enum ApplyStatus: String, TagStyle, CaseIterable {
     
     var backgroundColor: Color {
         switch self {
-        case .standby: return Color(hex: "#FFE699")
-        case .accepted: return Color(hex: "#A9D18E")
-        case .rejected: return Color(hex: "#F4CCCC")
-        case .allType: return Color(hex: "#D9D9D9")
+        case .standby: return .primaryLight
+        case .accepted: return .primaryDark
+        case .rejected: return .accentRed
+        case .allType: return .secondaryCoolGray
         }
     }
 
-    var textColor: Color { .black }
+    var textColor: Color {
+        switch self {
+        default: return .white
+        }
+    }
 
     var borderColor: Color {
         switch self {
-        case .standby: return Color(hex: "#E1B800")
-        case .accepted: return Color(hex: "#6AA84F")
-        case .rejected: return Color(hex: "#CC0000")
-        case .allType: return Color(hex: "#B7B7B7")
+        case .standby: return .primaryBaseGreen
+        case .accepted: return .primaryDark
+        case .rejected: return .accentRed
+        case .allType: return .secondaryDeepGray
         }
     }
-}
-
-
-extension Color {
-  init(hex: String) {
-    let scanner = Scanner(string: hex)
-    _ = scanner.scanString("#")
-    
-    var rgb: UInt64 = 0
-    scanner.scanHexInt64(&rgb)
-    
-    let r = Double((rgb >> 16) & 0xFF) / 255.0
-    let g = Double((rgb >>  8) & 0xFF) / 255.0
-    let b = Double((rgb >>  0) & 0xFF) / 255.0
-    self.init(red: r, green: g, blue: b)
-  }
 }

@@ -31,7 +31,7 @@ struct ProfileEditView: View {
                                 Image(systemName: "person.crop.circle.fill")
                                     .resizable()
                                     .scaledToFill()
-                                    .foregroundStyle(Color(.green))
+                                    .foregroundStyle(Color(.green).opacity(0.7))
                             }
                         }
                         .frame(width: 100, height: 100)
@@ -72,20 +72,21 @@ struct ProfileEditView: View {
                         .padding(10)
                         .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
                     }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("연락처").font(.caption).foregroundColor(.gray)
-                        HStack {
-                            Image(systemName: "phone")
-                                .foregroundColor(.black)
-                            Text(UserSessionManager.shared.currentUser?.phoneNumber ?? "")
-                                .foregroundColor(.black)
-                                .font(.body)
-                                .disabled(true)
-                            Spacer()
-                        }
-                        .padding(10)
-                        .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
-                    }
+                    // 연락처는 당장 받아오는 데이터가 아니므로 추후 필요한 상황에 활성화 예정
+//                    VStack(alignment: .leading, spacing: 4) {
+//                        Text("연락처").font(.caption).foregroundColor(.gray)
+//                        HStack {
+//                            Image(systemName: "phone")
+//                                .foregroundColor(.black)
+//                            Text(UserSessionManager.shared.currentUser?.phoneNumber ?? "")
+//                                .foregroundColor(.black)
+//                                .font(.body)
+//                                .disabled(true)
+//                            Spacer()
+//                        }
+//                        .padding(10)
+//                        .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemGray5)))
+//                    }
                     VStack(alignment: .leading, spacing: 4) {
                         Text("이메일").font(.caption).foregroundColor(.gray)
                         HStack {
@@ -129,7 +130,7 @@ struct ProfileEditView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("성별").font(.caption).foregroundColor(.gray)
                             HStack {
-                                Image(systemName: "figure.stand.dress.line.vertical.figure")
+                                Image("icon_mixed")
                                     .foregroundColor(.black)
                                 Text(UserSessionManager.shared.currentUser?.gender ?? "")
                                     .foregroundColor(.black)
@@ -151,9 +152,9 @@ struct ProfileEditView: View {
                 set: {viewModel.position = $0 }
             )
             
-            let levelBinding = Binding(
-                get: {viewModel.level },
-                set: {viewModel.level = $0 }
+            let levelBinding = Binding<String>(
+                get: { viewModel.levelRaw },
+                set: { viewModel.updateLevel(raw: $0) }
             )
             
             
@@ -186,13 +187,14 @@ struct ProfileEditView: View {
                         Text("실력 레벨").font(.caption).foregroundColor(.gray)
                         Menu {
                             Picker("실력 레벨", selection: levelBinding) {
-                                ForEach(ProfileEditViewModel.SkillLevel.allCases, id: \.self) { lv in
-                                  Text(lv.rawValue).tag(lv)
+                                let levelOptions = ["beginner", "intermediate", "advanced", "expert"]
+                                ForEach(levelOptions, id: \.self) { raw in
+                                    Text(raw.skillLevelToKorean()).tag(raw)
                                 }
                             }
                         } label: {
                             HStack(spacing: 35) {
-                                Text(viewModel.level.rawValue)
+                                Text(viewModel.levelDisplay)
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 15, weight: .regular))
                             }

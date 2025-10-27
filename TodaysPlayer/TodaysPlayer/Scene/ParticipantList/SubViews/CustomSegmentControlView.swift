@@ -29,14 +29,14 @@ struct CustomSegmentControlView: View {
             ForEach(categories, id: \.self) { status in
                 ZStack(alignment: .bottom) {
                     Text(status)
-                        .foregroundColor(selectedStatus == status ? .green : .gray)
+                        .foregroundColor(selectedStatus == status ? .primaryBaseGreen : .secondaryDeepGray)
                         .font(.headline)
                         .lineLimit(1) 
                         .minimumScaleFactor(0.7)
                         .overlay(
                             VStack {
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.green.opacity(0.5))
+                                    .fill(Color.primaryBaseGreen)
                                     .frame(height: 3)
                                     .matchedGeometryEffect(id: "underline", in: underlineNamespace)
                                     .offset(y: 10)

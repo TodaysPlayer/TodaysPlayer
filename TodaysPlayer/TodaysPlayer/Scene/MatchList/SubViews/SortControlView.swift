@@ -37,7 +37,7 @@ struct SortSheetButtonView: View {
                     Text("정렬")
                         .font(.system(size: 15, weight: .medium))
                 }
-                .foregroundColor(.green.opacity(0.8))
+                .foregroundColor(.secondaryDeepGray)
             }
             .sheet(isPresented: $showSortSheet) {
                 SortBottomSheet(selectedOption: $selectedOption)

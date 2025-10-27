@@ -26,10 +26,11 @@ struct ContentView: View {
                 MatchListView()
             }
             
-            Tab("프로필", systemImage: "person", value: 3) {
+            Tab("마이페이지", systemImage: "person", value: 3) {
                 MyPageView()
             }
         }
+        .tint(Color.primaryBaseGreen)
         .environment(tabSelection)
     }
 }

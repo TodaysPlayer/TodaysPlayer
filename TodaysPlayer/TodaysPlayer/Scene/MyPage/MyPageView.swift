@@ -38,7 +38,7 @@ struct MyPageView: View {
                     bannerSection
                     menuList
                 }
-                .padding(.vertical, 16)
+                .padding(.top, 8)
                 .padding(.horizontal, 16)
             }
             .background(Color.gray.opacity(0.1))
@@ -64,7 +64,6 @@ struct MyPageView: View {
                 }
             }
         }
-        .padding(.top, 8)
     }
 
     private var profileCard: some View {
@@ -89,7 +88,7 @@ struct MyPageView: View {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
                             .scaledToFill()
-                            .foregroundStyle(Color.green)
+                            .foregroundStyle(Color.green.opacity(0.7))
                     }
                 }
                 .frame(width: 75, height: 75)
@@ -115,14 +114,12 @@ struct MyPageView: View {
                         // 추후 추가될 종목에 따른 포지션 변경 요청
                         Text(storedPosition.isEmpty ? "포지션 미설정" : storedPosition)
                             .font(.system(size: 11))
-//                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
                             .padding(.horizontal, 30)
                             .padding(.vertical, 6)
                             .background(Color(.systemGray5))
                             .cornerRadius(20)
-                        Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel)
+                        Text(storedLevel.isEmpty ? "레벨 미설정" : storedLevel.skillLevelToKorean())
                             .font(.system(size: 11))
-//                            .frame(maxWidth: .infinity, maxHeight: .infinity , alignment: .center)
                             .padding(.horizontal, 30)
                             .padding(.vertical, 6)
                             .background(Color(.systemGray5))
