@@ -27,10 +27,6 @@ struct ApplyView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("용병 모집")
                             .font(.title.bold())
-                        
-                        Text("함께할 팀원을 찾아보세요")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 8)

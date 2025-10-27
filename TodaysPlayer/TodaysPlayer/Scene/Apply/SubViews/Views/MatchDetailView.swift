@@ -27,8 +27,7 @@ struct MatchDetailView: View {
                 MatchTagViewForMatch(match: viewModel.currentMatch, postedMatchCase: .allMatches)
                 
                 MatchDetailHeaderView(
-                    title: match.title,
-                    subtitle: "함께 할 플레이어를 모집합니다"
+                    title: match.title
                 )
                 
                 MatchBasicInfoCardForMatch(match: viewModel.currentMatch)

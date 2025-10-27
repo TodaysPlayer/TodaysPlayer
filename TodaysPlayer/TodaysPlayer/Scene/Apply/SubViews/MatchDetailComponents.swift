@@ -11,17 +11,12 @@ import SwiftUI
 // MARK: - 헤더 컴포넌트
 struct MatchDetailHeaderView: View {
     let title: String
-    let subtitle: String
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.title2)
                 .fontWeight(.bold)
-            
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
         }
     }
 }
