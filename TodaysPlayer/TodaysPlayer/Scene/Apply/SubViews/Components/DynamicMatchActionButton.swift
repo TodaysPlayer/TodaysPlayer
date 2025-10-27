@@ -35,6 +35,7 @@ struct DynamicMatchActionButton: View {
                     } label: {
                         buttonLabel
                     }
+                    .disabled(!viewModel.isButtonEnabled)
                     .background(
                         NavigationLink(
                             destination: ApplyMatchView(match: viewModel.match),
