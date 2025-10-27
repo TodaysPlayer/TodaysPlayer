@@ -109,7 +109,7 @@ struct PersonalityView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("개인정보 보호 담당자").font(.subheadline.weight(.semibold))
                             Text("성명: 김개인 / 직책: 개인정보보호책임자")
-                            Text("연락처: privacy@futsalmatch.com")
+                            Text("연락처: inCollection@futsalmatch.com")
                         }
                         .foregroundStyle(.secondary)
                         VStack(alignment: .leading, spacing: 2) {
@@ -138,6 +138,7 @@ struct PersonalityView: View {
             .padding(.vertical, 12)
         }
         .navigationTitle("개인정보 처리방침")
+        .padding(.top, 8)
         .toolbar(.hidden, for: .tabBar)
         .background(Color.gray.opacity(0.1))
     }
