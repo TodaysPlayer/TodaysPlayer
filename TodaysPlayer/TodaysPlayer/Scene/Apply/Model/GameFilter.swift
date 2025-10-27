@@ -30,9 +30,9 @@ enum Region: String, CaseIterable {
 
 // 실력 레벨 enum
 enum SkillLevel: String, CaseIterable {
-    case beginner = "초급"
-    case intermediate = "중급"
-    case advanced = "고급"
+    case beginner = "입문자"
+    case intermediate = "초급"
+    case advanced = "중급"
     case expert = "상급"
 }
 
