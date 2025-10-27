@@ -186,7 +186,7 @@ struct ApplyMatchView: View {
                         }
                     }
                     .background(
-                        (viewModel.isFormValid && !viewModel.isSubmitting) ? Color.green : Color.gray
+                        (viewModel.isFormValid && !viewModel.isSubmitting) ? Color.primaryBaseGreen : Color.secondaryDeepGray
                     )
                     .cornerRadius(12)
                     .disabled(!viewModel.isFormValid || viewModel.isSubmitting)
@@ -231,7 +231,7 @@ struct ApplyMatchView: View {
                 .foregroundColor(isSelected ? .white : .primary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .background(isSelected ? Color.blue : Color(.systemGray5))
+                .background(isSelected ? Color.primaryBaseGreen : Color(.systemGray5))
                 .cornerRadius(16)
         }
     }
@@ -256,21 +256,21 @@ struct ApplyMatchInfoCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // 제목
+            Text(match.title)
+                .font(.headline)
+            
             HStack {
                 Text(match.matchType == "futsal" ? "풋살" : "축구")
                     .font(.caption)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(match.matchType == "futsal" ? Color.green : Color.blue)
+                    .background(match.matchType == "futsal" ? Color.futsalGreen : Color.secondaryMintGreen)
                     .foregroundColor(.white)
                     .cornerRadius(8)
                 
                 Spacer()
             }
             
-            Text(match.title)
-                .font(.headline)
             
             Divider()
             

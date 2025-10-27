@@ -45,7 +45,7 @@ struct CalendarView: View {
         HStack {
             Button(action: moveToPreviousWeek) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(canMoveToPreviousWeek ? .blue : .secondary)
+                    .foregroundColor(canMoveToPreviousWeek ? .primaryBaseGreen : .secondary)
                     .padding(8)
             }
             .disabled(!canMoveToPreviousWeek)
@@ -60,7 +60,7 @@ struct CalendarView: View {
             
             Button(action: moveToNextWeek) {
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.primaryBaseGreen)
                     .padding(8)
             }
         }
@@ -200,7 +200,7 @@ struct DateCell: View {
             // 오늘 날짜 인디케이터
             if isToday && !isSelected {
                 Circle()
-                    .fill(Color.blue)
+                    .fill(Color.primaryBaseGreen)
                     .frame(width: 4, height: 4)
             } else {
                 Circle()
@@ -218,7 +218,7 @@ struct DateCell: View {
         } else if isSelected {
             return .white
         } else if isToday {
-            return .blue
+            return .primaryBaseGreen
         } else {
             return .primary
         }
@@ -229,7 +229,7 @@ struct DateCell: View {
         if isPast {
             return .clear
         } else if isSelected {
-            return .blue
+            return .primaryBaseGreen
         } else {
             return .clear
         }

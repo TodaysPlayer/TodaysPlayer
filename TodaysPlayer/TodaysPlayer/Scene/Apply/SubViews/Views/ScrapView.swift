@@ -53,12 +53,9 @@ struct ScrapView: View {
                                     match: match,
                                     isFavorited: favoriteViewModel.isFavorited(matchId: match.id),
                                     action: {
-                                        // 먼저 로컬에서 즉시 제거
                                         withAnimation {
                                             scrapedMatches.removeAll { $0.id == match.id }
                                         }
-                                        
-                                        // 그 다음 Firebase 삭제 (백그라운드)
                                         favoriteViewModel.toggleFavorite(
                                             matchId: match.id,
                                             organizerId: match.organizerId
@@ -94,113 +91,5 @@ struct ScrapView: View {
                 self.isLoading = false
             }
         }
-    }
-}
-
-// MARK: - 매치 카드 컴포넌트 (FirebaseMatchListView와 동일)
-struct MatchCardView: View {
-    let match: Match
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // 1️⃣ 풋살/축구 태그
-            HStack {
-                Text(match.matchType == "futsal" ? "풋살" : "축구")
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(match.matchType == "futsal" ? Color.green : Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-                
-                Spacer()
-                
-                // 북마크 공간 확보
-                Color.clear
-                    .frame(width: 44, height: 44)
-            }
-            
-            // 2️⃣ 제목
-            Text(match.title)
-                .font(.headline)
-                .foregroundColor(.primary)
-            
-            // 3️⃣ 시간 (시작 시간만)
-            HStack(spacing: 4) {
-                Image(systemName: "clock")
-                    .font(.caption)
-                    .foregroundColor(.primary)
-                Text(match.dateTime.formatForDisplay())
-                    .font(.caption)
-                    .foregroundColor(.primary)
-            }
-            
-            // 4️⃣ 장소명
-            HStack(spacing: 4) {
-                Image(systemName: "mappin.circle")
-                    .font(.caption)
-                    .foregroundColor(.primary)
-                Text(match.location.name)
-                    .font(.caption)
-                    .foregroundColor(.primary)
-            }
-            
-            // 5️⃣ 인원 / 참가비 / 성별 / 실력
-            HStack(spacing: 16) {
-                // 인원
-                HStack(spacing: 2) {
-                    Image(systemName: "person.2")
-                        .font(.caption2)
-                        .foregroundColor(.primary)
-                    Text("\(match.appliedParticipantsCount)/\(match.maxParticipants)명")
-                        .font(.caption)
-                        .foregroundColor(.primary)
-                }
-                
-                // 참가비
-                HStack(spacing: 2) {
-                    Image(systemName: "wonsign.circle")
-                        .font(.caption2)
-                        .foregroundColor(.primary)
-                    Text(match.price == 0 ? "무료" : "\(match.price)원")
-                        .font(.caption)
-                        .foregroundColor(.primary)
-                }
-                
-                // 성별
-                Text(match.genderKorean)
-                    .font(.caption)
-                    .foregroundColor(.primary)
-                
-                // 실력
-                Text(skillLevelKorean(match.skillLevel))
-                    .font(.caption)
-                    .foregroundColor(.primary)
-                
-                Spacer()
-            }
-        }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.1), radius: 4)
-    }
-    
-    // 실력 레벨을 한글로 변환하는 헬퍼 함수
-    private func skillLevelKorean(_ level: String) -> String {
-        switch level.lowercased() {
-        case "beginner": return "입문자"
-        case "amateur": return "초급"
-        case "elite": return "중급"
-        case "professional": return "상급"
-        default: return "무관"
-        }
-    }
-}
-
-#Preview {
-    NavigationStack {
-        ScrapView()
-            .environmentObject(FavoriteViewModel())
     }
 }

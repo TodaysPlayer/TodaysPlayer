@@ -9,10 +9,10 @@ import SwiftUI
 
 struct WritePostView: View {
     @State private var viewModel = WritePostViewModel()
-    @Environment(\.dismiss) private var dismiss
     @State private var showCalendar = false
-    
     @State private var toastManager = ToastMessageManager()
+    
+    @Environment(\.dismiss) private var dismiss
     
     @EnvironmentObject var filterViewModel: FilterViewModel
     
@@ -59,7 +59,7 @@ struct WritePostView: View {
                             }
                             
                             // 날짜 선택
-                            FormSection(title: "날짜") {
+                            FormSection(title: "경기 날짜") {
                                 Button(action: { showCalendar = true }) {
                                     HStack {
                                         Text(dateFormatter.string(from: viewModel.selectedDate))
@@ -75,7 +75,7 @@ struct WritePostView: View {
                             }
                             
                             // 시간 입력
-                            FormSection(title: "시간") {
+                            FormSection(title: "경기 시간") {
                                 HStack(spacing: 12) {
                                     DatePicker(
                                         "시작 시간",
@@ -113,7 +113,7 @@ struct WritePostView: View {
                                         Image(systemName: "magnifyingglass")
                                             .foregroundColor(.gray)
                                         Text(viewModel.selectedLocation?.name ?? "구장을 검색하세요")
-                                            .foregroundColor(viewModel.selectedLocation == nil ? .gray : .primary)
+                                            .foregroundColor(viewModel.selectedLocation == nil ? Color.secondaryDeepGray : Color.primaryBaseGreen)
                                         Spacer()
                                     }
                                     .padding()
@@ -237,7 +237,7 @@ struct WritePostView: View {
                                         } label: {
                                             HStack {
                                                 Image(systemName: viewModel.hasFee ? "circle" : "checkmark.circle.fill")
-                                                    .foregroundColor(viewModel.hasFee ? .gray : .green)
+                                                    .foregroundColor(viewModel.hasFee ? .secondaryDeepGray : .primaryBaseGreen)
                                                 Text("없어요")
                                                     .foregroundColor(.primary)
                                             }
@@ -252,7 +252,7 @@ struct WritePostView: View {
                                         } label: {
                                             HStack {
                                                 Image(systemName: viewModel.hasFee ? "checkmark.circle.fill" : "circle")
-                                                    .foregroundColor(viewModel.hasFee ? .green : .gray)
+                                                    .foregroundColor(viewModel.hasFee ? .primaryBaseGreen : .secondaryDeepGray)
                                                 Text("있어요")
                                                     .foregroundColor(.primary)
                                             }
@@ -355,7 +355,7 @@ struct WritePostView: View {
                             }
                         }
                         .background(
-                        (viewModel.isFormValid && !viewModel.isSubmitting) ? Color.green : Color.gray)
+                        (viewModel.isFormValid && !viewModel.isSubmitting) ? Color.primaryBaseGreen : Color.secondaryDeepGray)
                         .cornerRadius(12)
                         .padding(.horizontal)
                         .disabled(!viewModel.isFormValid || viewModel.isSubmitting)
@@ -419,7 +419,7 @@ struct MonthCalendarSheet: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.green)
+                        .background(Color.primaryBaseGreen)
                         .cornerRadius(12)
                 }
                 .padding()
@@ -465,7 +465,7 @@ struct MatchTypeButton: View {
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(isSelected ? Color.green : Color.white)
+                .background(isSelected ? Color.primaryBaseGreen : Color.white)
                 .foregroundColor(isSelected ? .white : .primary)
                 .cornerRadius(12)
         }
@@ -493,7 +493,7 @@ struct SkillLevelPicker: View {
                         .font(.subheadline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(selectedLevel == level.0 ? Color.blue : Color.white)
+                        .background(selectedLevel == level.0 ? Color.primaryBaseGreen : Color.white)
                         .foregroundColor(selectedLevel == level.0 ? .white : .primary)
                         .cornerRadius(8)
                 }
@@ -522,7 +522,7 @@ struct GenderPicker: View {
                         .font(.subheadline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(selectedGender == gender.0 ? Color.blue : Color.white)
+                        .background(selectedGender == gender.0 ? Color.primaryBaseGreen : Color.white)
                         .foregroundColor(selectedGender == gender.0 ? .white : .primary)
                         .cornerRadius(8)
                 }

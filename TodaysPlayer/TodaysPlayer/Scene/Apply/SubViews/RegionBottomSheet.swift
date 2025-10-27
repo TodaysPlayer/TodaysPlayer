@@ -26,7 +26,7 @@ struct RegionBottomSheet: View {
                     Button("완료") {
                         isPresented = false
                     }
-                    .foregroundColor(.blue)
+                    .foregroundColor(.primaryBaseGreen)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
@@ -63,8 +63,7 @@ struct RegionBottomSheet: View {
         Button(action: {
             filterViewModel.updateRegion(region)
             isPresented = false
-            
-            // 지역 변경 로직 (나중에 ViewModel로 이동 예정)
+        
             print("선택된 지역: \(region.rawValue)")
         }) {
             HStack {
@@ -76,7 +75,7 @@ struct RegionBottomSheet: View {
                 
                 if filterViewModel.currentFilter.region == region {
                     Image(systemName: "checkmark")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.primaryBaseGreen)
                         .font(.system(size: 16, weight: .medium))
                 }
             }

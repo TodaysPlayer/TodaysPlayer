@@ -72,7 +72,7 @@ struct NearbyMatchesCard: View {
                             location: match.location.name,
                             distance: formatDistance(match.location.coordinates),
                             time: match.dateTime.formatForDisplay(),
-                            participants: "\(match.appliedParticipantsCount)/\(match.maxParticipants)",
+                            participants: "\(match.appliedParticipantsCount) / \(match.maxParticipants)",
                             gender: GenderType(rawValue: match.gender) ?? .mixed,
                             rating: nil,
                             price: match.price == 0 ? "무료" : String.formatPrice(match.price),

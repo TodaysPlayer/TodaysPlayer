@@ -99,28 +99,32 @@ final class MatchDetailViewModel {
     
     /// 버튼 배경색
     var buttonBackgroundColor: Color {
+        // 1. 본인 매치 체크
         if isMyMatch {
-            return .blue
+            return .secondaryMintGreen  // 참여자 관리
         }
         
+        // 2. 사용자의 신청 상태가 있으면 우선 체크
+        if let status = userApplyStatus {
+            switch status {
+            case .standby:
+                return .primaryLight  // 수락 대기중
+            case .accepted:
+                return .primaryBaseGreen  // 참여 확정
+            case .rejected:
+                return .accentRed
+            default:
+                return .gray
+            }
+        }
+        
+        // 3. 신청 안했는데 모집 마감됐으면
         if !currentMatch.isRecruiting {
-            return .gray
+            return .accentRed  // 모집 마감
         }
         
-        guard let status = userApplyStatus else {
-            return .green // 신청하기
-        }
-        
-        switch status {
-        case .standby:
-            return .orange
-        case .accepted:
-            return .blue
-        case .rejected:
-            return .gray
-        default:
-            return .green
-        }
+        // 4. 신청 가능한 상태
+        return .primaryBaseGreen  // 신청하기
     }
     
     // 최신 매치 정보 가져오기
@@ -133,14 +137,14 @@ final class MatchDetailViewModel {
             ) else { return }
             
             self.currentMatch = updatedMatch
-            print("✅ 매치 정보 갱신: \(updatedMatch.status), 신청인원: \(updatedMatch.appliedParticipantsCount)/\(updatedMatch.maxParticipants)")
+            print("매치 정보 갱신: \(updatedMatch.status), 신청인원: \(updatedMatch.appliedParticipantsCount)/\(updatedMatch.maxParticipants)")
         } catch {
-            print("⚠️ 매치 정보 갱신 실패: \(error)")
+            print("매치 정보 갱신 실패: \(error)")
         }
     }
     
     func refreshUserApplyStatus() async {
-        // ✅ 매치 정보도 함께 갱신
+        // 매치 정보도 함께 갱신
         await fetchLatestMatch()
         
         let userId = AuthHelper.currentUserId
@@ -149,7 +153,7 @@ final class MatchDetailViewModel {
         let allApplies = await repository.fetchParticipants(matchId: match.id)
         userApply = allApplies.first { $0.userId == userId }
         
-        print("✅ 신청 상태 새로고침: \(userApply?.status ?? "없음")")
+        print("신청 상태 새로고침: \(userApply?.status ?? "없음")")
     }
 
     // MARK: - Methods
@@ -166,7 +170,7 @@ final class MatchDetailViewModel {
         // 현재 사용자의 Apply 필터링
         userApply = allApplies.first { $0.userId == userId }
         
-        print("✅ Apply 상세 조회 완료: \(userApply?.status ?? "없음")")
+        print("Apply 상세 조회 완료: \(userApply?.status ?? "없음")")
     }
     
     // MARK: - Gender Validation
@@ -179,7 +183,7 @@ final class MatchDetailViewModel {
         }
         
         guard let userGender = AuthHelper.currentUser?.gender else {
-            print("❌ 사용자 성별 정보 없음")
+            print("사용자 성별 정보 없음")
             return false
         }
         

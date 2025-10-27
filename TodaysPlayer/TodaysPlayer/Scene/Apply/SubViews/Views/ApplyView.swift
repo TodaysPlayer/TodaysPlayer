@@ -40,7 +40,7 @@ struct ApplyView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: filterViewModel.currentFilter.isEmpty ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                                     .font(.system(size: 14))
-                                    .foregroundColor(filterViewModel.currentFilter.isEmpty ? .blue : .white)
+                                    .foregroundColor(filterViewModel.currentFilter.isEmpty ? .primaryBaseGreen : .white)
                                 Text("필터")
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(filterViewModel.currentFilter.isEmpty ? .primary : .white)
@@ -50,7 +50,7 @@ struct ApplyView: View {
                             .background(
                                 filterViewModel.currentFilter.isEmpty
                                     ? Color(.systemBackground)
-                                    : Color.blue.opacity(0.85)
+                                    : Color.primaryBaseGreen.opacity(0.85)
                             )
                             .cornerRadius(16)
                             .scaleEffect(filterButtonScale)
@@ -62,7 +62,7 @@ struct ApplyView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: "location")
                                     .font(.system(size: 14))
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.primaryBaseGreen)
                                 Text(filterViewModel.currentFilter.region.rawValue)
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(.primary)
@@ -179,7 +179,7 @@ struct ApplyView: View {
             .padding(.vertical, 16)
             .background(
                 RoundedRectangle(cornerRadius: isScrolling ? 28 : 25)
-                    .fill(Color.green)
+                    .fill(Color.primaryBaseGreen)
             )
             .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
         }
