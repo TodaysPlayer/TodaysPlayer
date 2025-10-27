@@ -24,11 +24,11 @@ struct MatchDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                MatchTagViewForMatch(match: viewModel.currentMatch, postedMatchCase: .allMatches)
-                
                 MatchDetailHeaderView(
                     title: match.title
                 )
+                
+                MatchTagViewForMatch(match: viewModel.currentMatch, postedMatchCase: .allMatches)
                 
                 MatchBasicInfoCardForMatch(match: viewModel.currentMatch)
                 MatchLocationSectionForMatch(match: match)
