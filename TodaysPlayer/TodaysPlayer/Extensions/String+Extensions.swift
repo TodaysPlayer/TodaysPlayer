@@ -69,4 +69,77 @@ extension String {
         
         return result
     }
+    
+    /// 주소에서 "지역 + 구/시" 형태로 추출
+    func extractRegionWithDistrict() -> String {
+        let address = self.removingPostalCode()
+        
+        // 1. 먼저 지역명 추출
+        guard let region = EnumMapper.extractRegion(from: address) else {
+            return address
+        }
+        
+        // 2. 지역에 따른 간단한 이름
+        let regionShortName: String
+        switch region {
+        case .all:
+            regionShortName = "전체"
+        case .seoul:
+            regionShortName = "서울"
+        case .gyeonggi:
+            regionShortName = "경기"
+        case .incheon:
+            regionShortName = "인천"
+        case .gangwon:
+            regionShortName = "강원"
+        case .daejeonSejong:
+            regionShortName = "대전/세종"
+        case .chungbuk:
+            regionShortName = "충북"
+        case .chungnam:
+            regionShortName = "충남"
+        case .daegu:
+            regionShortName = "대구"
+        case .busan:
+            regionShortName = "부산"
+        case .ulsan:
+            regionShortName = "울산"
+        case .gyeongbuk:
+            regionShortName = "경북"
+        case .gyeongnam:
+            regionShortName = "경남"
+        case .gwangju:
+            regionShortName = "광주"
+        case .jeonbuk:
+            regionShortName = "전북"
+        case .jeonnam:
+            regionShortName = "전남"
+        case .jeju:
+            regionShortName = "제주"
+        }
+        
+        // 3. 구/시 추출 - 여러 패턴 시도
+        // 먼저 "○○구" 패턴 찾기
+        let patterns = [
+            "([가-힣]+구)",  // 한글 + 구
+            "([가-힣]+시)",  // 한글 + 시
+        ]
+        
+        for pattern in patterns {
+            if let regex = try? NSRegularExpression(pattern: pattern),
+               let match = regex.firstMatch(in: address, range: NSRange(address.startIndex..., in: address)),
+               let range = Range(match.range(at: 1), in: address) {
+                let district = String(address[range])
+                
+                // "서울특별시"나 "경기도" 같은 광역단위는 제외
+                let excludeWords = ["특별시", "광역시", "특별자치도", "특별자치시"]
+                if !excludeWords.contains(where: { district.contains($0) }) {
+                    return "\(regionShortName) \(district)"
+                }
+            }
+        }
+        
+        // 구/시를 못 찾으면 지역명만 반환
+        return regionShortName
+    }
 }

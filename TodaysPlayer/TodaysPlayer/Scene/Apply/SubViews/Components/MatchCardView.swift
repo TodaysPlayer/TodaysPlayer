@@ -45,7 +45,7 @@ struct MatchCardView: View {
                 Image(systemName: "location")
                     .font(.caption)
                     .foregroundColor(.primary)
-                Text(match.location.address.removingPostalCode())
+                Text(match.location.address.extractRegionWithDistrict())
                     .font(.caption)
                     .foregroundColor(.primary)
             }
