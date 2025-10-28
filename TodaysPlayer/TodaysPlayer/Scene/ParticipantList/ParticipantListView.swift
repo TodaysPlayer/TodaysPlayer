@@ -26,23 +26,27 @@ struct ParticipantListView: View {
                     viewModel.fetchParticipantDatas(type: $0)
                 }
                 
-                Text("참여자가 없습니다.")
-                    .visible(viewModel.displayedApplies.isEmpty)
-                    .padding(.top, 50)
-                
                 
                 ScrollView {
                     LazyVStack(spacing: 12) {
+                        Text("참여자가 없습니다.")
+                            .visible(viewModel.displayedApplies.isEmpty)
+                            .padding(.top, 50)
+
+                        
                         ForEach(viewModel.displayedApplies) { participant in
                             ParticipantView(participantData: participant, viewModel: viewModel)
                                 .padding(10)
                                 .background(Color.white)
                                 .cornerRadius(12)
-                                .shadow(radius: 1, y: 1)
+                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
                         }
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 8)
+                }
+                .refreshable {
+                    await viewModel.fetchInitialDatas()
                 }
             }
             

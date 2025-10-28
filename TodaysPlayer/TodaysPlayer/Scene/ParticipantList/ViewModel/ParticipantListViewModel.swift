@@ -28,12 +28,14 @@ final class ParticipantListViewModel {
     
     init(match: Match){
         self.match = match
-        
-        Task {
-            let applyDatas = await repository.fetchParticipants(matchId: match.id)
-            participantDatas = applyDatas
-            displayedApplies = participantDatas.filter({ $0.applyStatusEnum == .standby })
-        }
+    
+        Task { await fetchInitialDatas() }
+    }
+    
+    func fetchInitialDatas() async {
+        let applyDatas = await repository.fetchParticipants(matchId: match.id)
+        participantDatas = applyDatas
+        displayedApplies = participantDatas.filter({ $0.applyStatusEnum == selectedStatus })
     }
     
     /// 세그먼트 누른 타입대로 신청자 정보 보여주기
@@ -41,6 +43,7 @@ final class ParticipantListViewModel {
         guard let type = ApplyStatus(rawValue: type) else { return }
         // apply로 모델 변경
         
+        selectedStatus = type
         displayedApplies = []
         
         switch type {

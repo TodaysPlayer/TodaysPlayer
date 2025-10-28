@@ -13,7 +13,7 @@ struct MatchInfoDetailView: View {
     var body: some View {
         // 시간
         HStack {
-            Image(systemName: "fitness.timer")
+            Image(systemName: "clock")
             Text(matchInfo.dateTime.formatForDisplay())
         }
         
@@ -26,7 +26,7 @@ struct MatchInfoDetailView: View {
         
         // 인원수
         HStack {
-            Image(systemName: "person.fill")
+            Image(systemName: "person.2")
             
             let participants = matchInfo.participants.filter { (_, value: String) in
                 value == "accepted"

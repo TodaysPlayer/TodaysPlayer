@@ -23,6 +23,8 @@ final class UserSessionManager: ObservableObject {
     
     // 자동로그인
     func checkAuthState() async {
+        try? await Task.sleep(for: .seconds(0.8))
+
         if let user = Auth.auth().currentUser {
             
             self.isLoggedIn = true
@@ -34,6 +36,7 @@ final class UserSessionManager: ObservableObject {
             self.isLoading = false
             print("자동로그인 실패")
         }
+        
         
         self.isLoading = false
     }

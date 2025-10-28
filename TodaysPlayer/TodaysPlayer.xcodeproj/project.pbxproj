@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3DAD9EE42EA08460007334F8 /* AlanAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3DAD9EE32EA08460007334F8 /* AlanAI */; };
+		EE28239D2EAF553F0018DA87 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = EE28239C2EAF553F0018DA87 /* Lottie */; };
 		EEEF08A02E862B6A0018112B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF089F2E862B6A0018112B /* FirebaseAuth */; };
 		EEEF08A22E862B6A0018112B /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF08A12E862B6A0018112B /* FirebaseCore */; };
 		EEEF08A42E862B6A0018112B /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = EEEF08A32E862B6A0018112B /* FirebaseDatabase */; };
@@ -53,6 +54,7 @@
 				EEEF08A22E862B6A0018112B /* FirebaseCore in Frameworks */,
 				EEEF08A02E862B6A0018112B /* FirebaseAuth in Frameworks */,
 				EEEF08AA2E862B6A0018112B /* FirebaseStorage in Frameworks */,
+				EE28239D2EAF553F0018DA87 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +104,7 @@
 				EEEF08A72E862B6A0018112B /* FirebaseMessaging */,
 				EEEF08A92E862B6A0018112B /* FirebaseStorage */,
 				3DAD9EE32EA08460007334F8 /* AlanAI */,
+				EE28239C2EAF553F0018DA87 /* Lottie */,
 			);
 			productName = TodaysPlayer;
 			productReference = 89C7EE522E8370CE0062B03C /* TodaysPlayer.app */;
@@ -134,6 +137,7 @@
 			packageReferences = (
 				EEEF089E2E862B6A0018112B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				3DAD9EE22EA08460007334F8 /* XCRemoteSwiftPackageReference "alan-ios-sdk" */,
+				EE28239B2EAF553F0018DA87 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 89C7EE532E8370CE0062B03C /* Products */;
@@ -407,6 +411,14 @@
 				kind = branch;
 			};
 		};
+		EE28239B2EAF553F0018DA87 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
 		EEEF089E2E862B6A0018112B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -422,6 +434,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3DAD9EE22EA08460007334F8 /* XCRemoteSwiftPackageReference "alan-ios-sdk" */;
 			productName = AlanAI;
+		};
+		EE28239C2EAF553F0018DA87 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EE28239B2EAF553F0018DA87 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
 		};
 		EEEF089F2E862B6A0018112B /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
