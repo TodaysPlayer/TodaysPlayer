@@ -358,6 +358,7 @@ struct WritePostView: View {
                 .toolbar(.hidden, for: .tabBar)
                 .sheet(isPresented: $showCalendar) {
                     MonthCalendarSheet(selectedDate: $viewModel.selectedDate, showCalendar: $showCalendar)
+                        .presentationDetents([.height(600)])
                 }
                 .sheet(isPresented: $viewModel.showLocationSearch) {
                     LocationSearchBottomSheet(
@@ -479,11 +480,20 @@ struct MonthCalendarSheet: View {
                 }
                 .padding()
             }
+            .background(Color.white)
             .navigationTitle("날짜 선택")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button("닫기") {
-                showCalendar = false
-            })
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showCalendar = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.primaryBaseGreen)
+                            .font(.system(size: 16, weight: .semibold))
+                    }
+                }
+            }
         }
     }
 }
