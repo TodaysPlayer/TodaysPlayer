@@ -24,24 +24,30 @@ struct MyPageView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    if viewModel.isLoading {
-                        ProgressView().padding(.bottom, 8)
+            VStack(alignment: .leading, spacing: 0) {
+                header
+                    .padding(.top, 10)
+                    .padding(.horizontal)
+                    .background(Color.gray.opacity(0.1))
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        if viewModel.isLoading {
+                            ProgressView().padding(.bottom, 8)
+                        }
+                        if let error = viewModel.errorMessage {
+                            Text(error).font(.caption).foregroundStyle(.red)
+                        }
+                        profileCard
+                        statsRow
+                        bannerSection
+                        menuList
                     }
-                    if let error = viewModel.errorMessage {
-                        Text(error).font(.caption).foregroundStyle(.red)
-                    }
-                    header
-                    profileCard
-                    statsRow
-                    bannerSection
-                    menuList
+                    .padding(.top, 8)
+                    .padding(.horizontal, 16)
                 }
-                .padding(.top, 8)
-                .padding(.horizontal, 16)
+                .background(Color.gray.opacity(0.1))
             }
-            .background(Color.gray.opacity(0.1))
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
@@ -49,7 +55,7 @@ struct MyPageView: View {
     private var header: some View {
         HStack {
             Text("마이페이지")
-                .font(.system(size: 26, weight: .bold))
+                .font(.system(size: 28, weight: .bold))
             Spacer()
             HStack(spacing: 20) {
                 NavigationLink(destination: NotiView(notifications: $notifications)) {
@@ -205,3 +211,4 @@ struct MyPageView: View {
         )
     }
 }
+
