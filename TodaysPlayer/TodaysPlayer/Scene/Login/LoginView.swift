@@ -92,9 +92,8 @@ struct LoginView: View {
                                 Text("비밀번호")
                                 SecureField("비밀번호를 입력하세요", text: $password)
                                     .focused($focusedField, equals: .password)
-//                                    .submitLabel(.done)
                                     .onSubmit { login() }
-                                    .onChange(of: password) { newValue, _ in
+                                    .onChange(of: password) { _ ,newValue in
                                         validatePassword(newValue)
                                     }
                                     .padding()
@@ -190,6 +189,7 @@ struct LoginView: View {
     
     private func isValidPassword(_ password: String) -> Bool {
         let pattern = #"^.{8,}$"#
+        print(password)
         return NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: password)
     }
     
