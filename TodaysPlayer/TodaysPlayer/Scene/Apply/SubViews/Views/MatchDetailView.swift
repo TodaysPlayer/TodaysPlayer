@@ -218,7 +218,7 @@ struct MatchLocationSectionForMatch: View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Image(systemName: "mappin.circle.fill")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.primaryBaseGreen)
                         .frame(width: 24)
                     
                     VStack(alignment: .leading, spacing: 2) {
