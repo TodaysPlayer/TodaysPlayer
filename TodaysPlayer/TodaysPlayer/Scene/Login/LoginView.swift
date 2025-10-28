@@ -37,34 +37,31 @@ struct LoginView: View {
                     .ignoresSafeArea()
                     .onTapGesture { focusedField = nil }
                 
-                ScrollView {
-                    VStack(spacing: 30) {
+//                ScrollView {
+                    VStack(spacing: 10) {
                         
                         // 상단 로고
-                        VStack(spacing: 16) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.blue)
-                                    .frame(width: 80, height: 80)
-                                Image(systemName: "shield.fill")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 40))
-                            }
+                        VStack(spacing: 10) {
+                            Image("TodaysPlayerIcon")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 150, height: 150)
+                            
                             Text("오늘의 용병")
                                 .font(.title)
                                 .fontWeight(.bold)
-                            Text("빠르고 쉬운 로컬 스포츠 매칭")
+                            Text("빠르고 쉬운 풋살/축구 매칭")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                         }
-                        .padding(.top, 50)
+                        .padding(.vertical, 50)
                         
                         // 로그인 카드
                         VStack(spacing: 20) {
-                            Text("로그인")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .padding(.bottom, 10)
+//                            Text("로그인")
+//                                .font(.title2)
+//                                .fontWeight(.bold)
+//                                .padding(.bottom, 10)
                             
                             // 이메일 입력 필드
                             VStack(alignment: .leading, spacing: 4) {
@@ -72,11 +69,11 @@ struct LoginView: View {
                                 TextField("이메일을 입력하세요", text: $email)
                                     .textInputAutocapitalization(.never)
                                     .disableAutocorrection(true)
-                                    .keyboardType(.emailAddress)
+//                                    .keyboardType(.emailAddress)
                                     .focused($focusedField, equals: .email)
-                                    .submitLabel(.next)
+//                                    .submitLabel(.next)
                                     .onSubmit { focusedField = .password }
-                                    .onChange(of: email) { newValue in
+                                    .onChange(of: email) { newValue, _ in
                                         validateEmail(newValue)
                                     }
                                     .padding()
@@ -95,9 +92,9 @@ struct LoginView: View {
                                 Text("비밀번호")
                                 SecureField("비밀번호를 입력하세요", text: $password)
                                     .focused($focusedField, equals: .password)
-                                    .submitLabel(.done)
+//                                    .submitLabel(.done)
                                     .onSubmit { login() }
-                                    .onChange(of: password) { newValue in
+                                    .onChange(of: password) { newValue, _ in
                                         validatePassword(newValue)
                                     }
                                     .padding()
@@ -116,27 +113,10 @@ struct LoginView: View {
                                 Text("로그인")
                                     .frame(maxWidth: .infinity)
                                     .padding()
-                                    .background(Color.blue)
+                                    .background(Color.primaryBaseGreen)
                                     .foregroundColor(.white)
                                     .cornerRadius(8)
                             }
-                            
-                            NavigationLink(destination: PasswordResetView()) {
-                                Text("비밀번호를 잊으셨나요?")
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            // 회원가입으로 이동 (약관동의 -> 회원가입)
-                            //                            NavigationLink(destination: UserAgreementView()) {
-                            //                                Text("이메일로 회원가입")
-                            //                                    .frame(maxWidth: .infinity)
-                            //                                    .padding()
-                            //                                    .background(Color.white)
-                            //                                    .overlay(
-                            //                                        RoundedRectangle(cornerRadius: 8)
-                            //                                            .stroke(Color.gray.opacity(0.3))
-                            //                                    )
-                            //                            }
                             
                             Button {
                                 path.append("UserAgreement")
@@ -144,6 +124,7 @@ struct LoginView: View {
                                 Text("이메일로 회원가입")
                                     .frame(maxWidth: .infinity)
                                     .padding()
+                                    .foregroundStyle(Color.primaryBaseGreen)
                                     .background(Color.white)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 8)
@@ -159,7 +140,8 @@ struct LoginView: View {
                         }
                         .padding()
                         .background(Color.white)
-                        .cornerRadius(16)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
                         .padding(.horizontal)
                         
                         Spacer(minLength: 50)
@@ -167,7 +149,7 @@ struct LoginView: View {
                     .padding(.bottom, keyboardHeight)
                     .animation(.easeOut(duration: 0.25), value: keyboardHeight)
                 }
-            }
+//            }
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("로그인 오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))

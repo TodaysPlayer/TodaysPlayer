@@ -17,7 +17,7 @@ struct ConfirmButton: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(Color.blue)
+                .background(Color.futsalGreen)
                 .cornerRadius(12)
         }
         .padding(.horizontal, 16)

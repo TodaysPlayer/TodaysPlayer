@@ -20,7 +20,7 @@ struct StoredQuestionMessage: Identifiable, Codable, Equatable {
 
 final class EmailCollections {
     static let shared = EmailCollections()
-    private let storageKey = "email_collection_storage_key"
+    private let storageKey = "question_collection_storage_key"
 
     private init() {}
 

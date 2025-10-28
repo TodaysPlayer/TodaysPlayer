@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="TodaysPlayer/TodaysPlayer/AppIcon.icon/Assets/2조.png" width="480" alt="TodaysPlayer Logo" />
+<img width="480" height="480" alt="TodaysPlayerIcon" src="https://github.com/user-attachments/assets/e8739d9b-a98d-48f9-983f-c4038307bdda" />
 
 🧭 **TodaysPlayer**
 
@@ -155,6 +155,8 @@ TodaysPlayer/
 ### v1.1 (계획 중)
 - 🔄 성능 최적화
 - 🔄 푸시 알림 추가
+- 🔄 SNS 로그인 추가
+- 🔄 경기 취소 및 수정기능 추가
 
 ### v2.0 (향후)
 - 🔜 다국어 지원

@@ -57,6 +57,6 @@ struct MyPageRow: View {
         .padding()
         .background(Color.white)
         // 카드형 배경을 위한 모서리 둥글기
-        .cornerRadius(40)
+        .cornerRadius(20)
     }
 }

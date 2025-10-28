@@ -40,7 +40,7 @@ struct RatingSectionView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: imageName)
-                            .foregroundColor(.green)
+                            .foregroundColor(Color.primaryBaseGreen)
                         
                         Text(title)
                             .font(.subheadline)
@@ -53,7 +53,7 @@ struct RatingSectionView: View {
                     }
                     
                     ProgressView(value: value / 5.0, total: 1.0)
-                        .tint(.green)
+                        .tint(Color.primaryBaseGreen)
                         .frame(height: 8)
                         .clipShape(Capsule())
                 }

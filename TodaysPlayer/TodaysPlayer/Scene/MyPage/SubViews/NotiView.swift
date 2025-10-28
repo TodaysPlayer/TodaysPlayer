@@ -82,7 +82,7 @@ struct NotiView: View {
                     persistNotifications()
                     persistMessageDocMap()
                 }) {
-                    Image(systemName: "bell.slash")
+                    Image(systemName: "trash")
                 }
                 .accessibilityLabel("모든 알림 삭제")
                 .disabled(notifications.isEmpty)
