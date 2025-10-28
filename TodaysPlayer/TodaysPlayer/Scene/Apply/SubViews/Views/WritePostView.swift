@@ -1,4 +1,3 @@
-//
 //  WritePostView.swift
 //  TodaysPlayer
 //
@@ -77,30 +76,32 @@ struct WritePostView: View {
                             // 시간 입력
                             FormSection(title: "경기 시간") {
                                 HStack(spacing: 12) {
-                                    DatePicker(
-                                        "시작 시간",
-                                        selection: $viewModel.startTime,
-                                        displayedComponents: .hourAndMinute
-                                    )
-                                    .labelsHidden()
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(12)
+                                    // 시작 시간
+                                    Button {
+                                        viewModel.showStartTimePicker = true
+                                    } label: {
+                                        Text(timeFormatter.string(from: viewModel.startTime))
+                                            .foregroundColor(.primary)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.white)
+                                            .cornerRadius(12)
+                                    }
                                     
                                     Text("~")
                                         .foregroundColor(.gray)
                                     
-                                    DatePicker(
-                                        "종료 시간",
-                                        selection: $viewModel.endTime,
-                                        displayedComponents: .hourAndMinute
-                                    )
-                                    .labelsHidden()
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(12)
+                                    // 종료 시간
+                                    Button {
+                                        viewModel.showEndTimePicker = true
+                                    } label: {
+                                        Text(timeFormatter.string(from: viewModel.endTime))
+                                            .foregroundColor(.primary)
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.white)
+                                            .cornerRadius(12)
+                                    }
                                 }
                             }
                             
@@ -181,7 +182,7 @@ struct WritePostView: View {
                                                     viewModel.maxParticipants = 0
                                                 } else {
                                                     let value = Int(newValue) ?? 0
-                                                    viewModel.maxParticipants = min(value, 30) // 30 이상 제한
+                                                    viewModel.maxParticipants = min(value, 30)
                                                 }
                                             }
                                         ))
@@ -296,7 +297,7 @@ struct WritePostView: View {
                             }
                         }
                         .padding()
-                        .padding(.bottom, 80) // 하단 버튼 공간 확보
+                        .padding(.bottom, 80)
                     }
                     
                     // 하단 고정 등록 버튼
@@ -312,26 +313,15 @@ struct WritePostView: View {
                                     }
                                     
                                     let userId = AuthHelper.currentUserId
-                                    
-                                    // 생성된 match 객체 받기
                                     let newMatch = try await viewModel.createMatch(organizerId: userId)
                                     
-                                    // 새 매치 추가
                                     filterViewModel.addNewMatch(newMatch)
-                                    
-                                    // 캘린더 날짜를 경기 날짜로 변경
                                     filterViewModel.selectedDate = newMatch.dateTime
-                                    
-                                    // 해당 날짜의 매치들로 필터 재적용
                                     filterViewModel.applyFilter()
                                     
-                                    // 토스트 메시지 표시
                                     toastManager.show(.postCreated, duration: 2.0)
-                                    
-                                    // 2초 대기 (토스트 메시지 표시 시간)
                                     try? await Task.sleep(nanoseconds: 2_000_000_000)
                                     
-                                    // 화면 닫기
                                     dismiss()
                                     
                                 } catch {
@@ -375,6 +365,24 @@ struct WritePostView: View {
                         selectedMatchLocation: $viewModel.selectedLocation
                     )
                 }
+                .sheet(isPresented: $viewModel.showStartTimePicker) {
+                    TimePickerSheet(
+                        selectedTime: $viewModel.startTime,
+                        showPicker: $viewModel.showStartTimePicker,
+                        title: "시작 시간"
+                    )
+                    .presentationDetents([.height(310)])
+                    .presentationDragIndicator(.hidden)
+                }
+                .sheet(isPresented: $viewModel.showEndTimePicker) {
+                    TimePickerSheet(
+                        selectedTime: $viewModel.endTime,
+                        showPicker: $viewModel.showEndTimePicker,
+                        title: "종료 시간"
+                    )
+                    .presentationDetents([.height(310)])
+                    .presentationDragIndicator(.hidden)
+                }
                 .alert("오류", isPresented: .constant(viewModel.errorMessage != nil)) {
                     Button("확인") {
                         viewModel.errorMessage = nil
@@ -394,6 +402,53 @@ struct WritePostView: View {
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "yyyy년 M월 d일"
         return formatter
+    }
+    
+    private var timeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "a h:mm"
+        return formatter
+    }
+}
+
+// MARK: - Time Picker Sheet
+struct TimePickerSheet: View {
+    @Binding var selectedTime: Date
+    @Binding var showPicker: Bool
+    let title: String
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // 헤더
+            HStack {
+                Text(title)
+                    .font(.headline)
+                Spacer()
+                Button("완료") {
+                    showPicker = false
+                }
+                .foregroundColor(.primaryBaseGreen)
+            }
+            .padding()
+            .background(Color.white)
+            
+            Divider()
+            
+            // 피커
+            DatePicker(
+                "",
+                selection: $selectedTime,
+                displayedComponents: .hourAndMinute
+            )
+            .datePickerStyle(.wheel)
+            .labelsHidden()
+            .environment(\.locale, Locale(identifier: "ko_KR"))
+            .padding()
+            .background(Color.white)
+        }
+        .background(Color.white)
+        .presentationBackground(Color.white)
     }
 }
 

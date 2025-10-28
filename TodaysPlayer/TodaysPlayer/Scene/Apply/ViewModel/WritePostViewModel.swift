@@ -23,6 +23,9 @@ final class WritePostViewModel {
     var hasFee: Bool = false
     var selectedLocation: MatchLocation?
     
+    var showStartTimePicker: Bool = false
+    var showEndTimePicker: Bool = false
+    
     var maxParticipants: Int = 1 {
             didSet {
                 // 30명 초과 시 30으로 제한
