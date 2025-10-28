@@ -61,7 +61,7 @@ struct FilterBottomSheet: View {
                                 filterToggleButton(
                                     title: matchType.rawValue,
                                     isSelected: tempFilter.matchType == matchType,
-                                    color: matchType.rawValue == "풋살" ? .futsalGreen : .secondaryMintGreen
+                                    color: .primaryBaseGreen
                                 ) {
                                     tempFilter.matchType = (tempFilter.matchType == matchType) ? nil : matchType
                                 }
@@ -147,7 +147,7 @@ struct FilterBottomSheet: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(hasActiveFilters ? Color.primaryDark: Color.secondaryDeepGray)
+                            .background(hasActiveFilters ? Color.secondaryDeepGray: Color.secondaryMintGreen)
                             .cornerRadius(12)
                     }
                     
