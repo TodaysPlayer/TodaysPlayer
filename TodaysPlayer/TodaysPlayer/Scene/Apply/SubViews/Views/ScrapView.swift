@@ -49,25 +49,25 @@ struct ScrapView: View {
                                 .buttonStyle(PlainButtonStyle())
                                 
                                 // 북마크 버튼
-                                BookmarkButton(
-                                    match: match,
-                                    isFavorited: favoriteViewModel.isFavorited(matchId: match.id),
-                                    action: {
-                                        withAnimation {
-                                            scrapedMatches.removeAll { $0.id == match.id }
-                                        }
-                                        favoriteViewModel.toggleFavorite(
-                                            matchId: match.id,
-                                            organizerId: match.organizerId
-                                        )
+                                Button {
+                                    withAnimation {
+                                        scrapedMatches.removeAll { $0.id == match.id }
                                     }
-                                )
+                                    favoriteViewModel.toggleFavorite(
+                                        matchId: match.id,
+                                        organizerId: match.organizerId
+                                    )
+                                } label: {
+                                    Image(systemName: favoriteViewModel.isFavorited(matchId: match.id) ? "bookmark.fill" : "bookmark")
+                                        .font(.system(size: 22))
+                                        .foregroundColor(favoriteViewModel.isFavorited(matchId: match.id) ? .green : .gray)
+                                }
                                 .padding(8)
                             }
                         }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 16)
+                    .padding(.vertical, 16)
                 }
             }
         }
