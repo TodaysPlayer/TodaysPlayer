@@ -162,11 +162,11 @@ private struct AnnouncementCard: View {
             }
         }
         .background(
-            RoundedRectangle(cornerRadius: 40, style: .continuous)
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color(.white))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 40, style: .continuous)
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .strokeBorder(Color(.separator), lineWidth: 0.5)
         )
         .toolbar(.hidden, for: .tabBar)

@@ -58,6 +58,18 @@ struct QuestionView: View {
     // MARK: - Sections
     private var inquiryCard: some View {
         VStack(alignment: .leading, spacing: 14) {
+            // 제목
+            LabeledContainer(label: "제목") {
+                TextField("문의 제목을 입력해주세요", text: $subject)
+                    .textInputAutocapitalization(.sentences)
+                    .padding(.horizontal, 12)
+                    .frame(height: 44)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color(.systemGray4), lineWidth: 1)
+                            )
+            }
+            
             // 문의 유형
             LabeledContainer(label: "문의 유형") {
                 Menu {
@@ -74,19 +86,11 @@ struct QuestionView: View {
                     }
                     .padding(.horizontal, 12)
                     .frame(height: 44)
-                    .background(fieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
-            }
-
-            // 제목
-            LabeledContainer(label: "제목") {
-                TextField("문의 제목을 입력해주세요", text: $subject)
-                    .textInputAutocapitalization(.sentences)
-                    .padding(.horizontal, 12)
-                    .frame(height: 44)
-                    .background(fieldBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color(.systemGray4), lineWidth: 1)
+                )
             }
 
             // 문의 내용
@@ -95,8 +99,6 @@ struct QuestionView: View {
                     TextEditor(text: $bodyText)
                         .frame(minHeight: 150)
                         .padding(8)
-                        .background(fieldBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
                     if bodyText.isEmpty {
                         Text("문의하실 내용을 자세히 작성해주세요. 문제 상황, 발생 시간, 사용 환경 등을 포함해주시면 더 빠른 답변이 가능합니다.")
                             .foregroundColor(.secondary)
@@ -105,6 +107,10 @@ struct QuestionView: View {
                             .allowsHitTesting(false)
                     }
                 }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color(.systemGray4), lineWidth: 1)
+                )
             }
 
             // 이메일
@@ -123,7 +129,7 @@ struct QuestionView: View {
                 HStack {
                     Image(systemName: "paperplane.fill")
                     Text("문의 보내기")
-                        .fontWeight(.semibold)
+                        .fontWeight(.bold)
                 }
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
@@ -133,7 +139,7 @@ struct QuestionView: View {
             }
             .buttonStyle(.plain)
             .disabled(!isFormValid)
-            .opacity(isFormValid ? 1 : 0.5)
+            .opacity(isFormValid ? 1 : 0.9)
         }
         .padding(16)
         .background(Color.white)
