@@ -99,7 +99,7 @@ struct UserAgreementView: View {
             VStack(alignment: .leading, spacing: 16) {
                 CheckboxView(isChecked: $agreeService, title: "서비스 이용약관 동의", required: true)
                 CheckboxView(isChecked: $agreePrivacy, title: "개인정보 수집 및 이용 동의", required: true)
-                CheckboxView(isChecked: $agreeAge, title: "만 14세 이상입니다", required: true)
+//                CheckboxView(isChecked: $agreeAge, title: "만 14세 이상입니다", required: true)
                 CheckboxView(isChecked: $agreeMarketing, title: "마케팅 정보 수신 동의")
             }
             .onChange(of: [agreeService, agreePrivacy, agreeAge, agreeMarketing]) { _, _ in

@@ -21,8 +21,8 @@ struct MatchDashboardComponentView<T: MatchFilterType>: View {
                 .foregroundStyle(selectedTitle == buttonType ? Color.white : Color.secondaryDeepGray)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .background(selectedTitle == buttonType ? Color.primaryBaseGreen : Color.secondaryCoolGray)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .background(selectedTitle == buttonType ? Color.primaryBaseGreen : Color.white)
+                .cornerRadius(16)
         }
     }
 }
@@ -30,7 +30,6 @@ struct MatchDashboardComponentView<T: MatchFilterType>: View {
 
 /// MatchList DashBoard
 /// - 나의 매치 필터링 버튼
-/// 클로져달기
 struct MyMatchFilterButtonView<T: MatchFilterType>: View {
     var filterTypes: [T]
     @Binding var selectedFilter: T
