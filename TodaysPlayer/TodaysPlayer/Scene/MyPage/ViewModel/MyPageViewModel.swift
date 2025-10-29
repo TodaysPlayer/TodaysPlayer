@@ -27,7 +27,7 @@ final class MyPageViewModel: ObservableObject {
     }
     
     func load() async {
-        await setLoading(true)
+        setLoading(true)
         defer { Task { @MainActor in self.isLoading = false } }
         
         guard let uid = Auth.auth().currentUser?.uid else {

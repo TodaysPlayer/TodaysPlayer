@@ -51,12 +51,17 @@ class HomeViewModel {
     
     @MainActor
     func loadInitialData() async {
-        self.isLoading = true
-        self.errorMessage = nil
+        // 이미 데이터가 있는 경우 로딩 상태를 표시하지 않음
+        let hasExistingData = !self.matches.isEmpty || self.user != nil
         
-        // 초기화
-        self.matches = []
-        self.user = nil
+        if !hasExistingData {
+            self.isLoading = true
+            self.errorMessage = nil
+            
+            // 초기화
+            self.matches = []
+            self.user = nil
+        }
         
         do {
             print("Firebase에서 데이터 로딩 시작...")
@@ -71,12 +76,16 @@ class HomeViewModel {
         } catch {
             print("Firebase 데이터 로딩 실패: \(error.localizedDescription)")
             
-            // Firebase 로딩 실패 시 빈 데이터 사용
-            self.matches = []
-            self.user = nil
+            // Firebase 로딩 실패 시 빈 데이터 사용 (기존 데이터가 없는 경우에만)
+            if !hasExistingData {
+                self.matches = []
+                self.user = nil
+            }
         }
         
-        self.isLoading = false
+        if !hasExistingData {
+            self.isLoading = false
+        }
     }
     
     func loadMatches() async throws {
