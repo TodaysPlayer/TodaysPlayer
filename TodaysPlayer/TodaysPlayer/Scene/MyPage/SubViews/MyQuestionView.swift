@@ -81,11 +81,13 @@ struct MyQuestionView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: reload)
             .refreshable { reload() }
-            .sheet(isPresented: $isPresentingDetail) {
-                if let selected {
-                    QuestionDetailView(message: selected)
+            .sheet(item: $selected, content: { selectedMessgae in
+                NavigationStack {
+                    QuestionDetailView(message: selectedMessgae)
                 }
-            }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            })
         }
     }
 
@@ -139,7 +141,6 @@ private struct QuestionDetailView: View {
     let message: StoredQuestionMessage
 
     var body: some View {
-        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     Group {
@@ -172,7 +173,7 @@ private struct QuestionDetailView: View {
                 .padding()
             }
             .navigationTitle("세부 문의 사항")
-        }
+        
     }
 
     private var dateString: String {
