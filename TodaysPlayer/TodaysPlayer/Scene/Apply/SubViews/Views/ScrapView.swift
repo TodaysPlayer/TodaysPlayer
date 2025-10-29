@@ -41,12 +41,12 @@ struct ScrapView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(scrapedMatches, id: \.id) { match in
-                                // 매치 카드 (NavigationLink)
-                                NavigationLink(destination: MatchDetailView(match: match)) {
-                                    MatchCardView(match: match)
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                                .overlay(alignment: .topTrailing) {
+                            // 매치 카드 (NavigationLink)
+                            NavigationLink(destination: MatchDetailView(match: match)) {
+                                MatchCardView(match: match)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .overlay(alignment: .topTrailing) {
                                 BookmarkButton(
                                     match: match,
                                     isFavorited: favoriteViewModel.isFavorited(matchId: match.id),
@@ -66,13 +66,17 @@ struct ScrapView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 16)
+                    .padding(.bottom, 16)
                 }
+                .scrollContentBackground(.hidden)
             }
         }
         .navigationTitle("찜한 매치")
         .toolbar(.hidden, for: .tabBar)
         .onAppear {
-            loadScrapedMatches()
+            if scrapedMatches.isEmpty {
+                loadScrapedMatches()
+            }
         }
         .refreshable {
             loadScrapedMatches()
@@ -85,7 +89,12 @@ struct ScrapView: View {
         
         favoriteViewModel.fetchFavoritedMatches { matches in
             withAnimation {
-                self.scrapedMatches = matches
+                // 중복 제거: id 기준으로 고유한 매치만 남김
+                let uniqueMatches = Array(Dictionary(grouping: matches, by: { $0.id })
+                    .compactMapValues { $0.first }
+                    .values)
+                
+                self.scrapedMatches = uniqueMatches
                 self.isLoading = false
             }
         }
