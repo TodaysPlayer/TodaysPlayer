@@ -234,48 +234,44 @@ class FavoriteViewModel: ObservableObject {
     private func fetchMatchesByIds(matchIds: [String], completion: @escaping ([Match]) -> Void) {
         // Firestore의 'in' 쿼리는 최대 10개까지만 지원
         // 10개씩 나눠서 요청
-        let batchSize = 10
-        var allMatches: [Match] = []
-        let group = DispatchGroup()
-        
-        for i in stride(from: 0, to: matchIds.count, by: batchSize) {
-            let batch = Array(matchIds[i..<min(i + batchSize, matchIds.count)])
+        Task {
+            let batchSize = 10
+            var allMatches: [Match] = []
             
-            group.enter()
-            
-            db.collection("matches")
-                .whereField(FieldPath.documentID(), in: batch)
-                .getDocuments { snapshot, error in
-                    defer { group.leave() }
+            // 각 배치를 순차적으로 처리
+            for i in stride(from: 0, to: matchIds.count, by: batchSize) {
+                let batch = Array(matchIds[i..<min(i + batchSize, matchIds.count)])
+                
+                do {
+                    let snapshot = try await db.collection("matches")
+                        .whereField(FieldPath.documentID(), in: batch)
+                        .getDocuments()
                     
-                    if let error = error {
-                        print("❌ Matches 불러오기 실패: \(error.localizedDescription)")
-                        return
-                    }
-                    
-                    guard let documents = snapshot?.documents else {
-                        return
-                    }
-                    
-                    let matches = documents.compactMap { doc -> Match? in
-                        let decoder = Firestore.Decoder()
-                        decoder.userInfo[Match.documentIdKey] = doc.documentID
-                        
-                        do {
-                            return try doc.data(as: Match.self, decoder: decoder)
-                        } catch {
-                            print("❌ Match 디코딩 실패: \(error)")
-                            return nil
+                    // Main actor에서 디코딩 수행
+                    let matches = await MainActor.run {
+                        snapshot.documents.compactMap { doc -> Match? in
+                            let decoder = Firestore.Decoder()
+                            decoder.userInfo[Match.documentIdKey] = doc.documentID
+                            
+                            do {
+                                return try doc.data(as: Match.self, decoder: decoder)
+                            } catch {
+                                print("❌ Match 디코딩 실패: \(error)")
+                                return nil
+                            }
                         }
                     }
                     
                     allMatches.append(contentsOf: matches)
+                } catch {
+                    print("❌ Matches 불러오기 실패: \(error.localizedDescription)")
                 }
-        }
-        
-        group.notify(queue: .main) {
-            print("✅ 스크랩한 매치 \(allMatches.count)개 불러오기 완료")
-            completion(allMatches)
+            }
+            
+            await MainActor.run {
+                print("✅ 스크랩한 매치 \(allMatches.count)개 불러오기 완료")
+                completion(allMatches)
+            }
         }
     }
 }
