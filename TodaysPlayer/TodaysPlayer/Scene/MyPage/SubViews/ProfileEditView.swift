@@ -55,7 +55,7 @@ struct ProfileEditView: View {
                             Image(systemName: "person.crop.circle.fill")
                                 .resizable()
                                 .scaledToFill()
-                                .foregroundStyle(Color(.green).opacity(0.7))
+                                .foregroundStyle(Color.primaryBaseGreen)
                         }
                     }
                     .frame(width: 100, height: 100)
@@ -73,6 +73,15 @@ struct ProfileEditView: View {
                 Text("프로필 사진을 변경하려면 카메라 아이콘을 클릭하세요.")
                     .font(.caption)
                     .foregroundColor(.gray)
+                Button(action: {
+                    // 기본 아이콘으로 되돌리기
+                    viewModel.editAvatarData = nil
+                    viewModel.selectedPhotoItem = nil
+                }) {
+                    Text("기본 값은 여기를 클릭하세요.")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
             }
             .padding(16)
             .frame(maxWidth: .infinity)
@@ -82,7 +91,7 @@ struct ProfileEditView: View {
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(Color.gray.opacity(0.15), lineWidth: 1)
             )
-            .disabled(true)
+            
             
             VStack(alignment: .leading, spacing: 16) {
                 Text("기본 정보")

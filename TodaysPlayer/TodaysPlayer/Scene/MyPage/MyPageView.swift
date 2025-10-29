@@ -21,6 +21,7 @@ struct MyPageView: View {
     @AppStorage("profile_position") private var storedPosition: String = ""
     @AppStorage("profile_level") private var storedLevel: String = ""
     @AppStorage("profile_name") private var storedName: String = ""
+    @AppStorage("profile_avatar") private var storedAvatarData: Data?
 
     var body: some View {
         NavigationStack {
@@ -76,20 +77,11 @@ struct MyPageView: View {
         VStack {
             HStack(alignment: .center, spacing: 10) {
                 Group {
-                    // 구현은 되어있으나, firestore storage 요금제로 인해 사용 불가
-                    if let urlString = session.currentUser?.profileImageUrl, let url = URL(string: urlString) {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView()
-                            case .success(let image):
-                                image.resizable().scaledToFill()
-                            case .failure:
-                                Image(systemName: "person.crop.circle.fill").resizable().scaledToFill().foregroundStyle(Color.green)
-                            @unknown default:
-                                Image(systemName: "person.crop.circle.fill").resizable().scaledToFill().foregroundStyle(Color.green)
-                            }
-                        }
+                    if let data = storedAvatarData, let uiImage = UIImage(data: data) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                            .transition(.opacity)
                     } else {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()

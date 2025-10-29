@@ -17,7 +17,7 @@ struct ApplyMatchView: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    // init에서 ViewModel 초기화
+    // 10.31에 클라이언트 키 만료. 추후 다른것으로 변경요망.
     init(match: Match, aiClientID: String = "c81645d9-ead6-4a91-9e47-f81311287298") {
         self.match = match
         _viewModel = StateObject(wrappedValue: ApplyMatchViewModel(match: match, aiClientID: aiClientID))

@@ -18,6 +18,7 @@ struct AccountView: View {
     @State private var showLogoutResult = false
     @State private var goToLogin = false
     @State private var path = NavigationPath()
+    @State private var showDeletionCompletionAlert = false
     @Environment(\.dismiss) private var dismiss
     private let authManager: AuthManager = AuthManager()
     
@@ -30,88 +31,67 @@ struct AccountView: View {
     
     private var logOut: some View {
         Button {
-            showLogoutAlert = true
+            showSystemAlert(
+                title: "로그아웃 하시겠습니까?",
+                message: "현재 계정에서 로그아웃합니다.",
+                tint: .systemRed, // ✅ alert 버튼만 빨간색
+                actions: [
+                    UIAlertAction(title: "취소", style: .cancel),
+                    UIAlertAction(title: "확인", style: .destructive) { _ in
+                        performLogout()
+                    }
+                ]
+            )
         } label: {
-            MyPageRow(icon: "rectangle.portrait.and.arrow.right", iconColor: .accentOrange, title: "로그아웃", subtitle: "현재 계정에서 로그아웃 합니다.")
-        }
-        .alert("로그아웃 하시겠습니까?", isPresented: $showLogoutAlert) {
-            Button("취소", role: .cancel) {
-            }
-            Button("확인", role: .destructive) {
-                performLogout()
-            }
-        } message: {
-            Text("현재 계정에서 로그아웃합니다.")
-        }
-        .alert("로그아웃", isPresented: $showLogoutResult) {
-            Button("확인") {
-                // 로그인 화면으로 이동 - 네비게이션 스택 비우기
-                while !path.isEmpty {
-                    path.removeLast()
-                }
-                showLogoutResult = false
-                goToLogin = true
-            }
-        } message: {
-            Text("로그아웃 되었습니다.")
+            MyPageRow(icon: "rectangle.portrait.and.arrow.right",
+                      iconColor: .accentOrange,
+                      title: "로그아웃",
+                      subtitle: "현재 계정에서 로그아웃 합니다.")
         }
         .padding(.horizontal)
     }
     
     private var checkOut: some View {
         Button {
-            showDeleteAlert = true
+            showSystemAlert(
+                title: "정말 탈퇴하시겠습니까?",
+                message: "모든 데이터가 삭제됩니다.",
+                tint: .systemRed, // ✅ 탈퇴 Alert는 빨간색 버튼
+                actions: [
+                    UIAlertAction(title: "취소", style: .cancel),
+                    UIAlertAction(title: "탈퇴", style: .destructive) { _ in
+                        performAccountDeletion()
+                    }
+                ]
+            )
         } label: {
-            MyPageRow(icon: "person.slash.fill", iconColor: .accentRed, title: "회원 탈퇴", subtitle: "모든 정보를 지우고 회원 탈퇴 합니다.")
-        }
-        .alert("정말 탈퇴하시겠습니까?", isPresented: $showDeleteAlert) {
-            Button("취소", role: .cancel) { }
-            Button("탈퇴", role: .destructive) {
-                performAccountDeletion()
-            }
-        } message: {
-            Text("모든 데이터가 삭제됩니다.")
-        }
-        // 계정 삭제 완료
-        .alert("계정 삭제 완료", isPresented: $showDeleteResult) {
-            Button("확인") {
-                // 로그인 화면으로 이동 - 네비게이션 스택 비우기
-                while !path.isEmpty {
-                    path.removeLast()
-                }
-                showDeleteResult = false
-                goToLogin = true
-            }
-        } message: {
-            Text("그동안 이용해주셔서 감사합니다.")
-        }
-        // 계정 삭제 실패
-        .alert("계정 삭제 실패", isPresented: Binding(get: { deleteError != nil }, set: { if !$0 { deleteError = nil } })) {
-            Button("확인") { }
-        } message: {
-            Text(deleteError ?? "알 수 없는 오류가 발생했습니다.")
+            MyPageRow(
+                icon: "person.slash.fill",
+                iconColor: .accentRed,
+                title: "회원 탈퇴",
+                subtitle: "모든 정보를 지우고 회원 탈퇴 합니다."
+            )
         }
         .disabled(isDeleting)
-        .overlay {
-            if isDeleting {
-                ZStack {
-                    Color.black.opacity(0.2).ignoresSafeArea()
-                    ProgressView("탈퇴 처리 중...")
-                        .padding(16)
-                        .background(Color.white)
-                        .cornerRadius(40)
-                }
-            }
-        }
         .padding(.horizontal)
     }
     
     var body: some View {
         NavigationStack(path: $path) {
-            ScrollView {
-                pwEdit
-                logOut
-                checkOut
+            ZStack {
+                ScrollView {
+                    pwEdit
+                    logOut
+                    checkOut
+                }
+                if isDeleting {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                    ProgressView("탈퇴 처리 중...")
+                        .padding(16)
+                        .background(Color.secondaryCoolGray)
+                        .cornerRadius(20)
+                }
             }
             .toolbar(.hidden, for: .tabBar)
             .toolbar {
@@ -121,13 +101,13 @@ struct AccountView: View {
                         .bold()
                 }
             }
-            .fullScreenCover(isPresented: $goToLogin) {
-                LoginView()
-                    .interactiveDismissDisabled(true)
-                    .toolbar(.hidden, for: .navigationBar)
-            }
             .background(Color.gray.opacity(0.1))
             .foregroundStyle(Color(.black))
+        }
+        .fullScreenCover(isPresented: $goToLogin) {
+            LoginView()
+                .interactiveDismissDisabled(true)
+                .toolbar(.hidden, for: .navigationBar)
         }
     }
     
@@ -139,6 +119,14 @@ struct AccountView: View {
         guard let user = Auth.auth().currentUser else {
             isDeleting = false
             deleteError = "로그인된 사용자가 없습니다."
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                ToastManager.shared.show(title: "계정 삭제 실패",
+                                         message: self.deleteError ?? "알 수 없는 오류가 발생했습니다.",
+                                         buttonTitle: "확인") {
+                    while !self.path.isEmpty { self.path.removeLast() }
+                    self.goToLogin = true
+                }
+            }
             return
         }
         
@@ -151,6 +139,14 @@ struct AccountView: View {
                 DispatchQueue.main.async {
                     self.isDeleting = false
                     self.deleteError = "데이터 삭제 실패: \(err.localizedDescription)"
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                        ToastManager.shared.show(title: "계정 삭제 실패",
+                                                 message: self.deleteError ?? "알 수 없는 오류가 발생했습니다.",
+                                                 buttonTitle: "확인") {
+                            while !self.path.isEmpty { self.path.removeLast() }
+                            self.goToLogin = true
+                        }
+                    }
                 }
                 return
             }
@@ -165,21 +161,32 @@ struct AccountView: View {
                         } else {
                             self.deleteError = "계정 삭제 실패: \(error.localizedDescription)"
                         }
-                    } else {
-                        // 3) 로컬 세션 정리
-                        _ = try? Auth.auth().signOut()
-                        // 네비게이션 스택 비우기
-                        while !path.isEmpty {
-                            path.removeLast()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                            ToastManager.shared.show(title: "계정 삭제 실패",
+                                                     message: self.deleteError ?? "알 수 없는 오류가 발생했습니다.",
+                                                     buttonTitle: "확인") {
+                                while !self.path.isEmpty { self.path.removeLast() }
+                                self.goToLogin = true
+                            }
                         }
-                        self.showDeleteResult = true
-                        
+                    } else {
+                        _ = try? Auth.auth().signOut()
                         UserSessionManager.shared.removeSeesion()
+                        self.deleteError = nil
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                            ToastManager.shared.show(title: "계정 삭제 완료",
+                                                     message: "그동안 이용해주셔서 감사합니다.",
+                                                     buttonTitle: "확인") {
+                                while !self.path.isEmpty { self.path.removeLast() }
+                                self.goToLogin = true
+                            }
+                        }
                     }
                 }
             }
         }
     }
+    
     private func performLogout() {
             authManager.logout()
             // 네비게이션 스택 비우기
@@ -188,10 +195,37 @@ struct AccountView: View {
             }
             // 확인 알림 표시
             self.showLogoutAlert = false
-            self.showLogoutResult = true
+            ToastManager.shared.show(title: "로그아웃 완료",
+                                     message: "성공적으로 로그아웃되었습니다.",
+                                     buttonTitle: "확인") {
+                while !self.path.isEmpty { self.path.removeLast() }
+                self.goToLogin = true
+            }
     }
 }
 
+    extension View {
+            func showSystemAlert(title: String,
+                         message: String,
+                         tint: UIColor = .systemBlue,
+                         actions: [UIAlertAction] = []) {
+            guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                        let window = scene.windows.first,
+                        let rootVC = window.rootViewController else { return }
+        
+                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                alert.view.tintColor = tint // ✅ 이게 핵심 (alert별로 색 지정 가능)
+        
+        // 전달된 액션이 있으면 추가하고, 없으면 기본 OK 버튼 추가
+                if actions.isEmpty {
+                    alert.addAction(UIAlertAction(title: "확인", style: .default))
+                } else {
+                actions.forEach { alert.addAction($0) }
+                }
+        
+                rootVC.present(alert, animated: true)
+    }
+}
 
 #Preview {
     AccountView()
