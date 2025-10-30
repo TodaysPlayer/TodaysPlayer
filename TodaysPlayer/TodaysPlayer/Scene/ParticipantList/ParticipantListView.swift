@@ -69,17 +69,28 @@ struct ParticipantListView: View {
             .presentationDetents([.height(350)])
             .presentationDragIndicator(.visible)
         }
-        .alert("이 신청자를 수락할까요?", isPresented: $viewModel.isShowAcceptAlert) {
-            Button("취소") {}
-            
-            Button("수락") {
-                Task {
-                    await viewModel.managementAppliedStatus(status: .accepted)
-                    viewModel.toastManager.show(.participantAccepted)
-                }
+        .onChange(of: viewModel.isShowAcceptAlert) { _, newValue in
+            if newValue {
+                showSystemAlert(
+                    title: "이 신청자를 수락할까요?",
+                    message: "해당 신청자가 경기에 참여하게 됩니다.",
+                    tint: .green,
+                    actions: [
+                        UIAlertAction(title: "취소", style: .cancel) { _ in
+                            viewModel.isShowAcceptAlert = false
+                        },
+                        UIAlertAction(title: "수락", style: .destructive) { _ in
+                            Task {
+                                await viewModel.managementAppliedStatus(status: .accepted)
+                                viewModel.toastManager.show(.participantAccepted)
+                            }
+                            viewModel.isShowAcceptAlert = false
+                        }
+                    ]
+                )
             }
-            .foregroundStyle(Color.green)
         }
+
         .navigationTitle("인원 관리하기")
     }
 }

@@ -101,14 +101,25 @@ struct MatchListView: View {
             .onAppear {
                 viewModel.fetchMyMatchData()
             }
-            .alert("해당 경기를 종료할까요?", isPresented: $viewModel.isFinishMatchAlertShow) {
-                Button("취소", role: .cancel) { }
-                
-                Button("종료", role: .close) {
-                    Task { await viewModel.finishSelectedMatch() }
+            .onChange(of: viewModel.isFinishMatchAlertShow) { _, newValue in
+                if newValue {
+                    showSystemAlert(
+                        title: "해당 경기를 종료할까요?",
+                        message: "경기가 종료되면 더 이상 인원을 모집할 수 없어요.",
+                        tint: .systemRed,
+                        actions: [
+                            UIAlertAction(title: "취소", style: .cancel) { _ in
+                                viewModel.isFinishMatchAlertShow = false
+                            },
+                            UIAlertAction(title: "종료", style: .destructive) { _ in
+                                Task { await viewModel.finishSelectedMatch() }
+                                viewModel.isFinishMatchAlertShow = false
+                            }
+                        ]
+                    )
                 }
-                .modifier(MyMatchButtonStyle())
             }
+
         }
     }
     
