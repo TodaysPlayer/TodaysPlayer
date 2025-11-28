@@ -109,7 +109,6 @@ struct UserAgreementView: View {
                 // 전체 동의 true → 모두 true / false → 모두 false
                 agreeService = agreeAll
                 agreePrivacy = agreeAll
-                agreeAge = agreeAll
                 agreeMarketing = agreeAll
             } label: {
                 HStack {
@@ -186,12 +185,12 @@ struct UserAgreementView: View {
     
     // 개별 항목이 모두 선택되었는지 검사
     private func updateAgreeAllState() {
-        let allChecked = agreeService && agreePrivacy && agreeAge && agreeMarketing
-        agreeAll = allChecked
+        agreeAll = agreeService && agreePrivacy
+        
     }
     
     private var allRequiredAgreed: Bool {
-        agreeService && agreePrivacy && agreeAge
+        agreeService && agreePrivacy 
     }
 }
 

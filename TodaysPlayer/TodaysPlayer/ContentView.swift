@@ -9,12 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var tabSelection = TabSelection()
+    @State private var homeViewModel = HomeViewModel()
     
     var body: some View {
         TabView(selection: $tabSelection.selectedTab) {
             Tab("홈", systemImage: "house", value: 0) {
                 NavigationStack {
-                    HomeView()
+                    HomeView(viewModel: homeViewModel)
                 }
             }
             

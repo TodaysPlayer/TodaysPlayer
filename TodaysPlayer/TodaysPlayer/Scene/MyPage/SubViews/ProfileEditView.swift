@@ -73,15 +73,15 @@ struct ProfileEditView: View {
                 Text("프로필 사진을 변경하려면 카메라 아이콘을 클릭하세요.")
                     .font(.caption)
                     .foregroundColor(.gray)
-                Button(action: {
-                    // 기본 아이콘으로 되돌리기
-                    viewModel.editAvatarData = nil
-                    viewModel.selectedPhotoItem = nil
-                }) {
-                    Text("기본 값은 여기를 클릭하세요.")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+//                Button(action: {
+//                    // 기본 아이콘으로 되돌리기
+//                    viewModel.editAvatarData = nil
+//                    viewModel.selectedPhotoItem = nil
+//                }) {
+//                    Text("기본 값은 여기를 클릭하세요.")
+//                        .font(.caption)
+//                        .foregroundColor(.gray)
+//                }
             }
             .padding(16)
             .frame(maxWidth: .infinity)

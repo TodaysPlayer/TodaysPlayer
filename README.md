@@ -171,7 +171,7 @@ TodaysPlayer/
     <td align="center"><b>박정수</b></td>
     <td align="center"><b>이정명</b></td>
     <td align="center"><b>임종혁</b></td>
-    <td align="center"><b>최용헌</b></td>
+    <td align="center"><b>⭐ 최용헌 ⭐</b></td>
   </tr>
 </table>
 

@@ -147,7 +147,7 @@ struct FilterBottomSheet: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(hasActiveFilters ? Color.primaryBaseGreen: Color.primaryDark)
+                            .background(hasActiveFilters ? Color.secondaryDeepGray.opacity(0.5): Color.secondaryCoolGray)
                             .cornerRadius(12)
                     }
                     

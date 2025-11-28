@@ -15,7 +15,7 @@ struct MyMatchButtonStyle: ViewModifier {
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(Color.green)
+            .background(Color.primaryBaseGreen)
             .cornerRadius(12)
     }
 }

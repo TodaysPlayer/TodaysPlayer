@@ -19,8 +19,6 @@ final class UserDataRepository {
                     documentId: userId,
                     as: User.self
                 )
-            print(userId)
-            print("유저정보 가져옴\(user)")
             
             return user
             

@@ -93,7 +93,7 @@ struct MatchInfoView: View {
         guard postedMatchCase == .finishedMatch else { return false }
         guard matchInfo.organizerId == userId else { return false }
         guard matchInfo.rating == nil else { return false }
-        let acceptedCount = matchInfo.participants.values.filter { $0 == ApplyStatus.accepted.title }.count
+        let acceptedCount = matchInfo.participants.values.filter { $0 == ApplyStatusConverter.toString(from: .accepted) }.count
         return acceptedCount > 0
     }
 }

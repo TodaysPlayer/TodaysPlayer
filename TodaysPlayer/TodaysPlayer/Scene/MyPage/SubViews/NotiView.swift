@@ -45,6 +45,7 @@ struct NotiView: View {
                                     .foregroundColor(.accentOrange)
                                 Text(message)
                                     .foregroundColor(.primary)
+                                    .multilineTextAlignment(.leading)
                                 Spacer()
                             }
                             .padding()

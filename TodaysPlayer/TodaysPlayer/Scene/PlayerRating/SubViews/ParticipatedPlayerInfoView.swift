@@ -27,7 +27,7 @@ struct ParticipatedPlayerInfoView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(userInfo.displayName)
                     .font(.headline)
-                Text("\(userInfo.position ?? "") / \(userInfo.skillLevel ?? "")")
+                Text("\(userInfo.position ?? "포지션 무관")  \(userInfo.skillLevel ?? "실력 무관")")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }

@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var viewModel = HomeViewModel()
+    @State private var viewModel: HomeViewModel
     @State private var isCreatingSampleData = false
     @State private var isAddingRating = false
     @State private var showSampleDataAlert = false
     @State private var sampleDataMessage = ""
+    
+    init(viewModel: HomeViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     var body: some View {
         ScrollView {
