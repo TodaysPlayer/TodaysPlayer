@@ -7,7 +7,6 @@
 
 import SwiftUI
 import FirebaseAuth
-// 권소정추가한부분(두개)
 import GoogleSignIn
 import FirebaseFirestore
 
@@ -30,7 +29,6 @@ enum AuthError: LocalizedError {
     case wrongPassword
     case userNotFound
     case missingUID
-    // 권소정추가한부분(두개)
     case googleSignInFailed
     case windowNotFound
     case unknown(Error)
@@ -49,7 +47,6 @@ enum AuthError: LocalizedError {
             return "가입된 사용자를 찾을 수 없습니다."
         case .missingUID:
             return "사용자 UID를 가져올 수 없습니다."
-            // 권소정추가한부분(두개)
         case .googleSignInFailed:
             return "구글 로그인에 실패했습니다."
         case .windowNotFound:
@@ -102,7 +99,7 @@ final class AuthManager {
         }
     }
     
-    // MARK: - 이메일 로그인 권소정추가한부분 시작
+    // MARK: - 이메일 로그인
     func loginWithEmail(email: String, password: String) async throws {
         do {
             let result = try await Auth.auth()
@@ -207,7 +204,6 @@ final class AuthManager {
             throw mapFirebaseError(error)
         }
     }
-    // 권소정추가한부분 종료
     // MARK: - Private Methods
     
     /// 이메일 회원가입 시 Firestore에 사용자 데이터 저장
@@ -216,7 +212,6 @@ final class AuthManager {
             id: uid,
             email: userData.email,
             displayName: userData.displayName,
-            // 권소정추가한부분 (하나)
             gender: userData.gender,
             profileImageUrl: "",
             phoneNumber: "",
@@ -241,7 +236,6 @@ final class AuthManager {
             )
     }
     
-    // 권소정추가한부분 시작
     /// 구글 로그인 시 Firestore에 사용자 정보 저장 (신규 사용자만)
     private func saveGoogleUserToFirestore(user: FirebaseAuth.User) async throws {
         let db = Firestore.firestore()
@@ -284,12 +278,10 @@ final class AuthManager {
             )
         
         print("✅ 구글 사용자 Firestore 저장 완료")
-        // 권소정추가한부분 종료
     }
     
     /// Firebase 에러를 AuthError로 매핑
     private func mapFirebaseError(_ error: NSError) -> AuthError {
-        // 권소정추가한부분 하나
         switch AuthErrorCode(rawValue: error.code) {
         case .emailAlreadyInUse:
             return .emailAlreadyInUse

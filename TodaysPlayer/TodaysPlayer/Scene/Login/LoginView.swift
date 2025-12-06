@@ -128,7 +128,7 @@ struct LoginView: View {
                                     UserAgreementView(path: $path)
                                 }
                             }
-                            // 권소정추가한부분 시작
+                            // 구글로그인 버튼 추가
                             Button(action: {
                                 Task {
                                     do {
@@ -160,7 +160,6 @@ struct LoginView: View {
                                         .stroke(Color.gray.opacity(0.3))
                                 )
                             }
-                            // 권소정추가한부분 종료
                         }
                         .padding()
                         .background(Color.white)
