@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import KakaoSDKCommon
+import KakaoSDKAuth
 
 @main
 struct TodaysPlayerApp: App {
@@ -13,11 +15,20 @@ struct TodaysPlayerApp: App {
     @StateObject private var favoriteViewModel = FavoriteViewModel()
     @StateObject private var userSessionManager = UserSessionManager.shared
     
+    init() {
+        KakaoSDK.initSDK(appKey: KakaoConfig.nativeAppKey)
+    }
+    
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(favoriteViewModel)
                 .environmentObject(userSessionManager)
+                .onOpenURL { url in
+                    if AuthApi.isKakaoTalkLoginUrl(url) {
+                        _ = AuthController.handleOpenUrl(url: url)
+                    }
+                }
         }
     }
 
