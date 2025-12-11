@@ -160,6 +160,27 @@ struct LoginView: View {
                                         .stroke(Color.gray.opacity(0.3))
                                 )
                             }
+                            // 카카오 로그인
+                            Button(action: {
+                                Task {
+                                    do {
+                                        let success = try await authManager.signInWithKakao()
+                                        if success {
+                                            print("카카오 로그인 완료!")
+                                            isLoggedIn = true
+                                        }
+                                    } catch {
+                                        alertMessage = (error as? AuthError)?.errorDescription ?? "카카오 로그인 실패"
+                                        showAlert = true
+                                    }
+                                }
+                            }) {
+                                Image("kakao_login_large_wide")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 45)
+                            }
                         }
                         .padding()
                         .background(Color.white)
