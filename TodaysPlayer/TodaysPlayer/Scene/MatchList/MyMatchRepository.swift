@@ -133,4 +133,72 @@ final class MatchRepository {
             print("경기데이터 업데이트에 실패했습니다: \(error.localizedDescription)")
         }
     }
+    
+    // MARK: - 달력용: 모든 경기 가져오기 (기존 메서드 활용)
+    
+    /// 달력용: 신청한 모든 경기 조회 (페이지네이션 반복 호출)
+    func fetchAllAppliedMatches(userId: String) async throws -> [Match] {
+        var allMatches: [Match] = []
+        var lastDoc: DocumentSnapshot? = nil
+        var shouldContinue = true
+        
+        while shouldContinue {
+            let result = try await fetchAppliedMatchesPage(
+                with: userId,
+                pageSize: 100,
+                after: lastDoc
+            )
+            
+            allMatches.append(contentsOf: result.matches)
+            lastDoc = result.lastDocument
+            
+            // 더 이상 데이터가 없으면 중단
+            shouldContinue = result.fetchedCount >= 100
+        }
+        
+        return allMatches
+    }
+    
+    /// 달력용: 모집중인 모든 경기 조회 (페이지네이션 반복 호출)
+    func fetchAllRecruitingMatches(userId: String) async throws -> [Match] {
+        var allMatches: [Match] = []
+        var lastDoc: DocumentSnapshot? = nil
+        var shouldContinue = true
+        
+        while shouldContinue {
+            let result = try await fetchRecruitingMatchesPage(
+                with: userId,
+                pageSize: 100,
+                after: lastDoc
+            )
+            
+            allMatches.append(contentsOf: result.matches)
+            lastDoc = result.lastDocument
+            
+            shouldContinue = result.fetchedCount >= 100
+        }
+        
+        return allMatches
+    }
+    
+    /// 달력용: 날짜 범위로 필터링된 경기 반환
+    func fetchMatchesForCalendar(
+        userId: String,
+        startDate: Date,
+        endDate: Date
+    ) async throws -> (applied: [Match], recruiting: [Match], finished: [Match]) {
+        // 기존 메서드들을 병렬로 호출
+        async let appliedMatches = fetchAllAppliedMatches(userId: userId)
+        async let recruitingMatches = fetchAllRecruitingMatches(userId: userId)
+        async let finishedMatches = fetchFinishedMatches(with: userId)
+        
+        let (applied, recruiting, finished) = try await (appliedMatches, recruitingMatches, finishedMatches)
+        
+        // 날짜 범위로 필터링
+        let filteredApplied = applied.filter { $0.dateTime >= startDate && $0.dateTime < endDate }
+        let filteredRecruiting = recruiting.filter { $0.dateTime >= startDate && $0.dateTime < endDate }
+        let filteredFinished = finished.filter { $0.dateTime >= startDate && $0.dateTime < endDate }
+        
+        return (filteredApplied, filteredRecruiting, filteredFinished)
+    }
 }
