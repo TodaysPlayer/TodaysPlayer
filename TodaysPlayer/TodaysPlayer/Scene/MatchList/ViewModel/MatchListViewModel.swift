@@ -299,7 +299,7 @@ final class MatchListViewModel {
         finishedMatchId = ""
         isFinishMatchAlertShow = false
         
-        toastManager.show(.finishMactch)
+        toastManager.show(.finishMatch)
     }
     
     // MARK: 평가가 완료된 경기처리
